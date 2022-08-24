@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="title">
+  Welcome, {{ name }}
+</h1>
+<h2>
+  You have the following callsigns
+</h2>
+<h2>
+        <ul>
+        {% for callsign in callsigns %}
+               <li> {{ callsign['name'] }}</li>
+        {% endfor %}
+        </ul>
+</h2>
+{% endblock %}

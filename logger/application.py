@@ -1,8 +1,8 @@
 from flask import Flask, render_template
 from flask_login import LoginManager
-from users.views import users
-from config import Config
-from models import db
+from logger.users.views import users
+from logger.config import Config
+from logger.models import db
 
 
 def create_app():
@@ -15,7 +15,7 @@ def create_app():
     login_manager.login_view = 'users.login'
     login_manager.init_app(app)
 
-    from models import User
+    from logger.models import User
 
     @login_manager.user_loader
     def load_user(user_id):

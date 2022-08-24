@@ -6,7 +6,7 @@ db = SQLAlchemy()
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
-    name = db.Column(db.String(1000))
+    name = db.Column(db.String(1000), unique=True)
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     created_on = db.Column(db.DateTime())
@@ -15,5 +15,5 @@ class User(UserMixin, db.Model):
 
 class Callsign(db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
-    name = db.Column(db.String(1000))
+    name = db.Column(db.String(1000), unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)

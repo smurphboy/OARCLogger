@@ -1,5 +1,6 @@
+from datetime import datetime
 from flask import Blueprint, flash, render_template, redirect, request, url_for
-from flask_login import login_user
+from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from logger.models import User, db
 
@@ -7,15 +8,15 @@ users = Blueprint('users', __name__, template_folder='templates')
 
 @users.route("/")
 def index():
-    '''Shows all known users and lists their callsigns. Allows admin
-    to manage users.'''
-    return "User Index"
+    '''Our intro page'''
+    return render_template('index.html')
 
 @users.route('/<user>')
+@login_required
 def profile(user):
     '''This page shows all the users callsigns and let them manage them,
     add new calls, edit calls and add information about the callsign'''
-    return ("User: " + user)
+    return render_template('profile.html', name=current_user.name, callsigns=current_user.callsigns)
 
 @users.route('/<user>/<call>')
 def call_homepage(user, call):
@@ -43,6 +44,8 @@ def login_post():
 
     # if the above check passes, then we know the user has the right credentials
     login_user(user, remember=remember)
+    user.last_login = datetime.now()
+    db.session.commit()
     return redirect(url_for('users.profile', user=user.name))
 
 @users.route('/signup')
@@ -63,7 +66,7 @@ def signup_post():
         return redirect(url_for('users.signup'))
 
     # create a new user with the form data. Hash the password so the plaintext version isn't saved.
-    new_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'))
+    new_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'), created_on=datetime.now())
 
     # add the new user to the database
     db.session.add(new_user)
@@ -71,6 +74,8 @@ def signup_post():
     return redirect(url_for('users.login'))
 
 @users.route('/logout')
+@login_required
 def logout():
+    logout_user()
     #return render_template('logout.html')   
-    return 'Logout'
+    return redirect(url_for('users.index'))
