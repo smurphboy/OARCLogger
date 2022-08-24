@@ -1,9 +1,16 @@
 from flask import Flask, render_template
-from blueprints.users.views import users
+from flask_sqlalchemy import SQLAlchemy
+from .users.views import users
+from .config import Config
+
+# init SQLAlchemy so we can use it later in our models
+db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object('config.Config')
+    app.config.from_object(Config)
+
+    db.init_app(app)
 
     app.register_blueprint(users, url_prefix='/users')
 

@@ -10,8 +10,9 @@ class Config:
     """Set Flask config variables."""
 
     FLASK_ENV = 'development'
-    FLASK_APP = 'app.create_app'
+    FLASK_APP = 'logger'
     TESTING = True
     SECRET_KEY = environ.get('SECRET_KEY')
     STATIC_FOLDER = 'static'
     TEMPLATES_FOLDER = 'templates'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///db.sqlite'
