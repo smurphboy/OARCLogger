@@ -4,13 +4,19 @@
 <h1 class="title">
   Welcome, {{ name }}
 </h1>
+{% if (callsigns is defined) and callsigns %}
 <h2>
   You have the following callsigns
 </h2>
+{% endif %}
 <h2>
         <ul>
         {% for callsign in callsigns %}
-               <li> {{ callsign['name'] }}</li>
+               <li> <a href="{{ url_for ('users.call_homepage', user=name, call=callsign['name']) }}">{{ callsign['name'] }}</a></li>
+        {% else %}
+        You have no callsigns defined, please add one.   
+        
+        <button class="button is-link" onclick='window.location.href="https://twitter.com/home?lang=en";'>Add Callsign</button>
         {% endfor %}
         </ul>
 </h2>
