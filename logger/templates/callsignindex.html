@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} Welcome to OARCs Autumn Portable Day Logger {% endblock %}</h1>
+    <h2>Callsigns</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Owner</th>
+                <th>Callsign</th>
+                <th><abbr title="Number of QSOs">QSOs</abbr></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for call in callsigns %}
+            <tr>
+                <td><a href="{{ url_for ('users.profile', user=call.user['name']) }}"">{{ call.user.name }}</a></td>
+                <td>{{ call.name }}</td>
+            </tr>
+            {% else %}
+            No Callsigns
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endblock %}
