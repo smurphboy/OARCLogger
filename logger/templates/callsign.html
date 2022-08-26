@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} {{ qsos|length }} QSOs for this callsign {% endblock %}</h1>
+    <h2>QSOs</h2>
+    <table class="table is-striped is-hoverable">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Callsign</th>
+                <th>Band</th>
+                <th>Mode</th>
+                <th>Gridsqaure</th>
+                <th>My Gridsquare</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for qso in qsos %}
+            <tr>
+                <td>{{ qso.qso_date }}</td>
+                <td>{{ qso.time_on }}</td>
+                <td>{{ qso.call }}</td>
+                <td>{{ qso.band }}</td>
+                <td>{{ qso.mode }}</td>
+                <td>{{ qso.gridsquare }}</td>
+                <td>{{ qso.my_gridsquare }}</td>
+            </tr>
+            {% else %}
+            No QSOs
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

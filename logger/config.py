@@ -10,7 +10,7 @@ class Config:
     """Set Flask config variables."""
 
     FLASK_ENV = 'development'
-    FLASK_APP = 'logger'
+    FLASK_APP = 'logger.application'
     TESTING = True
     SECRET_KEY = environ.get('SECRET_KEY')
     if not SECRET_KEY:
