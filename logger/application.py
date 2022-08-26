@@ -2,6 +2,7 @@ from flask import Flask, render_template
 from flask_login import LoginManager
 from logger.users.views import users
 from logger.callsigns.views import callsigns
+from logger.qsos.views import qsos
 from logger.config import Config
 from logger.models import db
 
@@ -25,6 +26,7 @@ def create_app():
 
     app.register_blueprint(users, url_prefix='/users')
     app.register_blueprint(callsigns, url_prefix='/callsigns')
+    app.register_blueprint(qsos, url_prefix='/qsos')
 
     @app.route("/")
     def index():
