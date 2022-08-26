@@ -1,12 +1,12 @@
+import datetime
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, IntegerField, BooleanField,\
                     RadioField, DateField, TimeField, SelectField
 from wtforms.validators import InputRequired, Length
 
 class QSOForm(FlaskForm):
-    qso_date = DateField('QSO Date', validators=[InputRequired()])
-    time_on = TimeField('QSO On Time',
-                                validators=[InputRequired()])
+    qso_date = DateField('QSO Date', validators=[InputRequired()], default=datetime.date.today)
+    time_on = TimeField('QSO On Time', validators=[InputRequired()], default=datetime.datetime.now)
     call = StringField('Call', validators=[InputRequired(),
                                             Length(max=50)])
     band = SelectField('Band',

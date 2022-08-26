@@ -3,7 +3,6 @@ from flask import Blueprint, flash, render_template, redirect, request, url_for
 from flask_login import login_required, current_user
 from logger.models import User, db, Callsign, QSO
 from logger.forms import QSOForm
-from logger.callsigns import views
 
 qsos = Blueprint('qsos', __name__, template_folder='templates')
 
@@ -23,5 +22,5 @@ def postnewqso(station_callsign):
                     band=band, gridsquare=gridsquare, my_gridsquare=my_gridsquare, station_callsign=station_callsign)
         db.session.add(newqso)
         db.session.commit()
-        return redirect(url_for(call(callsign=station_callsign)))
+        return redirect(url_for('callsigns.call',callsign=station_callsign))
     return render_template('qsoform.html', form=form, station_callsign=station_callsign)

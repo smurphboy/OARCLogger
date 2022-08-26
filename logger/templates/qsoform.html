@@ -1,99 +1,125 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} Add a New QSO {% endblock %}</h1>
-
+    <div class="bd-hero-heading">
+        <h1 class="title algolia-lvl0">
+            {% block title %} <p>Add a New QSO</p> {% endblock %}
+        </h1>
+        <div class="subtitle is-4 algolia-lvl1">
+            <p>Enter QSO details below and press Add:</p>     
+        </div>
+    </div>
     <form method="POST">
         {{ form.csrf_token }}
-        <p>
-            {{ form.qso_date.label }}
-            {{ form.qso_date }}
-        </p>
+        <div class="columns">
+            <div class="column">
+                <div class="field">
+                    {{ form.qso_date.label(class_="label") }}
+                    <div class="control">
+                    {{ form.qso_date(class_="input") }}
+                    </div>
+                </div>
 
-        {% if form.qso_date.errors %}
-            <ul class="errors">
-                {% for error in form.qso_date.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+                {% if form.qso_date.errors %}
+                    <ul class="errors">
+                        {% for error in form.qso_date.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
 
-        <p>
-            {{ form.time_on.label }} {{ form.time_on }}
-        </p>
+                <div class="field">
+                    {{ form.time_on.label(class_="label") }}
+                    <div class="control">
+                        {{ form.time_on(class_="input") }}
+                    </div>
+                </div>
 
-        {% if form.time_on.errors %}
-            <ul class="errors">
-                {% for error in form.time_on.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+                {% if form.time_on.errors %}
+                    <ul class="errors">
+                        {% for error in form.time_on.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
 
-        <p>
-            {{ form.call.label }}
-            {{ form.call() }}
-        </p>
+                <div class="field">
+                    {{ form.call.label(class_='label') }}
+                    <div class="control">
+                        {{ form.call(class_="input") }}
+                    </div>
+                </div>
 
-        {% if form.call.errors %}
-            <ul class="errors">
-                {% for error in form.call.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
 
-        <p>
-            {{ form.mode() }} {{ form.mode.label }}
-        </p>
+                {% if form.call.errors %}
+                    <ul class="errors">
+                        {% for error in form.call.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <div class="field">
+                    {{ form.mode.label(class_="label") }}
+                    <div class="select">
+                    {{ form.mode() }}
+                    </div>
+                </div>
 
-        {% if form.mode.errors %}
-            <ul class="errors">
-                {% for error in form.mode.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+                {% if form.mode.errors %}
+                    <ul class="errors">
+                        {% for error in form.mode.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="column">
+                <div class="field">
+                    {{ form.band.label(class_="label") }}
+                    <div class="select">
+                    {{ form.band() }}
+                    </div>
+                </div>
 
-        <p>
-            {{ form.band.label }}
-            {{ form.band() }}
-        </p>
+                {% if form.band.errors %}
+                    <ul class="errors">
+                        {% for error in form.band.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
 
-        {% if form.band.errors %}
-            <ul class="errors">
-                {% for error in form.band.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+                <div class="field">
+                    {{ form.gridsquare.label(class_='label') }}
+                    <div class="control">
+                        {{ form.gridsquare(class_="input") }}
+                    </div>
+                </div>
 
-        <p>
-            {{ form.gridsquare.label }}
-            {{ form.gridsquare() }}
-        </p>
+                {% if form.gridsquare.errors %}
+                    <ul class="errors">
+                        {% for error in form.gridsquare.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
 
-        {% if form.gridsquare.errors %}
-            <ul class="errors">
-                {% for error in form.gridsquare.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+                <div class="field">
+                    {{ form.my_gridsquare.label(class_='label') }}
+                    <div class="control">
+                        {{ form.my_gridsquare(class_="input") }}
+                    </div>
+                </div>
 
-        <p>
-            {{ form.my_gridsquare.label }}
-            {{ form.my_gridsquare() }}
-        </p>
-
-        {% if form.my_gridsquare.errors %}
-            <ul class="errors">
-                {% for error in form.my_gridsquare.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-
+                {% if form.my_gridsquare.errors %}
+                    <ul class="errors">
+                        {% for error in form.my_gridsquare.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
         <p>
             <input type="submit" value="Add">
         </p>
