@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<div class="bd-hero-heading">
+		<h1 class="title algolia-lvl0">
+			{% block title %} <p>Upload an ADI File</p> {% endblock %}
+		</h1>
+		<div class="subtitle is-4 algolia-lvl1">
+			<p>Select an ADI file (max 2MB) and click Submit to import</p>     
+		</div>
+	</div>
+    <form method = "POST" enctype = "multipart/form-data">
+        <input type = "file" name = "file" />
+    	<input type = "submit" value = "Submit" />
+	</form>
+{% endblock %}

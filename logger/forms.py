@@ -1,7 +1,7 @@
 import datetime
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, IntegerField, BooleanField,\
-                    RadioField, DateField, TimeField, SelectField
+                    RadioField, DateField, TimeField, SelectField, FileField, SubmitField
 from wtforms.validators import InputRequired, Length
 
 class QSOForm(FlaskForm):
@@ -20,3 +20,7 @@ class QSOForm(FlaskForm):
                                             Length(max=10)])
     my_gridsquare = StringField('My Gridsquare', validators=[InputRequired(),
                                             Length(max=10)])
+
+class QSOUploadForm(FlaskForm):
+    file = FileField('File')
+    submit = SubmitField('Submit')

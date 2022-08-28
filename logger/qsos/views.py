@@ -2,7 +2,7 @@ import datetime
 from flask import Blueprint, flash, render_template, redirect, request, url_for
 from flask_login import login_required, current_user
 from logger.models import User, db, Callsign, QSO
-from logger.forms import QSOForm
+from logger.forms import QSOForm, QSOUploadForm
 
 qsos = Blueprint('qsos', __name__, template_folder='templates')
 
@@ -24,3 +24,18 @@ def postnewqso(station_callsign):
         db.session.commit()
         return redirect(url_for('callsigns.call',callsign=station_callsign))
     return render_template('qsoform.html', form=form, station_callsign=station_callsign)
+
+@qsos.route("/<station_callsign>/upload", methods=['GET', 'POST'])
+def uploadqsos(station_callsign):
+    uploadform = QSOUploadForm()
+    if request.method == 'POST':
+        uploaded_file = request.files['file']
+        if uploaded_file.filename != '':
+            uploaded_file.save(uploaded_file.filename)
+        return redirect(url_for('callsigns.call',callsign=station_callsign))
+    return render_template('qsoupload.html')
+
+@qsos.route('/view/<call>/<date>/<time>')
+def viewqso(call, date, time):
+    qso = QSO.query.filter_by(call=call, qso_date=date, time_on=time).first()
+    return render_template('viewqso.html', qso=qso)
