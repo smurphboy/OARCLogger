@@ -46,21 +46,21 @@
                 <a class="pagination-next {% if qsos.page == qsos.pages %}is-disabled{% endif %}">Next page</a>
                 <ul class="pagination-list">
                     {% for page_num in qsos.iter_pages() %}
-                    {% if page_num %}
-                    {% if qsos.page == page_num %}
-                    <li>
-                        <a class="pagination-link is-current" href="{{ url_for('callsigns.call', callsign=station_callsign, page=page_num) }}" aria-label="Page {{ page_num }}" aria-current="page">{{ page_num }}</a>
-                    </li>
-                    {% else %}
-                    <li>
-                        <a class="pagination-link" href="{{ url_for('callsigns.call', callsign=station_callsign, page=page_num) }}" aria-label="Goto page {{ page_num }}"</a>
-                    </li>
-                    {% endif %}
-                    {% else %}
-                    <li>
-                        <span class="pagination-ellipsis">&hellip;</span>
-                    </li>
-                    {% endif %}
+                        {% if page_num %}
+                            {% if qsos.page == page_num %}
+                            <li>
+                                <a class="pagination-link is-current" href="{{ url_for('callsigns.call', callsign=station_callsign, page=page_num) }}" aria-label="Page {{ page_num }}" aria-current="page">{{ page_num }}</a>
+                            </li>
+                            {% else %}
+                            <li>
+                                <a class="pagination-link" href="{{ url_for('callsigns.call', callsign=station_callsign, page=page_num) }}" aria-label="Goto page {{ page_num }}"</a>
+                            </li>
+                            {% endif %}
+                        {% else %}
+                        <li>
+                            <span class="pagination-ellipsis">&hellip;</span>
+                        </li>
+                        {% endif %}
                     {% endfor %}
                 </ul>
             </nav>
