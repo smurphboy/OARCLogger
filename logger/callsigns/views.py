@@ -7,12 +7,14 @@ callsigns = Blueprint('callsigns', __name__, template_folder='templates')
 ROWS_PER_PAGE = 10
 
 @callsigns.route("/")
+@login_required
 def index():
     '''Callsign index. show who has what callsign'''
     callsignlist = Callsign.query.all()
     return render_template('callsignindex.html', callsigns=callsignlist)
 
 @callsigns.route("/<callsign>/qsos")
+@login_required
 def call(callsign):
     '''Homepage for a callsign. We should show a table of all the QSOs logged against
     this callsign.'''

@@ -5,6 +5,7 @@ from logger.callsigns.views import callsigns
 from logger.qsos.views import qsos
 from logger.config import Config
 from logger.models import db
+from flask_migrate import Migrate
 
 
 def create_app():
@@ -12,6 +13,7 @@ def create_app():
     app.config.from_object(Config)
 
     db.init_app(app)
+    migrate = Migrate(app, db, render_as_batch=True)
 
     login_manager = LoginManager()
     login_manager.login_view = 'users.login'
@@ -31,5 +33,9 @@ def create_app():
     @app.route("/")
     def index():
         return render_template('index.html')
+
+    @app.route("/about")
+    def about():
+        return render_template('about.html')
 
     return app

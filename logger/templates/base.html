@@ -12,14 +12,51 @@
 <body>
     <nav class="navbar">
         <div class="container">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="https://oarc.uk">
+                    <img src="{{ url_for('static', filename='OARCLogger.png') }}" width="112" height="28">
+                </a>
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
             <div id="navbarMenuHeroA" class="navbar-menu">
-                <div class="navbar-end">
-                    <div class="buttons">
-                        <a href="{{ url_for('users.index') }}" class="button">
+                <div id="navbarBasicExample" class="navbar-menu">
+                    <div class="navbar-start">
+                        <a href="{{ url_for('users.index') }}" class="navbar-item">
                             Home
                         </a>
+                        <a class="navbar-item">
+                            Documentation
+                        </a>
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link">
+                            More
+                            </a>
+                            <div class="navbar-dropdown">
+                                <a class="navbar-item" href="/about">
+                                    About
+                                </a>
+                                <a class="navbar-item">
+                                    Jobs
+                                </a>
+                                <a class="navbar-item">
+                                    Contact
+                                </a>
+                                <hr class="navbar-divider">
+                                <a class="navbar-item" href="https://github.com/smurphboy/OARCFieldDayLogger/issues">
+                                    Report an issue (Github)
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <div class="navbar-end">
+                    <div class="buttons">
+
                         {% if current_user.is_authenticated %}
-                        <a href="{{ url_for('users.profile', user='simon') }}" class="button is-light">
+                        <a href="{{ url_for('users.profile', user=current_user.name) }}" class="button is-light">
                             Profile
                         </a>
                         {% endif %}

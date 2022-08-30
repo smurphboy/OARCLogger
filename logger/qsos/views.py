@@ -7,6 +7,7 @@ from logger.forms import QSOForm, QSOUploadForm
 qsos = Blueprint('qsos', __name__, template_folder='templates')
 
 @qsos.route("/<station_callsign>/new", methods=['GET','POST'])
+@login_required
 def postnewqso(station_callsign):
     form = QSOForm()
     if request.method == 'POST':
@@ -26,6 +27,7 @@ def postnewqso(station_callsign):
     return render_template('qsoform.html', form=form, station_callsign=station_callsign)
 
 @qsos.route("/<station_callsign>/upload", methods=['GET', 'POST'])
+@login_required
 def uploadqsos(station_callsign):
     uploadform = QSOUploadForm()
     if request.method == 'POST':
@@ -36,6 +38,7 @@ def uploadqsos(station_callsign):
     return render_template('qsoupload.html')
 
 @qsos.route('/view/<call>/<date>/<time>')
+@login_required
 def viewqso(call, date, time):
     call = call.replace('_', '/')
     qso = QSO.query.filter_by(call=call, qso_date=date, time_on=time).first()

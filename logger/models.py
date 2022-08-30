@@ -17,6 +17,7 @@ class Callsign(db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
     name = db.Column(db.String(1000), unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    primary = db.Column(db.Boolean, default=False)
 
 class QSO(db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy

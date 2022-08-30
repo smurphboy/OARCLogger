@@ -46,7 +46,7 @@ def login_post():
     login_user(user, remember=remember)
     user.last_login = datetime.now()
     db.session.commit()
-    return redirect(url_for('users.profile', user=user.name))
+    return redirect(url_for('users.profile', user=current_user.name))
 
 @users.route('/signup')
 def signup():
