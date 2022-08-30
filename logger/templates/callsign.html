@@ -42,8 +42,8 @@
                 </tbody>
             </table>
             <nav class="pagination" role="navigation" aria-label="pagination">
-                <a class="pagination-previous {% if qsos.has_prev %}" href="{{ url_for('callsigns.call', callsign=station_callsign, page=qsos.prev_num) }}"{% else %}is-disabled" {% endif %} title="This is the first page">Previous</a>
-                <a class="pagination-next {% if qsos.has_next %}" href="{{ url_for('callsigns.call', callsign=station_callsign, page=qsos.next_num) }}"{% else %}is-disabled" {% endif %}>Next page</a>
+                <a class="pagination-previous" {% if qsos.has_prev %}href="{{ url_for('callsigns.call', callsign=station_callsign, page=qsos.prev_num) }}"{% else %}disabled {% endif %} title="This is the first page">Previous</a>
+                <a class="pagination-next" {% if qsos.has_next %}href="{{ url_for('callsigns.call', callsign=station_callsign, page=qsos.next_num) }}"{% else %}disabled {% endif %}>Next page</a>
                 <ul class="pagination-list">
                     {% for page_num in qsos.iter_pages() %}
                         {% if qsos.page != page_num %}
@@ -58,6 +58,16 @@
                     {% endfor %}
                 </ul>
             </nav>
+        </div>
+    </section>
+    <section>
+        <div class="box">
+            <div class="level">
+                <div class="level-left">
+                    <p class="level-item">Add a new QSO for this callsign</p>
+                    <a class="button is-link level-item" disabled>Add QSO</a>
+                </div>
+            </div>
         </div>
     </section>
 {% endblock %}

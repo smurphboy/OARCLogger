@@ -1,23 +1,50 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="title">
-  Welcome, {{ name }}
-</h1>
-{% if (callsigns is defined) and callsigns %}
-<h2>
-  You have the following callsigns
-</h2>
-{% endif %}
-<h2>
-        <ul>
-        {% for callsign in callsigns %}
-               <li> <a href="{{ url_for ('callsigns.call', callsign=callsign['name'] | replace('/','_'))  }}">{{ callsign['name'] }}</a> which has {{ qsocount(callsign.name) }} QSOs and last QSOs was on </li>
-        {% else %}
-        You have no callsigns defined, please add one.   
-        
-        <button class="button is-link" onclick='window.location.href="https://twitter.com/home?lang=en";'>Add Callsign</button>
-        {% endfor %}
-        </ul>
-</h2>
+		<div class="bd-hero-heading">
+			<h1 class="title algolia-lvl0">
+				{% block title %} <p>Welcome, {{ name }}</p> {% endblock %}
+			</h1>
+			{% if (callsigns is defined) and callsigns %}
+			<div class="subtitle is-4 algolia-lvl1">
+				<p>You have the following callsigns</p>     
+			</div>
+			{% endif %}
+		</div>
+    </div>
+</section>
+<section>
+	<div class="box">
+		{% for callsign in callsigns %}
+		<div class="level">
+			<div class="level-left">
+				<a class="level-item" href="{{ url_for ('callsigns.call', callsign=callsign['name'] | replace('/','_'))  }}">{{ callsign['name'] }}</a><p class="level-item">which has {{ qsocount(callsign.name) }} QSOs{% if latestqso(callsign.name) != 'N/A' %} and that last QSO was on {{ latestqso(callsign.name) }}{% endif %}</p>
+			</div>
+			<div class="level-right">
+				<a class="button is-link level-item" href="{{ url_for('qsos.postnewqso', station_callsign=callsign.name | replace('/','_')) }}">Log New QSO</a>
+				<a class="button is-link level-item" disabled>Import ADI File</a>
+			</div>
+		</div>
+		{% else %}
+		<div class="level">
+			<div class="level-left">
+				<p class="level-item">You have no callsigns defined, please add one.</p>
+			</div>
+			<div class="level-right">
+				<button class="button level-item is-link" onclick='window.location.href="https://twitter.com/home?lang=en";'>Add Callsign</button>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+</section>
+<section>
+	<div class="box">
+		<div class="level">
+			<div class="level-left">
+				<p class="level-item">Add a new callsign</p>
+				<a class="button is-link level-item" disabled>Add a callsign</a>
+			</div>
+		</div>
+	</div>
+</section>
 {% endblock %}
