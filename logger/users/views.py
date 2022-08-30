@@ -2,9 +2,17 @@ from datetime import datetime
 from flask import Blueprint, flash, render_template, redirect, request, url_for
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from logger.models import User, db
+from logger.models import QSO, User, db
+from sqlalchemy import desc
 
 users = Blueprint('users', __name__, template_folder='templates')
+
+@users.context_processor
+def utility_processor():
+    def qsocount(logbook):
+        '''returns the total number of QSOs in the logbook and date and time of last QSO'''
+        return QSO.query.filter_by(station_callsign=logbook).count()
+    return dict(qsocount=qsocount)
 
 @users.route("/")
 def index():

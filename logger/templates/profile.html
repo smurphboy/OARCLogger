@@ -12,7 +12,7 @@
 <h2>
         <ul>
         {% for callsign in callsigns %}
-               <li> <a href="{{ url_for ('callsigns.call', callsign=callsign['name'] | replace('/','_'))  }}">{{ callsign['name'] }}</a></li>
+               <li> <a href="{{ url_for ('callsigns.call', callsign=callsign['name'] | replace('/','_'))  }}">{{ callsign['name'] }}</a> which has {{ qsocount(callsign.name) }} QSOs and last QSOs was on </li>
         {% else %}
         You have no callsigns defined, please add one.   
         

@@ -28,9 +28,20 @@
                         <a href="{{ url_for('users.index') }}" class="navbar-item">
                             Home
                         </a>
-                        <a class="navbar-item">
-                            Documentation
-                        </a>
+                        {% if current_user.is_authenticated %}
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link">
+                            {{ current_user.name }}'s Logbooks
+                            </a>
+                            <div class="navbar-dropdown">
+                            {% for call in current_user.callsigns %}
+                                <a class="navbar-item" href="{{ url_for('callsigns.call', callsign=call.name | replace('/','_')) }}">
+                                    {{ call.name }}
+                                </a>
+                            {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
                         <div class="navbar-item has-dropdown is-hoverable">
                             <a class="navbar-link">
                             More
@@ -38,12 +49,6 @@
                             <div class="navbar-dropdown">
                                 <a class="navbar-item" href="/about">
                                     About
-                                </a>
-                                <a class="navbar-item">
-                                    Jobs
-                                </a>
-                                <a class="navbar-item">
-                                    Contact
                                 </a>
                                 <hr class="navbar-divider">
                                 <a class="navbar-item" href="https://github.com/smurphboy/OARCFieldDayLogger/issues">
