@@ -38,4 +38,9 @@ def create_app():
     def about():
         return render_template('about.html')
 
+    @app.template_filter()
+    def MhzFormat(value):
+        value = float(value)/1000000
+        return "{:,.6f} MHz".format(value)
+
     return app

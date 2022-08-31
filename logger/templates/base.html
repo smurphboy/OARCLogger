@@ -6,7 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>OARC Autumn Portable Day Logger</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+    <script src="https://kit.fontawesome.com/0b3761f75b.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -83,7 +84,7 @@
             </div>
         </div>
     </nav>
-    <section class="hero is-primary">
+    <section class="hero {% block hero %}is-light{% endblock %}">
         <div class="hero-body">
             {% block content %}
             {% endblock %}

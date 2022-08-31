@@ -23,9 +23,11 @@ class Callsign(db.Model):
 class QSO(db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
     band = db.Column(db.String(25))
+    band_rx = db.Column(db.String(25))
     mode = db.Column(db.String(25))
     submode = db.Column(db.String(25))
     freq = db.Column(db.String(25))
+    freq_rx = db.Column(db.String(25))
     call = db.Column(db.String(50))
     station_callsign = db.Column(db.String(50))
     operator = db.Column(db.String(50))

@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 
+{% block hero %}is-primary{% endblock %}
 {% block content %}
             <div class="bd-hero-heading">
-                <h1 class="title algolia-lvl0">
-                    {% block title %} <p>QSOs for {{ station_callsign }}</p> {% endblock %}
+                <h1 class="title is-size-1">
+                    {% block title %} QSOs for {{ station_callsign }} {% endblock %}
                 </h1>
                 <div class="subtitle is-4 algolia-lvl1">
                     <p>{{ allqsos|length }} QSOs for this callsign.</p>     

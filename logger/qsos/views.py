@@ -43,3 +43,4 @@ def viewqso(call, date, time):
     call = call.replace('_', '/')
     qso = QSO.query.filter_by(call=call, qso_date=date, time_on=time).first()
     return render_template('viewqso.html', qso=qso)
+

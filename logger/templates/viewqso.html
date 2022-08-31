@@ -1,32 +1,185 @@
 {% extends 'base.html' %}
-
+{% block hero %}is-primary{% endblock %}
 {% block content %}
-	<div class="bd-hero-heading">
-		<h1 class="title algolia-lvl0">
-			{% block title %} <p>View a QSO</p> {% endblock %}
-		</h1>
-		<div class="subtitle is-4 algolia-lvl1">
-			<p>QSO from {{ qso.station_callsign }} to {{ qso.call }} on {{ qso.qso_date }} at {{ qso.time_on }}</p>     
+		<div class="bd-hero-heading">
+			<h1 class="title algolia-lvl0">
+				{% block title %} <p>View a QSO</p> {% endblock %}
+			</h1>
+			<div class="subtitle is-4 algolia-lvl1">
+				<p>QSO from {{ qso.station_callsign }} to {{ qso.call }} on {{ qso.qso_date }} at {{ qso.time_on }}</p>     
+			</div>
 		</div>
 	</div>
-        <div class="tile is-ancestor">
-                <div class="tile is-4 is-vertical is-parent">
-                        <div class="tile is-child box">
-                                <p class="title has-text-grey">Date & Time</p>
-                                <p>Date: {{ qso.qso_date }} </p>
-                                <p>Time: {{ qso.time_on }} </p>
-
-                        </div>
-                        <div class="tile is-child box">
-                                <p class="title has-text-grey">Bands & Modes</p>
-                                <p>Band: {{ qso.band }} </p>
-                                <p>Mode: {{ qso.mode }} </p>
-                        </div>
-                </div>
-                <div class="tile is-parent">
-                        <div class="tile is-child box">
-                                <p class="title has-text-grey">Locations</p>
-                        </div>
-                </div>
-        </div>
+</section>
+<section>
+	<div class="box">
+		<div class="columns">
+			<div class="column">
+				<div class="box">
+					<p class="title has-text-grey">Date & Time</p>
+					<nav class="level">
+						<div class="level-left">
+							<div class="level-item">
+								<div class="icon-text">
+									<span class="icon">
+										<i class="far fa-calendar"></i>
+									</span>
+									<span>QSO Date: {{ qso.qso_date }}</span>
+								</div>
+							</div>
+						</div>
+						{% if qso.qso_date_off %}
+						<div class="level-right">
+							<div class="level-item">
+								<div class="icon-text">
+									<span class="icon">
+										<i class="far fa-calendar"></i>
+									</span>
+									<span>QSO Date Off: {{ qso.qso_date_off }}</span>
+								</div>
+							</div>
+						</div>
+						{% endif %}
+					</nav>
+					<nav class="level">
+						<div class="level-left">
+							<div class="level-item">
+								<div class="icon-text">
+									<span class="icon">
+										<i class="far fa-clock"></i>
+									</span>
+									<span>QSO Time On: {{ qso.time_on }}</span>
+								</div>
+							</div>
+						</div>
+						{% if qso.time_off %}
+						<div class="level-right">
+							<div class="level-item">
+								<div class="icon-text">
+									<span class="icon">
+										<i class="far fa-clock"></i>
+									</span>
+									<span>QSO Date Off: {{ qso.time_off }}</span>
+								</div>
+							</div>
+						</div>
+						{% endif %}
+					</nav>
+				</div>
+				<div class="box">
+					<p class="title has-text-grey">Bands & Modes</p>
+					<nav class="level">
+						<div class="level-left">
+							<div class="level-item">
+								<div class="icon-text">
+									<span class="icon">
+										<i class="fa-solid fa-tower-broadcast"></i>
+									</span>
+									<span>Band: {{ qso.band }}</span>
+								</div>
+							</div>
+						</div>
+						{% if qso.band_rx %}
+						<div class="level-right">
+							<div class="level-item">
+								<div class="icon-text">
+									<span class="icon">
+										<i class="fa-solid fa-tower-broadcast"></i>
+									</span>
+									<span>Band RX: {{ qso.band_rx }}</span>
+								</div>
+							</div>
+						</div>
+						{% endif %}
+					</nav>
+					{% if qso.freq or qso.freq_rx %}
+					<nav class="level">
+						{% if qso.freq %}
+						<div class="level-left">
+							<div class="level-item">
+								<div class="icon-text">
+									<span class="icon">
+										<i class="fa-solid fa-tower-broadcast"></i>
+									</span>
+									<span>Freq: {{ qso.freq | MhzFormat }}</span>
+								</div>
+							</div>
+						</div>
+						{% endif %}
+						{% if qso.freq_rx %}
+						<div class="level-right">
+							<div class="level-item">
+								<div class="icon-text">
+									<span class="icon">
+										<i class="fa-solid fa-tower-broadcast"></i>
+									</span>
+									<span>Freq RX: {{ qso.freq_rx | MhzFormat }}</span>
+								</div>
+							</div>
+						</div>
+						{% endif %}
+					</nav>
+					{% endif %}
+					<nav class="level">
+						<div class="level-left">
+							<div class="level-item">
+								<div class="icon-text">
+									<span class="icon">
+										<i class="fa-solid fa-wave-square"></i>
+									</span>
+									<span>Mode: {{ qso.mode }}</span>
+								</div>
+							</div>
+						</div>
+						{% if qso.submode %}
+						<div class="level-right">
+							<div class="level-item">
+								<div class="icon-text">
+									<span class="icon">
+										<i class="fa-solid fa-wave-square"></i>
+									</span>
+									<span>Freq: {{ qso.submode }}</span>
+								</div>
+							</div>
+						</div>
+						{% endif %}
+					</nav>
+					{% if qso.sat_mode or qso.sat_name %}
+					<nav class="level">
+						{% if qso.sat_name %}
+						<div class="level-left">
+							<div class="level-item">
+								<div class="icon-text">
+									<span class="icon">
+										<i class="fa-solid fa-satellite"></i>
+									</span>
+									<span>Sat Name: {{ qso.sat_name}}</span>
+								</div>
+							</div>
+						</div>
+						{% endif %}
+						{% if qso.sat_mode %}
+						<div class="level-right">
+							<div class="level-item">
+								<div class="icon-text">
+									<span class="icon">
+										<i class="fa-solid fa-satellite"></i>
+									</span>
+									<span>Sat Mode: {{ qso.sat_mode }}</span>
+								</div>
+							</div>
+						</div>
+						{% endif %}
+					</nav>
+					{% endif %}
+				</div>
+			</div>
+			<div class="column">
+				<div class="box">
+						<p class="title has-text-grey">Locations</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
 {% endblock %}
