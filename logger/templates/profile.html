@@ -13,7 +13,7 @@
 		</div>
     </div>
 </section>
-<section>
+<section class="section">
 	<div class="box">
 		{% for callsign in callsigns %}
 		<div class="level">
@@ -21,8 +21,8 @@
 				<a class="level-item" href="{{ url_for ('callsigns.call', callsign=callsign['name'] | replace('/','_'))  }}">{{ callsign['name'] }}</a><p class="level-item">which has {{ qsocount(callsign.name) }} QSOs{% if latestqso(callsign.name) != 'N/A' %} and that last QSO was on {{ latestqso(callsign.name) }}{% endif %}</p>
 			</div>
 			<div class="level-right">
+				<a class="button is-link level-item" href="{{ url_for ('callsigns.call', callsign=callsign['name'] | replace('/','_'))  }}">View QSOs</a>
 				<a class="button is-link level-item" href="{{ url_for('qsos.postnewqso', station_callsign=callsign.name | replace('/','_')) }}">Log New QSO</a>
-				<a class="button is-link level-item" disabled>Import ADI File</a>
 			</div>
 		</div>
 		{% else %}
@@ -36,13 +36,15 @@
 		</div>
 		{% endfor %}
 	</div>
-</section>
-<section>
 	<div class="box">
 		<div class="level">
 			<div class="level-left">
 				<p class="level-item">Add a new callsign</p>
 				<a class="button is-link level-item" disabled>Add a callsign</a>
+			</div>
+			<div class="level-right">
+				<p>Click to select and import an ADI file.</p>
+				<a class="button is-link level-item" href="{{ url_for('qsos.uploadqsos', user=current_user.name )}} ">Select ADI File</a>
 			</div>
 		</div>
 	</div>

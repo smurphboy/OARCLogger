@@ -28,9 +28,9 @@ def postnewqso(station_callsign):
         return redirect(url_for('callsigns.call',callsign=station_callsign))
     return render_template('qsoform.html', form=form, station_callsign=station_callsign)
 
-@qsos.route("/<station_callsign>/upload", methods=['GET', 'POST'])
+@qsos.route("/<user>/upload", methods=['GET', 'POST'])
 @login_required
-def uploadqsos(station_callsign):
+def uploadqsos(user):
     uploadform = QSOUploadForm()
     if request.method == 'POST':
         uploaded_file = request.files['file']
@@ -41,7 +41,7 @@ def uploadqsos(station_callsign):
                 print('abort')
                 abort(400)
             uploaded_file.save(os.path.join(current_app.root_path, 'static/adi/', current_user.get_id(),'.adi')) #we store the file in static/adi/<user.id>
-        return redirect(url_for('callsigns.call',callsign=station_callsign))
+        return redirect(url_for('callsigns.call',callsign=user.callsigns.filter_by(primary='Y').one().name))
     return render_template('qsoupload.html')
 
 @qsos.route('/view/<call>/<date>/<time>')
