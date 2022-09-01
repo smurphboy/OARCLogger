@@ -1,16 +1,52 @@
 {% extends 'base.html' %}
 
 {% block content %}
-	<div class="bd-hero-heading">
-		<h1 class="title algolia-lvl0">
-			{% block title %} <p>Upload an ADI File</p> {% endblock %}
-		</h1>
-		<div class="subtitle is-4 algolia-lvl1">
-			<p>Select an ADI file (max 2MB) and click Submit to import</p>     
-		</div>
-	</div>
-    <form method = "POST" enctype = "multipart/form-data">
-        <input type = "file" name = "file" />
-    	<input type = "submit" value = "Submit" />
-	</form>
+        <div class="bd-hero-heading">
+            <h1 class="title algolia-lvl0">
+                {% block title %} <p>Upload an ADI File</p> {% endblock %}
+            </h1>
+            <div class="subtitle is-4 algolia-lvl1">
+                <p>Select an ADI file (max 2MB) and click Submit to import</p>     
+            </div>
+        </div>
+    </div>
+</section>
+<section class="section">
+    <div class="box">
+        <form method = "POST" enctype = "multipart/form-data">
+            <div id="file-js-example" class="file is-centered is-boxed is-success has-name">
+                <label class="file-label">
+                    <input class="file-input" type = "file" name = "file">
+                    <span class="file-cta">
+                        <span class="file-icon">
+                            <i class="fas fa-upload"></i>
+                        </span>
+                        <span class="file-label">
+                        Choose a file…
+                        </span>
+                    </span>
+                    <span class="file-name">
+                        No file selected
+                    </span>
+                </label>
+            </div>
+        <nav class="level">
+            <div class="level-item">
+                <h3 class="title">Click to submit selected file
+                <input class="button is-link" type = "submit" value = "Submit" /></h3>
+            </div>
+        </nav>
+        </form>
+    </div>
+</section>
+
+    <script>
+        const fileInput = document.querySelector('#file-js-example input[type=file]');
+        fileInput.onchange = () => {
+          if (fileInput.files.length > 0) {
+            const fileName = document.querySelector('#file-js-example .file-name');
+            fileName.textContent = fileInput.files[0].name;
+          }
+        }
+      </script>
 {% endblock %}

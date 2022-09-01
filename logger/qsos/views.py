@@ -1,8 +1,10 @@
 import datetime
-from flask import Blueprint, flash, render_template, redirect, request, url_for
+import os
+from flask import Blueprint, flash, render_template, redirect, request, url_for, abort, current_app
 from flask_login import login_required, current_user
 from logger.models import User, db, Callsign, QSO
 from logger.forms import QSOForm, QSOUploadForm
+from werkzeug.utils import secure_filename
 
 qsos = Blueprint('qsos', __name__, template_folder='templates')
 
@@ -32,8 +34,13 @@ def uploadqsos(station_callsign):
     uploadform = QSOUploadForm()
     if request.method == 'POST':
         uploaded_file = request.files['file']
-        if uploaded_file.filename != '':
-            uploaded_file.save(uploaded_file.filename)
+        filename = secure_filename(uploaded_file.filename)
+        if filename != '':
+            file_ext = os.path.splitext(filename)[1]
+            if file_ext not in current_app.config['UPLOAD_EXTENSIONS']:
+                print('abort')
+                abort(400)
+            uploaded_file.save(os.path.join(current_app.root_path, 'static/adi/', current_user.get_id(),'.adi')) #we store the file in static/adi/<user.id>
         return redirect(url_for('callsigns.call',callsign=station_callsign))
     return render_template('qsoupload.html')
 
@@ -43,4 +50,9 @@ def viewqso(call, date, time):
     call = call.replace('_', '/')
     qso = QSO.query.filter_by(call=call, qso_date=date, time_on=time).first()
     return render_template('viewqso.html', qso=qso)
+
+@qsos.errorhandler(400)
+def page_not_found(e):
+    # note that we set the 400 status explicitly
+    return render_template('400.html'), 400
 

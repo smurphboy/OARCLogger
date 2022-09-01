@@ -19,3 +19,4 @@ class Config:
     TEMPLATES_FOLDER = 'templates'
     SQLALCHEMY_DATABASE_URI = 'sqlite:///db.sqlite'
     MAX_CONTENT_LENGTH = 1024 * 1024 * 2
+    UPLOAD_EXTENSIONS = '*.adi'

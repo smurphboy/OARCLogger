@@ -2,17 +2,17 @@
 {% block hero %}is-primary{% endblock %}
 {% block content %}
 		<div class="bd-hero-heading">
-			<h1 class="title algolia-lvl0">
+			<h1 class="title is-size-1">
 				{% block title %} <p>View a QSO</p> {% endblock %}
 			</h1>
-			<div class="subtitle is-4 algolia-lvl1">
-				<p>QSO from {{ qso.station_callsign }} to {{ qso.call }} on {{ qso.qso_date }} at {{ qso.time_on }}</p>     
-			</div>
 		</div>
 	</div>
 </section>
-<section>
+<section class="section">
 	<div class="box">
+        <h3 class="title">QSO from <a href="{{ url_for('callsigns.call', callsign=qso.station_callsign) }}">{{ qso.station_callsign }}</a> to {{ qso.call }} on {{ qso.qso_date }} at {{ qso.time_on }}</h3>
+    </div>
+    <div class="box">
 		<div class="columns">
 			<div class="column">
 				<div class="box">
