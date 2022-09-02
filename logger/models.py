@@ -2,7 +2,7 @@ import datetime
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 
-DATE_FIELDS = ['qso_date', 'qso_date_off', 'lotw_qslsdate', 'eqsl_qslsdate', 'qrzcom_qso_upload_date']
+DATE_FIELDS = ['qso_date', 'qso_date_off', 'lotw_qslsdate', 'eqsl_qslsdate', 'qrzcom_qso_upload_date', 'lotw_qslrdate', 'eqsl_qslrdate', 'qslrdate', 'qslsdate']
 TIME_FIELDS = ['time_on', 'time_off']
 
 # init SQLAlchemy so we can use it later in our models
@@ -76,12 +76,16 @@ class QSO(db.Model):
     qsl_rcvd_via = db.Column(db.String(3))
     qsl_sent = db.Column(db.String(3))
     qsl_sent_via = db.Column(db.String(3))
+    qslrdate = db.Column(db.Date())
+    qslsdate = db.Column(db.Date())
     lotw_qsl_rcvd = db.Column(db.String(3))
     lotw_qsl_sent = db.Column(db.String(3))
     lotw_qslsdate = db.Column(db.Date())
+    lotw_qslrdate = db.Column(db.Date())
     eqsl_qsl_rcvd = db.Column(db.String(3))
     eqsl_qsl_sent = db.Column(db.String(3))
     eqsl_qslsdate = db.Column(db.Date())
+    eqsl_qslrdate = db.Column(db.Date())
     qrzcom_qso_upload_status = db.Column(db.String(3))
     qrzcom_qso_upload_date = db.Column(db.Date())
     address = db.Column(db.String(50))
@@ -103,6 +107,7 @@ class QSO(db.Model):
     lon = db.Column(db.String(11))
     my_lon = db.Column(db.String(11))
     pfx = db.Column(db.String(15))
+    contest_id = db.Column(db.String(50))
 
     def update(self, update_dictionary: dict):
         for col_name in self.__table__.columns.keys():

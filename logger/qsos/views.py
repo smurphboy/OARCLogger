@@ -5,6 +5,7 @@ from flask import Blueprint, flash, render_template, redirect, request, url_for,
 from flask_login import login_required, current_user
 from logger.models import User, db, Callsign, QSO
 from logger.forms import QSOForm, QSOUploadForm
+from pathlib import Path
 from werkzeug.utils import secure_filename
 
 qsos = Blueprint('qsos', __name__, template_folder='templates')
@@ -37,13 +38,17 @@ def uploadqsos(user):
         uploaded_file = request.files['file']
         filename = secure_filename(uploaded_file.filename)
         if filename != '':
-            file_ext = os.path.splitext(filename)[1]
+            file_ext = Path(filename).suffix
             if file_ext not in current_app.config['UPLOAD_EXTENSIONS']:
                 print('abort')
                 abort(400)
-            uploaded_file.save(os.path.join(current_app.root_path, 'static\\adi\\', (current_user.get_id()+'.adi'))) #we store the file in static/adi/<user.id>
+            user_file = (current_user.get_id() + '.adi')
+            file_path = Path(current_app.root_path)
+            file_path = file_path / "static/adi" / user_file
+            print(file_path)
+            uploaded_file.save(file_path) #we store the file in static/adi/<user.id>
             #we have a valid adi file saved as the <user id>.adi. Next to load and parse it.
-            qsos_raw, adif_header = adif_io.read_from_file(os.path.join(current_app.root_path, 'static\\adi\\', (current_user.get_id()+'.adi')))
+            qsos_raw, adif_header = adif_io.read_from_file(file_path)
             print('QSOs: ', len(qsos_raw))
             for qso in qsos_raw:
                 print('qso')
