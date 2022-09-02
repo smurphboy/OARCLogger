@@ -1,6 +1,9 @@
-from mimetypes import common_types
+import datetime
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
+
+DATE_FIELDS = ['qso_date', 'qso_date_off', 'lotw_qslsdate', 'eqsl_qslsdate', 'qrzcom_qso_upload_date']
+TIME_FIELDS = ['time_on', 'time_off']
 
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()
@@ -101,11 +104,27 @@ class QSO(db.Model):
     my_lon = db.Column(db.String(11))
     pfx = db.Column(db.String(15))
 
-
     def update(self, update_dictionary: dict):
         for col_name in self.__table__.columns.keys():
-            if col_name in update_dictionary:
-                setattr(self, col_name, update_dictionary[col_name])
-        
+            if col_name.upper() in update_dictionary:
+                setattr(self, col_name, update_dictionary[col_name.lower()])
         db.session.add(self)
         db.session.commit()
+        print('committed')
+    
+    def create(self, update_dictionary: dict):
+        for col_name in update_dictionary:
+            if hasattr(self, col_name.lower()):
+                if col_name.lower() in DATE_FIELDS:
+                    print(col_name, update_dictionary[col_name])
+                    setattr(self, col_name.lower(), datetime.datetime.strptime(update_dictionary[col_name], '%Y%m%d').date())
+                elif col_name.lower() in TIME_FIELDS:
+                    print(col_name, update_dictionary[col_name])
+                    setattr(self, col_name.lower(), datetime.datetime.strptime(update_dictionary[col_name], '%H%M%S').time())
+                else:
+                    setattr(self, col_name.lower(), update_dictionary[col_name])
+            else:
+                print(col_name.lower(), ': not found')
+        db.session.add(self)
+        db.session.commit()
+        print('created')

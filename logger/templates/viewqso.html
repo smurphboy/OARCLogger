@@ -10,7 +10,7 @@
 </section>
 <section class="section">
 	<div class="box">
-        <h3 class="title">QSO from <a href="{{ url_for('callsigns.call', callsign=qso.station_callsign) }}">{{ qso.station_callsign }}</a> to {{ qso.call }} on {{ qso.qso_date }} at {{ qso.time_on }}</h3>
+        <h3 class="title">QSO from <a href="{{ url_for('callsigns.call', callsign=qso.station_callsign | replace('/', '_')) }}">{{ qso.station_callsign }}</a> to {{ qso.call }} on {{ qso.qso_date }} at {{ qso.time_on }}</h3>
     </div>
     <div class="box">
 		<div class="columns">
@@ -138,7 +138,7 @@
 									<span class="icon">
 										<i class="fa-solid fa-wave-square"></i>
 									</span>
-									<span>Freq: {{ qso.submode }}</span>
+									<span>Submode: {{ qso.submode }}</span>
 								</div>
 							</div>
 						</div>

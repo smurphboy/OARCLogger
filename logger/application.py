@@ -40,7 +40,7 @@ def create_app():
 
     @app.template_filter()
     def MhzFormat(value):
-        value = float(value)/1000000
+        value = float(value)
         return "{:,.6f} MHz".format(value)
 
     return app

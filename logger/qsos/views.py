@@ -1,5 +1,6 @@
 import datetime
 import os
+import adif_io
 from flask import Blueprint, flash, render_template, redirect, request, url_for, abort, current_app
 from flask_login import login_required, current_user
 from logger.models import User, db, Callsign, QSO
@@ -40,8 +41,16 @@ def uploadqsos(user):
             if file_ext not in current_app.config['UPLOAD_EXTENSIONS']:
                 print('abort')
                 abort(400)
-            uploaded_file.save(os.path.join(current_app.root_path, 'static/adi/', current_user.get_id(),'.adi')) #we store the file in static/adi/<user.id>
-        return redirect(url_for('callsigns.call',callsign=user.callsigns.filter_by(primary='Y').one().name))
+            uploaded_file.save(os.path.join(current_app.root_path, 'static\\adi\\', (current_user.get_id()+'.adi'))) #we store the file in static/adi/<user.id>
+            #we have a valid adi file saved as the <user id>.adi. Next to load and parse it.
+            qsos_raw, adif_header = adif_io.read_from_file(os.path.join(current_app.root_path, 'static\\adi\\', (current_user.get_id()+'.adi')))
+            print('QSOs: ', len(qsos_raw))
+            for qso in qsos_raw:
+                print('qso')
+                newqso = QSO()
+                newqso.create(update_dictionary=qso)
+
+        return redirect(url_for('users.profile',user=current_user.name))
     return render_template('qsoupload.html')
 
 @qsos.route('/view/<call>/<date>/<time>')
