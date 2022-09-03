@@ -8,6 +8,9 @@
     <title>OARC Autumn Portable Day Logger</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
     <script src="https://kit.fontawesome.com/0b3761f75b.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@6.5.95/css/materialdesignicons.min.css" />
+    {% block scripts %}
+    {% endblock %}
 </head>
 
 <body>
@@ -90,6 +93,8 @@
             {% endblock %}
         </div>
     </section>
+    {% block bottombody %}
+    {% endblock %}
 </body>
 <footer class="footer">
     <div class="content has-text-centered">
