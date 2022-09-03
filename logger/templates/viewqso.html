@@ -343,6 +343,7 @@
   // Functions to open and close a modal
   function openModal($el) {
     $el.classList.add('is-active');
+    map.invalidateSize();
   }
 
   function closeModal($el) {
@@ -362,7 +363,6 @@
 
     $trigger.addEventListener('click', () => {
       openModal($target);
-      window.resizeTo(40, 400);
     });
   });
 
