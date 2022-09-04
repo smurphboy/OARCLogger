@@ -8,6 +8,8 @@
    integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
    crossorigin=""></script>
 <script src="https://ha8tks.github.io/Leaflet.Maidenhead/src/L.Maidenhead.js"></script>
+<link rel="stylesheet" href="/static/css/leaflet.awesome-markers.css">
+<script src="/static/js/leaflet.awesome-markers.js"></script>
 {% endblock %}
 {% block hero %}is-primary{% endblock %}
 {% block content %}
@@ -312,6 +314,7 @@
 </section>
 {% endblock %}
 {% block bottombody %}
+{% if qso.gridsquare or qso.my_gridsquare %}
 <div id="modal-js-map" class="modal">
     <div class="modal-background"></div>
     <div class="modal-card">
@@ -322,14 +325,21 @@
         <section class="modal-card-body">
             <div class="box is-clipped" id="map" style="height : 500px;">
                 <script>
-                var map = L.map('map').setView([51.505, -0.09], 13);
-                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                var map = L.map('map' ,{
+                    center: [51.505, -0.09],
+                    zoom: 13
+                });
+                var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 19,
                     attribution: '© OpenStreetMap'
                 }).addTo(map);
-                L.maidenhead({
+                var layerGroup = L.featureGroup().addTo(map);
+                L.marker([ {{ "%.6f"|format(markers.mgslat) }} , {{ "%.6f"|format(markers.mgslong) }} ], {icon: L.AwesomeMarkers.icon({icon: 'home', prefix: 'fa', markerColor: 'green'}) }).addTo(layerGroup);
+//                L.marker([ {{ "%.6f"|format(markers.gslat) }} , {{ "%.6f"|format(markers.gslong)}} ], {icon: L.AwesomeMarkers.icon({icon: 'coffee', prefix: 'fa', markerColor: 'red', iconColor: '#f28f82'}) }).addTo(layerGroup);
+                var maidenhead =  L.maidenhead({
                     color : 'rgba(255, 0, 0, 0.4)'
                 }).addTo(map);
+                map.fitBounds(layerGroup.getBounds().pad(0.5)); 
                 </script>
                 <!-- Your content -->
             </div>
@@ -385,4 +395,5 @@
   });
 });
 </script>
+{% endif %}
 {% endblock %}

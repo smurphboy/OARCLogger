@@ -5,6 +5,7 @@ from flask import Blueprint, flash, render_template, redirect, request, url_for,
 from flask_login import login_required, current_user
 from logger.models import User, db, Callsign, QSO
 from logger.forms import QSOForm, QSOUploadForm
+import maidenhead as mh
 from pathlib import Path
 from werkzeug.utils import secure_filename
 
@@ -63,7 +64,14 @@ def uploadqsos(user):
 def viewqso(call, date, time):
     call = call.replace('_', '/')
     qso = QSO.query.filter_by(call=call, qso_date=date, time_on=time).first()
-    return render_template('viewqso.html', qso=qso)
+    markers = {}
+    if qso.gridsquare:
+        markers['gslat'] = mh.to_location(qso.gridsquare, center=True)[0]
+        markers['gslong'] = mh.to_location(qso.gridsquare, center=True)[1]
+    if qso.my_gridsquare:
+        markers['mgslat'] = mh.to_location(qso.my_gridsquare, center=True)[0]
+        markers['mgslong'] = mh.to_location(qso.my_gridsquare, center=True)[1]
+    return render_template('viewqso.html', qso=qso, markers=markers)
 
 @qsos.errorhandler(400)
 def page_not_found(e):
