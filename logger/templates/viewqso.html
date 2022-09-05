@@ -10,6 +10,7 @@
 <script src="https://ha8tks.github.io/Leaflet.Maidenhead/src/L.Maidenhead.js"></script>
 <link rel="stylesheet" href="/static/css/leaflet.awesome-markers.css">
 <script src="/static/js/leaflet.awesome-markers.js"></script>
+<script src="/static/js/leaflet-providers.js"></script>
 {% endblock %}
 {% block hero %}is-primary{% endblock %}
 {% block content %}
@@ -215,11 +216,13 @@
                             </div>
 
                         {% endif %}
+                            {% if qso.my_gridsquare and qso.gridsquare %}
                             <div class="level-item">
                                 <button class="js-modal-trigger button is-link is-small" data-target="modal-js-map">
                                     View Map
                                 </button>
                             </div>
+                            {% endif %}
                         </div>
                     </nav>
                     {% endif %}
@@ -314,7 +317,7 @@
 </section>
 {% endblock %}
 {% block bottombody %}
-{% if qso.gridsquare or qso.my_gridsquare %}
+{% if qso.gridsquare and qso.my_gridsquare %}
 <div id="modal-js-map" class="modal">
     <div class="modal-background"></div>
     <div class="modal-card">
@@ -326,20 +329,18 @@
             <div class="box is-clipped" id="map" style="height : 500px;">
                 <script>
                 var map = L.map('map' ,{
-                    center: [51.505, -0.09],
+                    center: [{{ markers.mgslat }}, {{ markers.mgslong }}],
                     zoom: 13
                 });
-                var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 19,
-                    attribution: '© OpenStreetMap'
-                }).addTo(map);
-                var layerGroup = L.featureGroup().addTo(map);
-                L.marker([ {{ "%.6f"|format(markers.mgslat) }} , {{ "%.6f"|format(markers.mgslong) }} ], {icon: L.AwesomeMarkers.icon({icon: 'home', prefix: 'fa', markerColor: 'green'}) }).addTo(layerGroup);
-//                L.marker([ {{ "%.6f"|format(markers.gslat) }} , {{ "%.6f"|format(markers.gslong)}} ], {icon: L.AwesomeMarkers.icon({icon: 'coffee', prefix: 'fa', markerColor: 'red', iconColor: '#f28f82'}) }).addTo(layerGroup);
+                L.tileLayer.provider('Stamen.Terrain').addTo(map);
+                var mGroup = L.featureGroup().addTo(map);
+                L.marker([ {{ "%.6f"|format(markers.mgslat) }} , {{ "%.6f"|format(markers.mgslong) }} ], {icon: L.AwesomeMarkers.icon({icon: 'home', prefix: 'fa', markerColor: 'green'}) }).addTo(mGroup);
+                L.marker([ {{ "%.6f"|format(markers.gslat) }} , {{ "%.6f"|format(markers.gslong)}} ], {icon: L.AwesomeMarkers.icon({icon: 'star', prefix: 'fa', markerColor: 'red', iconColor: '#f28f82'}) }).addTo(mGroup);
                 var maidenhead =  L.maidenhead({
                     color : 'rgba(255, 0, 0, 0.4)'
                 }).addTo(map);
-                map.fitBounds(layerGroup.getBounds().pad(0.5)); 
+//                console.log(mGroup.getBounds());
+//                map.fitBounds(mGroup.getBounds()); 
                 </script>
                 <!-- Your content -->
             </div>
@@ -354,6 +355,7 @@
   function openModal($el) {
     $el.classList.add('is-active');
     map.invalidateSize();
+    map.fitBounds(mGroup.getBounds());
   }
 
   function closeModal($el) {
