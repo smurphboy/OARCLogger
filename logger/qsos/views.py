@@ -65,24 +65,25 @@ def uploadqsos(user):
 def viewqso(call, date, time):
     call = call.replace('_', '/')
     qso = QSO.query.filter_by(call=call, qso_date=date, time_on=time).first()
-    markers = {}
-    summit = {}
+    locations = []
     if qso.gridsquare:
-        markers['gslat'] = mh.to_location(qso.gridsquare, center=True)[0]
-        markers['gslong'] = mh.to_location(qso.gridsquare, center=True)[1]
+        locations.append([mh.to_location(qso.gridsquare, center=True)[0], mh.to_location(qso.gridsquare, center=True)[1], 'star', 'red', 'Gridsquare: ' + qso.gridsquare])
     if qso.my_gridsquare:
-        markers['mgslat'] = mh.to_location(qso.my_gridsquare, center=True)[0]
-        markers['mgslong'] = mh.to_location(qso.my_gridsquare, center=True)[1]
-    if qso.my_sota_ref or qso.sota_ref: #we are on a SOTA summit or chasing, so let's map it
+        locations.append([mh.to_location(qso.my_gridsquare, center=True)[0],mh.to_location(qso.my_gridsquare, center=True)[1], 'home', 'green', 'My Gridsquare: ' + qso.my_gridsquare])
+    if qso.my_sota_ref:
         url = ("https://api2.sota.org.uk/api/summits/" + qso.my_sota_ref)
         sotasummit = requests.request("GET", url)
         if sotasummit.status_code == 200:
             summit = sotasummit.json()
-            summit['status'] = True
-        else:
-            summit['status'] = False
+            locations.append([summit['latitude'], summit['longitude'], 'mountain', 'green', 'My SOTA Reference: ' + summit['summitCode'] + ' - ' + summit['name']])
+    if qso.sota_ref:
+        url = ("https://api2.sota.org.uk/api/summits/" + qso.sota_ref)
+        sotasummit = requests.request("GET", url)
+        if sotasummit.status_code == 200:
+            summit = sotasummit.json()
+            locations.append([summit['latitude'], summit['longitude'], 'mountain', 'red', 'SOTA Reference: ' + summit['summitCode'] + ' - ' + summit['name']])
 
-    return render_template('viewqso.html', qso=qso, markers=markers, summit=summit)
+    return render_template('viewqso.html', qso=qso, locations=locations)
 
 @qsos.errorhandler(400)
 def page_not_found(e):

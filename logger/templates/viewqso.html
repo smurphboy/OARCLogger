@@ -189,7 +189,22 @@
 			</div>
 			<div class="column">
 				<div class="box">
-					<p class="title has-text-grey">Locations</p>
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <p class="title has-text-grey">Locations</p>
+                            </div>
+                        </div>
+                        {% if qso.my_gridsquare and qso.gridsquare %}
+                        <div class="level-right">
+                            <div class="level-item">
+                                <button class="js-modal-trigger button is-link is-small" data-target="modal-js-map">
+                                    View Map
+                                </button>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </nav>
                     {% if qso.gridsquare or qso.my_gridsquare %}
                     <nav class="level">
                         {% if qso.gridsquare %}
@@ -216,13 +231,6 @@
                             </div>
 
                         {% endif %}
-                            {% if qso.my_gridsquare and qso.gridsquare %}
-                            <div class="level-item">
-                                <button class="js-modal-trigger button is-link is-small" data-target="modal-js-map">
-                                    View Map
-                                </button>
-                            </div>
-                            {% endif %}
                         </div>
                     </nav>
                     {% endif %}
@@ -328,19 +336,22 @@
         <section class="modal-card-body">
             <div class="box is-clipped" id="map" style="height : 500px;">
                 <script>
-                var map = L.map('map' ,{
-                    center: [{{ markers.mgslat }}, {{ markers.mgslong }}],
-                    zoom: 13
-                });
-                L.tileLayer.provider('Stamen.Terrain').addTo(map);
-                var mGroup = L.featureGroup().addTo(map);
-                L.marker([ {{ "%.6f"|format(markers.mgslat) }} , {{ "%.6f"|format(markers.mgslong) }} ], {icon: L.AwesomeMarkers.icon({icon: 'home', prefix: 'fa', markerColor: 'green'}) }).addTo(mGroup);
-                L.marker([ {{ "%.6f"|format(markers.gslat) }} , {{ "%.6f"|format(markers.gslong)}} ], {icon: L.AwesomeMarkers.icon({icon: 'star', prefix: 'fa', markerColor: 'red', iconColor: '#f28f82'}) }).addTo(mGroup);
-                var maidenhead =  L.maidenhead({
-                    color : 'rgba(255, 0, 0, 0.4)'
-                }).addTo(map);
-//                console.log(mGroup.getBounds());
-//                map.fitBounds(mGroup.getBounds()); 
+                    var locations = {{ locations|tojson }};
+                    var map = L.map('map');
+                    L.tileLayer.provider('Stamen.Terrain').addTo(map);
+                    var mGroup = L.featureGroup().addTo(map);
+                    for (var i = 0; i < locations.length; i++) {
+                        marker = new L.marker([locations[i][0], locations[i][1]],
+                            {icon: L.AwesomeMarkers.icon({icon: locations[i][2], prefix: 'fa', markerColor: locations[i][3]})})
+                            .bindPopup(locations[i][4])
+                            .addTo(mGroup);
+                    };
+                    var maidenhead =  L.maidenhead({
+                        color : 'rgba(255, 0, 0, 0.4)'
+                    }).addTo(map);
+    //                console.log(mGroup.getBounds());
+    //                map.fitBounds(mGroup.getBounds()); 
+                    console.log({{ locations|tojson }})
                 </script>
                 <!-- Your content -->
             </div>
@@ -355,7 +366,7 @@
   function openModal($el) {
     $el.classList.add('is-active');
     map.invalidateSize();
-    map.fitBounds(mGroup.getBounds());
+    map.fitBounds(mGroup.getBounds().pad(0.2));
   }
 
   function closeModal($el) {
