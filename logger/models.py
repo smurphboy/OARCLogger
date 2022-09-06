@@ -108,6 +108,13 @@ class QSO(db.Model):
     my_lon = db.Column(db.String(11))
     pfx = db.Column(db.String(15))
     contest_id = db.Column(db.String(50))
+    my_wwff_ref = db.Column(db.String(15))
+    wwff_ref = db.Column(db.String(15))
+    my_street = db.Column(db.String(50))
+    sig = db.Column(db.String(50))
+    my_sig = db.Column(db.String(50))
+    sig_info = db.Column(db.String(50))
+    my_sig_info = db.Column(db.String(50))
 
     def update(self, update_dictionary: dict):
         for col_name in self.__table__.columns.keys():
