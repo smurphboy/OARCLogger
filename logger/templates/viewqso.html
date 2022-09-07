@@ -193,6 +193,87 @@
 					</nav>
 					{% endif %}
 				</div>
+                <div class="box">
+                    <p class="title has-text-grey">Signal Report</p>
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <div class="icon-text">
+									<span class="icon">
+										<i class="fas fa-signal"></i>
+									</span>
+									<span><abbr class="has-text-weight-semibold" title="signal report sent to the contacted station">RST Sent:</abbr> {{ qso.rst_sent }}</span>
+								</div>
+                            </div>
+                        </div>
+						<div class="level-right">
+							<div class="level-item">
+								<div class="icon-text">
+									<span class="icon">
+										<i class="fas fa-signal"></i>
+									</span>
+									<span><abbr class="has-text-weight-semibold" title="signal report from the contacted station">RST Received:</abbr> {{ qso.rst_rcvd }}</span>
+								</div>
+							</div>
+						</div>
+                    </nav>
+                    {% if qso.srx or qso.stx %}
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                {% if qso.stx %}
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="mdi mdi-numeric"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="contest QSO transmitted serial number with a value greater than or equal to 0">Serial Sent:</abbr> {{ qso.stx }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if qso.srx %}
+                        <div class="level-right">
+                            <div class="level-item">
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="mdi mdi-numeric"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="contest QSO received serial number with a value greater than or equal to 0">Serial Received:</abbr> {{ qso.srx }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </nav>
+                    {% endif %}
+                    {% if qso.srx_string or qso.stx_string %}
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                {% if qso.stx_string %}
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="fas fa-quote-left"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="contest QSO transmitted information use Cabrillo format to convey contest information for which ADIF fields are not specified in the event of a conflict between information in a dedicated contest field and this field, information in the dedicated contest field shall prevail">Serial String Sent:</abbr> {{ qso.stx_string }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if qso.srx_string %}
+                        <div class="level-right">
+                            <div class="level-item">
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="fas fa-quote-right"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="contest QSO received information use Cabrillo format to convey contest information for which ADIF fields are not specified in the event of a conflict between information in a dedicated contest field and this field, information in the dedicated contest field shall prevail">Serial String Received:</abbr> {{ qso.srx_string }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </nav>
+                    {% endif %}
+                </div>
 			</div>
 			<div class="column">
 				<div class="box">
@@ -234,6 +315,34 @@
                                         <i class="fas fa-location-arrow"></i>
                                     </span>
                                     <span><abbr class="has-text-weight-semibold" title="the logging station's 2-character, 4-character, 6-character, or 8-character Maidenhead Grid Square">My Gridsquare:</abbr> {{ qso.my_gridsquare }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </nav>
+                    {% endif %}
+                    {% if qso.lat or qso.my_lat %}
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                {% if qso.lat %}
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="fas fa-map-pin"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="the contacted station's latitude and longitude">Lat, Long:</abbr> {{ qso.lat }}, {{ qso.lon }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if qso.my_lat %}
+                        <div class="level-right">
+                            <div class="level-item">
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="fas fa-map-pin"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="the logging station's latitude and longitude">My Lat, My Long:</abbr> {{ qso.my_lat }}, {{ qso.my_lon }}</span>
                                 </div>
                             </div>
                         </div>
@@ -463,6 +572,118 @@
                                         </span>
                                         <span style="flex-shrink : 1; flex-wrap : wrap"><abbr class="has-text-weight-semibold" title="the logging station's street, city, postal code and country">My Address:</abbr> {{ qso.my_street }}, {{ qso.my_city }}, {{ qso.my_postal_code }}, {{ qso.my_state}} {{ qso.my_country}}</span>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </nav>
+                    {% endif %}
+                    {% if qso.vucc_grids or qso.my_vucc_grids %}
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                {% if qso.vucc_grids %}
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="fas fa-th"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="two or four adjacent Maidenhead grid locators, each four characters long, representing the contacted station's grid squares credited to the QSO for the ARRL VUCC award program.  E.g. EN98,FM08,EM97,FM07">VUCC Grids:</abbr> {{ qso.vucc_grids }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if qso.my_vucc_grids %}
+                        <div class="level-right">
+                            <div class="level-item">
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="fas fa-th"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="two or four adjacent Maidenhead grid locators, each four characters long, representing the logging station's grid squares that the contacted station may claim for the ARRL VUCC award program.  E.g. EN98,FM08,EM97,FM07">My VUCC Grids:</abbr> {{ qso.my_vucc_grids }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </nav>
+                    {% endif %}
+                    {% if qso.usaca_counties or qso.my_usaca_counties %}
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                {% if qso.usaca_counties %}
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="mdi mdi-town-hall"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="two US counties in the case where the contacted station is located on a border between two counties, representing counties credited to the QSO for the CQ Magazine USA-CA award program.  E.g. MA,Franklin:MA,Hampshire">USACA Counties:</abbr> {{ qso.usaca_counties }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if qso.my_usaca_counties %}
+                        <div class="level-right">
+                            <div class="level-item">
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="mdi mdi-town-hall"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="two US counties in the case where the logging station is located on a border between two counties, representing counties that the contacted station may claim for the CQ Magazine USA-CA award program.  E.g. MA,Franklin:MA,Hampshire">My USACA Counties:</abbr> {{ qso.my_usaca_counties }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </nav>
+                    {% endif %}
+                    {% if qso.cnty or qso.my_cnty %}
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                {% if qso.cnty %}
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="mdi mdi-town-hall"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="the contacted station's Secondary Administrative Subdivision (e.g. US county, JA Gun), in the specified format">County:</abbr> {{ qso.cnty }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if qso.my_cnty %}
+                        <div class="level-right">
+                            <div class="level-item">
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="mdi mdi-town-hall"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="the logging station's Secondary Administrative Subdivision (e.g. US county, JA Gun), in the specified format">My County:</abbr> {{ qso.my_cnty }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </nav>
+                    {% endif %}
+                    {% if qso.state or qso.cont %}
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                {% if qso.state %}
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="far fa-flag"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="the code for the contacted station's Primary Administrative Subdivision (e.g. US State, JA Island, VE Province)">State:</abbr> {{ qso.state }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if qso.cont %}
+                        <div class="level-right">
+                            <div class="level-item">
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="fas fa-globe-asia"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="the contacted station's Continent">Continent:</abbr> {{ qso.cont }}</span>
                                 </div>
                             </div>
                         </div>

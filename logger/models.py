@@ -115,6 +115,12 @@ class QSO(db.Model):
     my_sig = db.Column(db.String(50))
     sig_info = db.Column(db.String(50))
     my_sig_info = db.Column(db.String(50))
+    vucc_grids = db.Column(db.String(25))
+    my_vucc_grids = db.Column(db.String(25))
+    usaca_counties = db.Column(db.String(50))
+    my_usaca_counties = db.Column(db.String(50))
+    state = db.Column(db.String(25))
+    my_state = db.Column(db.String(25))
 
     def update(self, update_dictionary: dict):
         for col_name in self.__table__.columns.keys():
