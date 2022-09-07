@@ -121,6 +121,24 @@ class QSO(db.Model):
     my_usaca_counties = db.Column(db.String(50))
     state = db.Column(db.String(25))
     my_state = db.Column(db.String(25))
+    rig = db.Column(db.String(50))
+
+# Solar Weather
+
+# a_index			the geomagnetic A index at the time of the QSO in the range 0 to 400 (inclusive)
+# k_index			the geomagnetic K index at the time of the QSO in the range 0 to 9 (inclusive)
+# sfi				the solar flux at the time of the QSO in the range 0 to 300 (inclusive).
+
+# Propogation
+
+# prop_mode		QSO propagation mode
+# ant_path		the signal path
+# ms_shower		For Meteor Scatter QSOs, the name of the meteor shower in progress
+# nr_pings		the number of meteor scatter pings heard by the logging station with a value greater than or equal to 0
+# nr_bursts		the number of meteor scatter bursts heard by the logging station with a value greater than or equal to 0
+# max_bursts	maximum length of meteor scatter bursts heard by the logging station, in seconds with a value greater than or equal to 0
+# force_init	new EME "initial" (Y/N)
+
 
     def update(self, update_dictionary: dict):
         for col_name in self.__table__.columns.keys():

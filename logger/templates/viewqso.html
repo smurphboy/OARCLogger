@@ -274,6 +274,131 @@
                     </nav>
                     {% endif %}
                 </div>
+				<div class="box">
+					<p class="title has-text-grey">Station Info</p>
+                    {% if qso.rig or qso.my_rig %}
+					<nav class="level">
+						<div class="level-left">
+							<div class="level-item">
+                                {% if qso.rig %}
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="mdi mdi-radio-handheld"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="description of the contacted station's equipment">Rig:</abbr> {{ qso.rig }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if qso.my_rig %}
+                        <div class="level-right">
+                            <div class="level-item">
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="mdi mdi-radio-handheld"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="description of the logging station's equipment">My Rig:</abbr> {{ qso.my_rig }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </nav>
+                    {% endif %}
+                    {% if qso.tx_pwr or qso.my_antenna %}
+					<nav class="level">
+						<div class="level-left">
+							<div class="level-item">
+                                {% if qso.tx_pwr %}
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="fas fa-tachometer-alt"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="the logging station's power in Watts with a value greater than 0">TX Power:</abbr> {{ qso.tx_pwr }}W</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if qso.my_antenna %}
+                        <div class="level-right">
+                            <div class="level-item">
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="mdi mdi-antenna"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="the logging station's antenna">My Antenna:</abbr> {{ qso.my_antenna }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </nav>
+                    {% endif %}
+                    {% if qso.ant_az or qso.ant_el %}
+					<nav class="level">
+						<div class="level-left">
+							<div class="level-item">
+                                {% if qso.ant_az %}
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="mdi mdi-sun-compass"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="	the logging station's antenna azimuth, in degrees with a value between 0 to 360 (inclusive). Values outside this range are import-only and must be normalized for export (e.g. 370 is exported as 10). True north is 0 degrees with values increasing in a clockwise direction.">Antenna Azimuth:</abbr> {{ qso.ant_az }}W</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if qso.ant_el %}
+                        <div class="level-right">
+                            <div class="level-item">
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="mdi mdi-angle-acute"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="the logging station's antenna elevation, in degrees with a value between -90 to 90 (inclusive).  Values outside this range are import-only and must be normalized for export (e.g. 100 is exported as 80). The horizon is 0 degrees with values increasing as the angle moves in an upward direction.">Antenna Elevation:</abbr> {{ qso.ant_el }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </nav>
+                    {% endif %}
+                    {% if qso.swl or qso.qso_complete %}
+					<nav class="level">
+						<div class="level-left">
+							<div class="level-item">
+                                {% if qso.swl %}
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="fas fa-tachometer-alt"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="indicates that the QSO information pertains to an SWL report">SWL?:</abbr> {{ qso.swl }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="level-item">
+                                {% if qso.qso_random %}
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="fas fa-random"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="indicates whether the QSO was random or scheduled">Random?:</abbr> {{ qso.qso_random }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if qso.my_antenna %}
+                        <div class="level-right">
+                            <div class="level-item">
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="mdi mdi-antenna"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="indicates whether the QSO was complete from the perspective of the logging station [Y - yes: N - no : NIL - not heard : ? - uncertain">QSO Complete:</abbr> {{ qso.qso_complete }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </nav>
+                    {% endif %}
+                </div>
 			</div>
 			<div class="column">
 				<div class="box">
