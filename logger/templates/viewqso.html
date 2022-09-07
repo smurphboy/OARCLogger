@@ -816,6 +816,52 @@
                     </nav>
                     {% endif %}
                 </div>
+                <div class="box">
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <p class="title has-text-grey">Propogation</p>
+                            </div>
+                        </div>
+                    </nav>
+                    {% if qso.a_index or qso.k_index %}
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                {% if qso.a_index %}
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="fa-solid fa-sun"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="the geomagnetic A index at the time of the QSO in the range 0 to 400 (inclusive)">A Index:</abbr> {{ qso.a_index }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="level-item">
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="fa-regular fa-sun"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="the geomagnetic K index at the time of the QSO in the range 0 to 400 (inclusive)">K Index:</abbr> {{ qso.k_index }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% if qso.sfi %}
+                        <div class="level-right">
+                            <div class="level-item">
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="fa-solid fa-solar-panel"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="the solar flux at the time of the QSO in the range 0 to 300 (inclusive).">SFI:</abbr> {{ qso.sfi }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </nav>
+                    {% endif %}
+
+                </div>
             </div>
 		</div>
 	</div>
