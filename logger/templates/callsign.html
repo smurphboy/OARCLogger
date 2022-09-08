@@ -43,18 +43,18 @@
                 </tbody>
             </table>
             <nav class="pagination" role="navigation" aria-label="pagination">
-                <a class="pagination-previous" {% if qsos.has_prev %}href="{{ url_for('callsigns.call', callsign=station_callsign, page=qsos.prev_num) }}"{% else %}disabled {% endif %} title="This is the first page">Previous</a>
-                <a class="pagination-next" {% if qsos.has_next %}href="{{ url_for('callsigns.call', callsign=station_callsign, page=qsos.next_num) }}"{% else %}disabled {% endif %}>Next page</a>
+                <a class="pagination-previous" {% if qsos.has_prev %}href="{{ url_for('callsigns.call', callsign=station_callsign | replace('/','_'), page=qsos.prev_num) }}"{% else %}disabled {% endif %} title="This is the first page">Previous</a>
+                <a class="pagination-next" {% if qsos.has_next %}href="{{ url_for('callsigns.call', callsign=station_callsign | replace('/','_'), page=qsos.next_num) }}"{% else %}disabled {% endif %}>Next page</a>
                 <ul class="pagination-list">
                     {% for page_num in qsos.iter_pages() %}
                         {% if page_num %}
                             {% if page_num != qsos.page %}
                             <li>
-                                <a class="pagination-link" href="{{ url_for('callsigns.call', callsign=station_callsign, page=page_num) }}" aria-label="Goto page {{ page_num }}">{{ page_num }}</a>
+                                <a class="pagination-link" href="{{ url_for('callsigns.call', callsign=station_callsign | replace('/','_'), page=page_num) }}" aria-label="Goto page {{ page_num }}">{{ page_num }}</a>
                             </li>
                             {% else %}
                             <li>
-                                <a class="pagination-link is-current" href="{{ url_for('callsigns.call', callsign=station_callsign, page=page_num) }}" aria-label="Page {{ page_num }}" aria-current="page">{{ page_num }}</a>
+                                <a class="pagination-link is-current" href="{{ url_for('callsigns.call', callsign=station_callsign | replace('/','_'), page=page_num) }}" aria-label="Page {{ page_num }}" aria-current="page">{{ page_num }}</a>
                             </li>
                             {% endif %}
                         {% else %}
