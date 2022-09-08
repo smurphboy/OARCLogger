@@ -27,13 +27,13 @@ def eventview(id):
     if event.owner.id == id:
         return render_template('eventview.html', event=event)
     else:
-        about(403)
+        abort(403)
 
 @events.route("/create")
 @login_required
 def eventcreate():
     '''Create an Event'''
-    return render_template('eventcreate.html')
+    return render_template('eventcreate.html', username=current_user.name)
 
 
 @events.errorhandler(403)
