@@ -1,12 +1,21 @@
 import datetime
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import MetaData
 
 DATE_FIELDS = ['qso_date', 'qso_date_off', 'lotw_qslsdate', 'eqsl_qslsdate', 'qrzcom_qso_upload_date', 'lotw_qslrdate', 'eqsl_qslrdate', 'qslrdate', 'qslsdate']
 TIME_FIELDS = ['time_on', 'time_off']
 
+naming_convention = {
+    "ix": 'ix_%(column_0_label)s',
+    "uq": "uq_%(table_name)s_%(column_0_name)s",
+    "ck": "ck_%(table_name)s_%(column_0_name)s",
+    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+    "pk": "pk_%(table_name)s"
+}
+db = SQLAlchemy(metadata=MetaData(naming_convention=naming_convention))
 # init SQLAlchemy so we can use it later in our models
-db = SQLAlchemy()
+#db = SQLAlchemy()
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
@@ -16,6 +25,7 @@ class User(UserMixin, db.Model):
     created_on = db.Column(db.DateTime())
     last_login = db.Column(db.DateTime())
     callsigns = db.relationship('Callsign', backref='user', lazy=True)
+    events = db.relationship('Event', backref='owner', lazy=True)
 
 class Callsign(db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
@@ -122,12 +132,16 @@ class QSO(db.Model):
     state = db.Column(db.String(25))
     my_state = db.Column(db.String(25))
     rig = db.Column(db.String(50))
+    import_source = db.Column(db.String(255))
+    import_date = db.Column(db.Date())
+    import_comments = db.Column(db.String(2000))
+    events = db.relationship('Event', backref='qso', lazy=True)
 
 # Solar Weather
 
-# a_index			the geomagnetic A index at the time of the QSO in the range 0 to 400 (inclusive)
-# k_index			the geomagnetic K index at the time of the QSO in the range 0 to 9 (inclusive)
-# sfi				the solar flux at the time of the QSO in the range 0 to 300 (inclusive).
+# a_index			the geomagnetic A index at the time of the QSO in the range 0 to 400 (inclusive) tick
+# k_index			the geomagnetic K index at the time of the QSO in the range 0 to 9 (inclusive) tick
+# sfi				the solar flux at the time of the QSO in the range 0 to 300 (inclusive). tick
 
 # Propogation
 
@@ -164,3 +178,13 @@ class QSO(db.Model):
         db.session.add(self)
         db.session.commit()
         print('created')
+
+class Event(db.Model):
+    id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
+    name = db.Column(db.String(1000), unique=True)
+    type = db.Column(db.String(15)) # it will be an enumeration
+    start_date = db.Column(db.Date())
+    end_date = db.Column(db.Date())
+    comment = db.Column(db.String(255))
+    qso_id = db.Column(db.Integer, db.ForeignKey('QSO.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)

@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block hero %}is-primary{% endblock %}
+{% block content %}
+            <div class="bd-hero-heading">
+                <h1 class="title is-size-1">
+                    {% block title %} Events for {{ username }} {% endblock %}
+                </h1>
+                <div class="subtitle is-4 algolia-lvl1">
+                    <p>{{ allevents|length }} events for this user.</p>     
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="box">
+            <table class="table is-striped is-hoverable">
+                <thead>
+                    <tr>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Owner</th>
+                        <th>Total QSOs</th>
+                        <th>Comment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in eventpage.items %}
+                    <tr>
+                        <td>{{ event.start_date }}</td>
+                        <td>{{ event.end_date }}</td>
+                        <td><a href="{{ url_for (events.eventview, id=event.id) }}" title="{{ event.name }}">{{ event.name }}</a></td>
+                        <td>{{ event.type }}</td>
+                        <td>{{ event.owner.name }}</td>
+                        <td>{{ event.qso|length }}</td>
+                        <td>{{ event.comment }}</td>
+                    </tr>
+                    {% else %}
+                    No Events yet
+                    {% endfor %}
+                </tbody>
+            </table>
+            <nav class="pagination" role="navigation" aria-label="pagination">
+                <a class="pagination-previous" {% if eventpage.has_prev %}href="{{ url_for('events.eventlist', username=current_user.name, page=eventlist.prev_num) }}"{% else %}disabled {% endif %} title="This is the first page">Previous</a>
+                <a class="pagination-next" {% if eventpage.has_next %}href="{{ url_for('events.eventlist', username=current_user.name, page=eventlist.next_num) }}"{% else %}disabled {% endif %}>Next page</a>
+                <ul class="pagination-list">
+                    {% for page_num in eventpage.iter_pages() %}
+                        {% if page_num %}
+                            {% if page_num != eventpage.page %}
+                            <li>
+                                <a class="pagination-link" href="{{ url_for('events.eventlist', username=current_user.name, page=page_num) }}" aria-label="Goto page {{ page_num }}">{{ page_num }}</a>
+                            </li>
+                            {% else %}
+                            <li>
+                                <a class="pagination-link is-current" href="{{ url_for('events.eventlist', username=current_user.name, page=page_num) }}" aria-label="Page {{ page_num }}" aria-current="page">{{ page_num }}</a>
+                            </li>
+                            {% endif %}
+                        {% else %}
+                            <li>
+                                <span class="pagination-ellipsis">&hellip;</span>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
+    </section>
+    <section>
+        <div class="box">
+            <div class="level">
+                <div class="level-left">
+                    <p class="level-item">Add a new Event</p>
+                    <a class="button is-link level-item" href="{{ url_for('events.eventcreate', username=current_user.name) }}">Add Event</a>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
