@@ -31,10 +31,10 @@
                     <tr>
                         <td>{{ event.start_date }}</td>
                         <td>{{ event.end_date }}</td>
-                        <td><a href="{{ url_for (events.eventview, id=event.id) }}" title="{{ event.name }}">{{ event.name }}</a></td>
+                        <td><a href="{{ url_for ('events.eventview', id=event.id) }}" title="{{ event.name }}">{{ event.name }}</a></td>
                         <td>{{ event.type }}</td>
                         <td>{{ event.owner.name }}</td>
-                        <td>{{ event.qso|length }}</td>
+                        <td>{% if event.qso %}{{ event.qso|length }}{% endif %}</td>
                         <td>{{ event.comment }}</td>
                     </tr>
                     {% else %}

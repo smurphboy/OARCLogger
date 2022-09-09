@@ -3,6 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, IntegerField, BooleanField,\
                     RadioField, DateField, TimeField, SelectField, FileField, SubmitField, DateTimeField
 from wtforms.validators import InputRequired, Length, Optional
+from wtforms.widgets import DateTimeInput
 
 class QSOForm(FlaskForm):
     qso_date = DateField('QSO Date', validators=[InputRequired()], default=datetime.date.today)
@@ -27,9 +28,11 @@ class QSOUploadForm(FlaskForm):
 
 class EventForm(FlaskForm):
     name = StringField('Name', validators=[InputRequired(), Length(max=50)])
-    type = SelectField('type',
+    type = SelectField('Type',
                         choices=['SOTA Activation', 'POTA Activation', 'WWFF Activation', 'Contest', 'Portable Day',
                         'Net', 'Other'])
-    start_date = DateTimeField('start_date', validators=[InputRequired()], default=datetime.datetime.now)
-    end_date  = DateTimeField('end_date', validators=[Optional()], default=datetime.datetime.now)
-    comment = TextAreaField('comment', validators=[Optional(), Length(max=255)])
+    start_date = DateField('Start Date', validators=[InputRequired()], default=datetime.date.today)
+    start_time = TimeField('Start Time', validators=[InputRequired()], default=datetime.datetime.now)
+    end_date  = DateField('End Date', validators=[Optional()], default=datetime.date.today)
+    end_time = TimeField('End Time', validators=[Optional()], default=datetime.datetime.now)
+    comment = TextAreaField('Comment', validators=[Optional(), Length(max=255)])

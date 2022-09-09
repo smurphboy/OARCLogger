@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% block hero %}is-primary{% endblock %}
+{% block content %}
+            <div class="bd-hero-heading">
+                <h1 class="title algolia-lvl0">
+                    {% block title %} <p>Add a New Event for {{ username }}</p> {% endblock %}
+                </h1>
+                <div class="subtitle is-4 algolia-lvl1">
+                    <p>Enter Event details below and press Add:</p>     
+                </div>
+            </div>
+        </div>
+    </section>
+    </section>
+        <div class="box">
+            <form method="POST">
+                {{ form.csrf_token }}
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            {{ form.name.label(class_='label') }}
+                            <div class="control">
+                                {{ form.name(class_="input") }}
+                            </div>
+                            <p class="help">Name your event, for example [Activation of G/SC-010 August 2022]</p>
+                        </div>
+                        {% if form.name.errors %}
+                            <ul class="errors">
+                                {% for error in form.name.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        <nav class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    <div class="field">
+                                        {{ form.start_date.label(class_="label") }}
+                                        <div class="control">
+                                        {{ form.start_date(class_="input") }}
+                                        </div>
+                                    </div>
+                                    {% if form.start_date.errors %}
+                                        <ul class="errors">
+                                            {% for error in form.start_date.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="level-item">
+                                    <div class="field">
+                                        {{ form.start_time.label(class_="label") }}
+                                        <div class="control">
+                                        {{ form.start_time(class_="input") }}
+                                        </div>
+                                    </div>
+                                    {% if form.start_time.errors %}
+                                        <ul class="errors">
+                                            {% for error in form.start_time.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="level-right">
+                                <div class="level-item">
+                                    <div class="field">
+                                        {{ form.end_date.label(class_="label") }}
+                                        <div class="control">
+                                        {{ form.end_date(class_="input") }}
+                                        </div>
+                                    </div>
+                                    {% if form.end_date.errors %}
+                                        <ul class="errors">
+                                            {% for error in form.end_date.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="level-item">
+                                    <div class="field">
+                                        {{ form.end_time.label(class_="label") }}
+                                        <div class="control">
+                                        {{ form.end_time(class_="input") }}
+                                        </div>
+                                    </div>
+                                    {% if form.end_time.errors %}
+                                        <ul class="errors">
+                                            {% for error in form.end_time.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </nav>
+                        <div class="field">
+                            {{ form.type.label(class_="label") }}
+                            <div class="select">
+                            {{ form.type() }}
+                            </div>
+                        </div>
+                        {% if form.type.errors %}
+                            <ul class="errors">
+                                {% for error in form.type.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                    <div class="column">
+                        <div class="field">
+                            {{ form.comment.label(class_="label") }}
+                            <div class="control">
+                            {{ form.comment(class_="textarea") }}
+                            </div>
+                            <p class="help">Use this for notes about the event, including details of any activations or other notes.</p>
+                        </div>
+                        {% if form.comment.errors %}
+                            <ul class="errors">
+                                {% for error in form.comment.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="control">
+                    <p>
+                        <input type="submit" class="button is-link" value="Add">
+                    </p>
+                </div>
+            </form>
+        </div>
+    </section>
+{% endblock %}

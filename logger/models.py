@@ -186,5 +186,5 @@ class Event(db.Model):
     start_date = db.Column(db.Date())
     end_date = db.Column(db.Date())
     comment = db.Column(db.String(255))
-    qso_id = db.Column(db.Integer, db.ForeignKey('QSO.id'), nullable=False)
+    qso_id = db.Column(db.Integer, db.ForeignKey('QSO.id'), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)

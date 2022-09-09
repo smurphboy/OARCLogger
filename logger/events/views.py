@@ -1,6 +1,8 @@
+import datetime
 from flask import Blueprint, flash, render_template, redirect, request, url_for, abort
 from flask_login import login_required, current_user
 from logger.models import User, db, Callsign, QSO, Event
+from logger.forms import EventForm
 
 events = Blueprint('events', __name__, template_folder='templates')
 
@@ -24,17 +26,32 @@ def eventlist(username):
 def eventview(id):
     '''View an event and the QSOs associated with it'''
     event = Event.query.filter_by(id=id).first()
-    if event.owner.id == id:
+    if int(event.owner.id) == int(current_user.get_id()):
         return render_template('eventview.html', event=event)
     else:
         abort(403)
 
-@events.route("/create")
+@events.route("/create", methods=['GET','POST'])
 @login_required
 def eventcreate():
     '''Create an Event'''
-    return render_template('eventcreate.html', username=current_user.name)
-
+    form = EventForm()
+    if request.method == 'POST':
+        start_date = datetime.datetime.strptime(request.form['start_date'], '%Y-%m-%d').date()
+        start_time = datetime.datetime.strptime(request.form['start_time'], '%H:%M').time()
+        start_date = datetime.datetime.combine(start_date, start_time)
+        end_date = datetime.datetime.strptime(request.form['end_date'], '%Y-%m-%d').date()
+        end_time = datetime.datetime.strptime(request.form['end_time'], '%H:%M').time()
+        end_date = datetime.datetime.combine(end_date, end_time)
+        name = request.form['name']
+        type = request.form['type']
+        comment = request.form['comment']
+        newevent = Event(start_date=start_date, end_date=end_date, name=name, comment=comment,
+                         type=type, user_id=current_user.get_id())
+        db.session.add(newevent)
+        db.session.commit()
+        return redirect(url_for('events.eventlist', username=current_user.name))
+    return render_template('eventcreateform.html', form=form, username=current_user.name)
 
 @events.errorhandler(403)
 def page_not_found(e):
