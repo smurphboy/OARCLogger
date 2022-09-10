@@ -33,6 +33,16 @@ class Callsign(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     primary = db.Column(db.Boolean, default=False)
 
+class Event(db.Model):
+    id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
+    name = db.Column(db.String(1000), unique=True)
+    type = db.Column(db.String(15)) # it will be an enumeration
+    start_date = db.Column(db.DateTime())
+    end_date = db.Column(db.DateTime())
+    comment = db.Column(db.String(255))
+    qsos = db.relationship('QSO', backref='event', lazy=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
 class QSO(db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
     band = db.Column(db.String(25))
@@ -135,7 +145,7 @@ class QSO(db.Model):
     import_source = db.Column(db.String(255))
     import_date = db.Column(db.Date())
     import_comments = db.Column(db.String(2000))
-    events = db.relationship('Event', backref='qso', lazy=True)
+    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=True)
 
 # Solar Weather
 
@@ -179,12 +189,3 @@ class QSO(db.Model):
         db.session.commit()
         print('created')
 
-class Event(db.Model):
-    id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
-    name = db.Column(db.String(1000), unique=True)
-    type = db.Column(db.String(15)) # it will be an enumeration
-    start_date = db.Column(db.Date())
-    end_date = db.Column(db.Date())
-    comment = db.Column(db.String(255))
-    qso_id = db.Column(db.Integer, db.ForeignKey('QSO.id'), nullable=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)

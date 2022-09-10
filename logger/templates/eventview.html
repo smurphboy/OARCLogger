@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block hero %}is-primary{% endblock %}
+{% block content %}
+		<div class="bd-hero-heading">
+			<h1 class="title is-size-1">
+				{% block title %} <p>View an Event</p> {% endblock %}
+			</h1>
+		</div>
+	</div>
+</section>
+<section>
+	<div class="columns">
+		<div class="column">
+			<div class="box">
+				<nav class="level">
+					<div class="level-left">
+						<div class="level-item">
+							<div class="icon-text">
+								<span class="icon">
+									<i class="fa-regular fa-square-caret-right"></i>
+								</span>
+								<span><abbr class="has-text-weight-semibold" title="Name your event, for example [Activation of G/SC-010 August 2022]">Name:</abbr> {{ event.name }}</span>
+							</div>
+						</div>
+					</div>
+					<div class="level-right">
+						<div class="level-item">
+							<div class="icon-text">
+								<span class="icon">
+									<i class="fa-regular fa-square-caret-down"></i>
+								</span>
+								<span><abbr class="has-text-weight-semibold" title="Type of event, SOTA / POTA, etc">Type:</abbr> {{ event.type }}</span>
+							</div>
+						</div>
+					</div>
+				</nav>
+				<nav class="level">
+					<div class="level-left">
+						<div class="level-item">
+							<div class="icon-text">
+								<span class="icon">
+									<i class="fa-regular fa-calendar-plus"></i>
+								</span>
+								<span><abbr class="has-text-weight-semibold" title="Start date / time of your event">Start Date:</abbr> {{ event.start_date.strftime('%Y-%m-%d %H:%M') }}</span>
+							</div>
+						</div>
+					</div>
+					<div class="level-right">
+						<div class="level-item">
+							<div class="icon-text">
+								<span class="icon">
+									<i class="fa-regular fa-calendar-minus"></i>
+								</span>
+								<span><abbr class="has-text-weight-semibold" title="End date / time of your event">End Date:</abbr> {{ event.end_date.strftime('%Y-%m-%d %H:%M') }}</span>
+							</div>
+						</div>
+					</div>
+				</nav>
+			</div>
+		</div>
+		<div class="column">
+			<div class="box">
+				<nav class="level">
+					<div class="level-left">
+						<div class="level-item">
+							<div class="icon-text">
+								<span class="icon">
+									<i class="fa-regular fa-comments"></i>
+								</span>
+								<span><abbr class="has-text-weight-semibold" title="">Comment:</abbr> {{ event.comment }}</span>
+							</div>
+						</div>
+					</div>
+				</nav>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %}

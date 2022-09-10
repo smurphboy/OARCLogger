@@ -24,18 +24,20 @@
                         <th>Owner</th>
                         <th>Total QSOs</th>
                         <th>Comment</th>
+                        <th>Export QSOs</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for event in eventpage.items %}
                     <tr>
-                        <td>{{ event.start_date }}</td>
-                        <td>{{ event.end_date }}</td>
+                        <td>{{ event.start_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>{{ event.end_date.strftime('%Y-%m-%d %H:%M') }}</td>
                         <td><a href="{{ url_for ('events.eventview', id=event.id) }}" title="{{ event.name }}">{{ event.name }}</a></td>
                         <td>{{ event.type }}</td>
                         <td>{{ event.owner.name }}</td>
-                        <td>{% if event.qso %}{{ event.qso|length }}{% endif %}</td>
+                        <td>{% if event.qsos %}{{ event.qsos|length }}{% endif %}</td>
                         <td>{{ event.comment }}</td>
+                        <td><a class="js-modal-trigger button is-link is-small" href="{{ url_for ('events.export', id=event.id) }}">Export QSOs</button></td>
                     </tr>
                     {% else %}
                     No Events yet

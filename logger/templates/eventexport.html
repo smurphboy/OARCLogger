@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block hero %}is-primary{% endblock %}
+{% block content %}
+            <div class="bd-hero-heading">
+                <h1 class="title is-size-1">
+                    {% block title %} Export Event{% endblock %}
+                </h1>
+                <div class="subtitle is-4 algolia-lvl1">
+                    <p>{{ event.qsos|length }} QSOs to export for {{ event.name }} on {{ event.start_date }} until {{ event.end_date }} </p>     
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

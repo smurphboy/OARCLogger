@@ -21,13 +21,23 @@ def eventlist(username):
     else:
         abort(403)
 
-@events.route("/view/<id>")
+@events.route("/view/<int:id>")
 @login_required
 def eventview(id):
     '''View an event and the QSOs associated with it'''
     event = Event.query.filter_by(id=id).first()
     if int(event.owner.id) == int(current_user.get_id()):
         return render_template('eventview.html', event=event)
+    else:
+        abort(403)
+
+@events.route("/export/<int:id>")
+@login_required
+def export(id):
+    '''Export and events QSOs associated with it'''
+    event = Event.query.filter_by(id=id).first()
+    if int(event.owner.id) == int(current_user.get_id()):
+        return render_template('eventexport.html', event=event)
     else:
         abort(403)
 
@@ -40,6 +50,7 @@ def eventcreate():
         start_date = datetime.datetime.strptime(request.form['start_date'], '%Y-%m-%d').date()
         start_time = datetime.datetime.strptime(request.form['start_time'], '%H:%M').time()
         start_date = datetime.datetime.combine(start_date, start_time)
+        print(start_date)
         end_date = datetime.datetime.strptime(request.form['end_date'], '%Y-%m-%d').date()
         end_time = datetime.datetime.strptime(request.form['end_time'], '%H:%M').time()
         end_date = datetime.datetime.combine(end_date, end_time)
