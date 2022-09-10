@@ -37,7 +37,13 @@ def export(id):
     '''Export and events QSOs associated with it'''
     event = Event.query.filter_by(id=id).first()
     if int(event.owner.id) == int(current_user.get_id()):
-        return render_template('eventexport.html', event=event)
+        # we want to export an ADIF header with information about our export and then an ADI row for each record
+        header = {'ADIF_VER' : '3.1.3', 'CREATED_TIMESTAMP' : datetime.datetime.now().strftime("%Y%m%d %H%M%S"),
+                  'PROGRAMID' : 'OARC Logger', 'PROGRAMVERSION' : '0.1 Alpha'}
+        for qso in event.qsos:
+            for col in QSO.__table__.columns:
+                print(col)
+        return render_template('eventexport.html', event=event, qsos=event.qsos, eventid=id, header=header)
     else:
         abort(403)
 
