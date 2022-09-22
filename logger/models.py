@@ -5,6 +5,8 @@ from sqlalchemy import MetaData
 
 DATE_FIELDS = ['qso_date', 'qso_date_off', 'lotw_qslsdate', 'eqsl_qslsdate', 'qrzcom_qso_upload_date', 'lotw_qslrdate', 'eqsl_qslrdate', 'qslrdate', 'qslsdate']
 TIME_FIELDS = ['time_on', 'time_off']
+BANDS = ['2190m', '630m', '560m', '160m', '80m', '60m', '40m', '30m', '20m', '17m', '15m', '12m', '10m', '8m', '6m', '4m', '2m', '1.25m', '70cm',
+         '33cm', '23cm', '13cm', '9cm', '6cm', '3cm', '1.25cm', '6mm', '4mm', '2.5mm', '2mm', '1mm']
 
 naming_convention = {
     "ix": 'ix_%(column_0_label)s',
@@ -26,6 +28,9 @@ class User(UserMixin, db.Model):
     last_login = db.Column(db.DateTime())
     callsigns = db.relationship('Callsign', backref='user', lazy=True)
     events = db.relationship('Event', backref='owner', lazy=True)
+    rigs = db.relationship('Rig', backref='owner', lazy=True)
+    configurations = db.relationship('Configuration', backref='owner', lazy=True)
+    antennas = db.relationship('Antenna', backref='owner', lazy=True)
 
 class Callsign(db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
@@ -147,11 +152,6 @@ class QSO(db.Model):
     import_comments = db.Column(db.String(2000))
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=True)
 
-# Solar Weather
-
-# a_index			the geomagnetic A index at the time of the QSO in the range 0 to 400 (inclusive) tick
-# k_index			the geomagnetic K index at the time of the QSO in the range 0 to 9 (inclusive) tick
-# sfi				the solar flux at the time of the QSO in the range 0 to 300 (inclusive). tick
 
 # Propogation
 
@@ -188,4 +188,38 @@ class QSO(db.Model):
         db.session.add(self)
         db.session.commit()
         print('created')
+
+
+class Band(db.Model):
+    id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
+    name = db.Column(db.String(1000), unique=True)
+
+    def __repr__(self):
+        return f'<Band "{self.name}">' 
+
+
+rig_band = db.Table('post_tag',
+                    db.Column('rig_id', db.Integer, db.ForeignKey('rig.id')),
+                    db.Column('band_id', db.Integer, db.ForeignKey('band.id'))
+                    )
+
+class Rig(db.Model):
+    id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
+    name = db.Column(db.String(1000), unique=True)
+    configurations = db.relationship('Configuration', backref='rig', lazy=True)
+    bands = db.relationship('Band', secondary=rig_band, backref='rigs')
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+
+
+class Antenna(db.Model):
+    id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
+    name = db.Column(db.String(1000), unique=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+
+class Configuration(db.Model):
+    id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
+    name = db.Column(db.String(1000), unique=True)
+    antenna = db.Column(db.Integer, db.ForeignKey('antenna.id'), nullable=True)
+    rig_id = db.Column(db.Integer, db.ForeignKey('rig.id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
 

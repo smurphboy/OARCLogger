@@ -13,10 +13,10 @@ class QSOForm(FlaskForm):
     band = SelectField('Band',
                        choices=['160m', '80m', '60m', '40m', '30m', '20m', '17m',
                                 '15m', '12m', '10m', '6m', '4m', '2m', '70cms'],
-                       validators=[InputRequired()])
+                       validators=[InputRequired()]) # convert this to look at the config selected and bands on the rig
     mode = SelectField('Mode',
                        choices=['USB', 'LSB', 'FM', 'AM', 'DSB', 'FT8'],
-                       validators=[InputRequired()])
+                       validators=[InputRequired()]) # convert this to look at the config selected and the modes available
     gridsquare = StringField('Gridsquare', validators=[InputRequired(),
                                             Length(max=10)])
     my_gridsquare = StringField('My Gridsquare', validators=[InputRequired(),
