@@ -36,3 +36,10 @@ class EventForm(FlaskForm):
     end_date  = DateField('End Date', validators=[Optional()], default=datetime.date.today)
     end_time = TimeField('End Time', validators=[Optional()], default=datetime.datetime.now)
     comment = TextAreaField('Comment', validators=[Optional(), Length(max=255)])
+
+
+class ConfigForm(FlaskForm):
+    name = StringField('Name', validators=[InputRequired(), Length(max=50)])
+    comment = TextAreaField('Comment', validators=[Optional(), Length(max=255)])
+    antenna = SelectField('Antenna', coerce=int)
+    rig = SelectField('Rig', coerce=int)

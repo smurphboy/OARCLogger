@@ -4,6 +4,7 @@ from logger.users.views import users
 from logger.callsigns.views import callsigns
 from logger.qsos.views import qsos
 from logger.events.views import events
+from logger.configurations.views import configurations
 from logger.config import Config
 from logger.models import db
 from flask_migrate import Migrate
@@ -31,6 +32,7 @@ def create_app():
     app.register_blueprint(callsigns, url_prefix='/callsigns')
     app.register_blueprint(qsos, url_prefix='/qsos')
     app.register_blueprint(events, url_prefix='/events')
+    app.register_blueprint(configurations, url_prefix='/configs')
 
     @app.route("/")
     def index():

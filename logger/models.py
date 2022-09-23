@@ -151,6 +151,7 @@ class QSO(db.Model):
     import_date = db.Column(db.Date())
     import_comments = db.Column(db.String(2000))
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=True)
+    config_id = db.Column(db.Integer, db.ForeignKey('configuration.id'), nullable=True)
 
 
 # Propogation
@@ -214,12 +215,15 @@ class Rig(db.Model):
 class Antenna(db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
     name = db.Column(db.String(1000), unique=True)
+    configurations = db.relationship('Configuration', backref='antenna', lazy=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
 
 class Configuration(db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
     name = db.Column(db.String(1000), unique=True)
-    antenna = db.Column(db.Integer, db.ForeignKey('antenna.id'), nullable=True)
+    comment = db.Column(db.String(255))
+    antenna_id = db.Column(db.Integer, db.ForeignKey('antenna.id'), nullable=True)
     rig_id = db.Column(db.Integer, db.ForeignKey('rig.id'), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    qsos = db.relationship('QSO', backref='configuration', lazy=True)
 
