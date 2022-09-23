@@ -24,6 +24,7 @@
                         <th>Used in QSOs</th>
                         <th>Used in Events</th>
                         <th>Comment</th>
+                        <th>Click to Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,6 +37,7 @@
                         <td>{% if config.qsos %}{{ config.qsos|length }}{% endif %}</td>
                         <td>{% if config.events %}{{ config.events|length }}{% endif %}</td>
                         <td>{{ config.comment }}</td>
+                        <td><a class="button is-danger" href="{{ url_for ('configurations.configdelete', id=config.id) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a></td>
                     </tr>
                     {% else %}
                     No Station Configurations yet
@@ -71,7 +73,7 @@
         <div class="box">
             <div class="level">
                 <div class="level-left">
-                    <p class="level-item">Add a new Station Configuration</p>
+                    <p class="level-item">Click to add a new Station Configuration</p>
                     <a class="button is-link level-item" href="{{ url_for('configurations.configcreate') }}">Add Station Configuration</a>
                 </div>
             </div>

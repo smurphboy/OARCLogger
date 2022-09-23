@@ -41,17 +41,30 @@ def configcreate():
     if request.method == 'POST':
         name = request.form['name']
         comment = request.form['comment']
-        antenna = request.form['antenna']
-        rig = request.form['rig']
+        antenna = Antenna.query.filter_by(id=request.form['antenna']).first()
+        rig = Rig.query.filter_by(id=request.form['rig']).first()
         newconfig = Configuration(name=name, comment=comment, antenna=antenna,
                                   rig=rig, user_id=current_user.get_id())
         db.session.add(newconfig)
         db.session.commit()
-        return redirect(url_for('configs.configlist', username=current_user.name))
+        return redirect(url_for('configurations.configlist', username=current_user.name))
 
     form.antenna.choices = [(a.id, a.name) for a in Antenna.query.filter_by(user_id=current_user.get_id()).order_by('name')]
     form.rig.choices = [(r.id, r.name) for r in Rig.query.filter_by(user_id=current_user.get_id()).order_by('name')]
     return render_template('configcreateform.html', form=form, username=current_user.name)
+
+
+@configurations.route("/delete/<int:id>")
+@login_required
+def configdelete(id):
+    config = Configuration.query.filter_by(id=id).first()
+    if int(config.user_id) == int(current_user.get_id()):
+        config1 = Configuration.query.get_or_404(id)
+        db.session.delete(config1)
+        db.session.commit()
+        return redirect(url_for('configurations.configlist', username=current_user.name))
+    else:
+        abort(403)
 
 @configurations.errorhandler(403)
 def page_not_found(e):

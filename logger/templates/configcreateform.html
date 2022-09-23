@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block hero %}is-primary{% endblock %}
+{% block content %}
+            <div class="bd-hero-heading">
+                <h1 class="title algolia-lvl0">
+                    {% block title %} <p>Add a New Station Configuration for {{ username }}</p> {% endblock %}
+                </h1>
+                <div class="subtitle is-4 algolia-lvl1">
+                    <p>Enter Station Configuration details below and press Add:</p>     
+                </div>
+            </div>
+        </div>
+    </section>
+    </section>
+        <div class="box">
+            <form method="POST">
+                {{ form.csrf_token }}
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            {{ form.name.label(class_='label') }}
+                            <div class="control">
+                                {{ form.name(class_="input") }}
+                            </div>
+                            <p class="help">Name your Station Configuration, for example [IC-705 on EFHW at home QTH]</p>
+                        </div>
+                        {% if form.name.errors %}
+						<ul class="errors">
+							{% for error in form.name.errors %}
+								<li>{{ error }}</li>
+							{% endfor %}
+						</ul>
+                        {% endif %}
+                        <nav class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    <div class="field">
+                                        {{ form.antenna.label(class_="label") }}
+                                        <div class="control">
+											<div class="select">
+                                        	{{ form.antenna() }}
+												<p class="help">Select the antenna for this configuration</p>
+											</div>
+                                        </div>
+                                    </div>
+                                    {% if form.antenna.errors %}
+									<ul class="errors">
+										{% for error in form.comment.errors %}
+											<li>{{ error }}</li>
+										{% endfor %}
+									</ul>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="level-right">
+                                <div class="level-item">
+                                    <div class="field">
+                                        {{ form.rig.label(class_="label") }}
+                                        <div class="control">
+											<div class="select">
+	                                        {{ form.rig() }}
+											<p class="help">Select the rig for this configuration</p>
+											</div>
+                                        </div>
+                                    </div>
+                                    {% if form.rig.errors %}
+									<ul class="errors">
+										{% for error in form.rig.errors %}
+											<li>{{ error }}</li>
+										{% endfor %}
+									</ul>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="column">
+                        <div class="field">
+                            {{ form.comment.label(class_="label") }}
+                            <div class="control">
+                            {{ form.comment(class_="textarea") }}
+                            </div>
+                            <p class="help">Use this for notes about the configuration.</p>
+                        </div>
+                        {% if form.comment.errors %}
+                            <ul class="errors">
+                                {% for error in form.comment.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="control">
+                    <p>
+                        <input type="submit" class="button is-link" value="Add Station Configuration">
+                    </p>
+                </div>
+            </form>
+        </div>
+    </section>
+{% endblock %}
