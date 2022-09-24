@@ -2,7 +2,7 @@ import datetime
 from flask import Blueprint, flash, render_template, redirect, request, url_for, abort
 from flask_login import login_required, current_user
 from logger.models import User, db, Callsign, QSO, Event, Configuration, Antenna, Rig
-from logger.forms import EventForm, ConfigForm
+from logger.forms import AntennaForm, EventForm, ConfigForm, RigForm
 
 configurations = Blueprint('configurations', __name__, template_folder='templates')
 
@@ -38,6 +38,8 @@ def configview(id):
 def configcreate():
     '''Create a Station Configuration'''
     form = ConfigForm()
+    form_ant = AntennaForm()
+    form_rig = RigForm()
     if request.method == 'POST':
         name = request.form['name']
         comment = request.form['comment']
@@ -51,7 +53,7 @@ def configcreate():
 
     form.antenna.choices = [(a.id, a.name) for a in Antenna.query.filter_by(user_id=current_user.get_id()).order_by('name')]
     form.rig.choices = [(r.id, r.name) for r in Rig.query.filter_by(user_id=current_user.get_id()).order_by('name')]
-    return render_template('configcreateform.html', form=form, username=current_user.name)
+    return render_template('configcreateform.html', form=form, form_ant=form_ant, form_rig=form_rig, username=current_user.name)
 
 
 @configurations.route("/delete/<int:id>")

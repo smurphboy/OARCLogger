@@ -1,4 +1,87 @@
 {% extends 'base.html' %}
+{% block scripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Functions to open and close a modal
+        function openModal($el) {
+        $el.classList.add('is-active');
+        }
+    
+        function closeModal($el) {
+        $el.classList.remove('is-active');
+        }
+    
+        function closeAllModals() {
+        (document.querySelectorAll('.modal') || []).forEach(($modal) => {
+            closeModal($modal);
+        });
+        }
+    
+        // Add a click event on buttons to open a specific modal
+        (document.querySelectorAll('.js-modal-trigger') || []).forEach(($trigger) => {
+        const modal = $trigger.dataset.target;
+        const $target = document.getElementById(modal);
+    
+        $trigger.addEventListener('click', () => {
+            openModal($target);
+        });
+        });
+    
+        // Add a click event on various child elements to close the parent modal
+        (document.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button.cancel') || []).forEach(($close) => {
+        const $target = $close.closest('.modal');
+    
+        $close.addEventListener('click', () => {
+            closeModal($target);
+        });
+        });
+
+        // Add a keyboard event to close all modals
+        document.addEventListener('keydown', (event) => {
+        const e = event || window.event;
+    
+        if (e.keyCode === 27) { // Escape key
+            closeAllModals();
+        }
+        });
+    });
+</script>
+<script>  
+    $(document).ready(function(){  
+         $('#add_ant').click(function(){  
+              var name = $('#name').val(); 
+              console.log(name);
+              console.log('test');  
+              if(username != '')  
+              {  
+                   $.ajax({  
+                        url:"/antenna/create",  
+                        method:"POST",  
+                        data: {name:name},  
+                        success:function(data)  
+                        {  
+                             alert(data);  
+                             if(data == 'No-data')  
+                             {  
+                                  alert("Invalid Name");  
+                             }  
+                             else
+                             {  
+                                  $('#loginModal').hide();  
+                                  location.reload();  
+                             }  
+                        }  
+                   });  
+              }  
+              else
+              {  
+                   alert("Both Fields are required");  
+              }  
+         });    
+    });  
+</script>   
+{% endblock %}
 {% block hero %}is-primary{% endblock %}
 {% block content %}
             <div class="bd-hero-heading">
@@ -41,6 +124,9 @@
                                         	{{ form.antenna() }}
 												<p class="help">Select the antenna for this configuration</p>
 											</div>
+                                            <button type="button" class="js-modal-trigger button is-primary" data-target="modal-add-antenna">
+                                                +
+                                            </button>
                                         </div>
                                     </div>
                                     {% if form.antenna.errors %}
@@ -61,6 +147,9 @@
 	                                        {{ form.rig() }}
 											<p class="help">Select the rig for this configuration</p>
 											</div>
+                                            <button type="button" class="js-modal-trigger button is-primary" data-target="modal-add-rig">
+                                                +
+                                            </button>
                                         </div>
                                     </div>
                                     {% if form.rig.errors %}
@@ -99,4 +188,70 @@
             </form>
         </div>
     </section>
+{% endblock %}
+{% block bottombody %}
+<div id="modal-add-antenna" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Add Antenna</p>
+            <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <form method="POST">
+                {{ form_ant.csrf_token }}
+                <div class="field">
+                    {{ form_ant.name.label(class_='label') }}
+                    <div class="control">
+                        {{ form_ant.name(class_="input ant") }}
+                    </div>
+                    <p class="help">Name your Antenna, for example [EFHW]</p>
+                </div>
+                {% if form_ant.name.errors %}
+                <ul class="errors">
+                    {% for error in form_ant.name.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </form> 
+        </section>
+        <footer class="modal-card-foot">
+            <button class="button is-success ant" name="add_ant">Add Antenna</button>
+            <button class="button cancel">Cancel</button>
+        </footer>
+    </div>
+</div>
+<div id="modal-add-rig" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Add Rig</p>
+            <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <form method="POST">
+                {{ form_rig.csrf_token }}
+                <div class="field">
+                    {{ form_rig.name.label(class_='label') }}
+                    <div class="control">
+                        {{ form_rig.name(class_="input rig") }}
+                    </div>
+                    <p class="help">Name your Rig, for example [IC-705]</p>
+                </div>
+                {% if form_rig.name.errors %}
+                <ul class="errors">
+                    {% for error in form_rig.name.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </form> 
+        </section>
+        <footer class="modal-card-foot">
+            <button class="button is-success" name="add_rig">Add Rig</button>
+            <button class="button cancel">Cancel</button>
+        </footer>
+    </div>
+</div>
 {% endblock %}

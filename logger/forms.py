@@ -43,3 +43,11 @@ class ConfigForm(FlaskForm):
     comment = TextAreaField('Comment', validators=[Optional(), Length(max=255)])
     antenna = SelectField('Antenna', coerce=int)
     rig = SelectField('Rig', coerce=int)
+
+
+class RigForm(FlaskForm):
+    name = StringField('Name', validators=[InputRequired(), Length(max=50)])
+
+
+class AntennaForm(FlaskForm):
+    name = StringField('Name', validators=[InputRequired(), Length(max=50)])
