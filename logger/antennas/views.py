@@ -25,7 +25,7 @@ def antennalist(username):
 @login_required
 def antennaview(id):
     '''View an antenna and the Station configurations / QSOs associated with it'''
-    antenna = Antenna.query.filter_by(user_id=id).first()
+    antenna = Antenna.query.filter_by(id=id).first()
     if int(antenna.user_id) == int(current_user.get_id()):
         return render_template('anteannaview.html', antenna=antenna)
     else:

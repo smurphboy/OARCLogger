@@ -43,8 +43,24 @@ def configcreate():
     if request.method == 'POST':
         if request.form['formsubmitted'] == 'antenna':
             print('antenna')
+            name = request.form['name']
+            newantenna = Antenna(name=name, user_id=current_user.get_id())
+            db.session.add(newantenna)
+            db.session.commit()
+            form.antenna.choices = [(a.id, a.name) for a in Antenna.query.filter_by(user_id=current_user.get_id()).order_by('name')]
+            form.rig.choices = [(r.id, r.name) for r in Rig.query.filter_by(user_id=current_user.get_id()).order_by('name')]
+            form.name.data='' #stops our form name leaking into the config form
+            return render_template('configcreateform.html', form=form, form_ant=form_ant, form_rig=form_rig, username=current_user.name)
         elif request.form['formsubmitted'] == 'rig':
             print('rig')
+            name = request.form['name']
+            newrig = Rig(name=name, user_id=current_user.get_id())
+            db.session.add(newrig)
+            db.session.commit()
+            form.antenna.choices = [(a.id, a.name) for a in Antenna.query.filter_by(user_id=current_user.get_id()).order_by('name')]
+            form.rig.choices = [(r.id, r.name) for r in Rig.query.filter_by(user_id=current_user.get_id()).order_by('name')]
+            form.name.data='' #stops our form name leaking into the config form
+            return render_template('configcreateform.html', form=form, form_ant=form_ant, form_rig=form_rig, username=current_user.name)
         elif request.form['formsubmitted'] == 'config':
             print('config')
             name = request.form['name']
@@ -56,7 +72,6 @@ def configcreate():
             db.session.add(newconfig)
             db.session.commit()
             return redirect(url_for('configurations.configlist', username=current_user.name))
-
     form.antenna.choices = [(a.id, a.name) for a in Antenna.query.filter_by(user_id=current_user.get_id()).order_by('name')]
     form.rig.choices = [(r.id, r.name) for r in Rig.query.filter_by(user_id=current_user.get_id()).order_by('name')]
     return render_template('configcreateform.html', form=form, form_ant=form_ant, form_rig=form_rig, username=current_user.name)

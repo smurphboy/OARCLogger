@@ -25,7 +25,7 @@ def riglist(username):
 @login_required
 def rigview(id):
     '''View a rig and the Station configurations / Antennas associated with it'''
-    rig = Rig.query.filter_by(user_id=id).first()
+    rig = Rig.query.filter_by(id=id).first()
     if int(rig.user_id) == int(current_user.get_id()):
         return render_template('rigview.html', rig=rig)
     else:

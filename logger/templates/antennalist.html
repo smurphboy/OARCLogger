@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block hero %}is-primary{% endblock %}
+{% block content %}
+            <div class="bd-hero-heading">
+                <h1 class="title is-size-1">
+                    {% block title %} Antennas for {{ username }} {% endblock %}
+                </h1>
+                <div class="subtitle is-4 algolia-lvl1">
+                    <p>{{ allantennas|length }} antennas for this user.</p>     
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="box">
+            <table class="table is-striped is-hoverable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Total QSOs</th>
+                        <th>Comment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for antenna in antennapage.items %}
+                    <tr>
+                        <td>{{ antenna.id }}</td>
+                        <td><a href="{{ url_for ('antennas.antennaview', id=antenna.id) }}" title="{{ antenna.name }}">{{ antenna.name }}</a></td>
+                        <td>{% if antenna.qsos %}{{ antenna.qsos|length }}{% endif %}</td>
+                        <td>{{ antenna.comment }}</td>
+                    </tr>
+                    {% else %}
+                    No Antennas yet
+                    {% endfor %}
+                </tbody>
+            </table>
+            <nav class="pagination" role="navigation" aria-label="pagination">
+                <a class="pagination-previous" {% if antennapage.has_prev %} href="{{ url_for('antennas.antennalist', username=current_user.name, page=antennalist.prev_num) }}"{% else %}disabled {% endif %} title="This is the first page">Previous</a>
+                <a class="pagination-next" {% if antennapage.has_next %}href="{{ url_for('antennas.antennalist', username=current_user.name, page=antennalist.next_num) }}"{% else %}disabled {% endif %}>Next page</a>
+                <ul class="pagination-list">
+                    {% for page_num in antennapage.iter_pages() %}
+                        {% if page_num %}
+                            {% if page_num != antennapage.page %}
+                            <li>
+                                <a class="pagination-link" href="{{ url_for('antennas.antennalist', username=current_user.name, page=page_num) }}" aria-label="Goto page {{ page_num }}">{{ page_num }}</a>
+                            </li>
+                            {% else %}
+                            <li>
+                                <a class="pagination-link is-current" href="{{ url_for('antennas.antennalist', username=current_user.name, page=page_num) }}" aria-label="Page {{ page_num }}" aria-current="page">{{ page_num }}</a>
+                            </li>
+                            {% endif %}
+                        {% else %}
+                            <li>
+                                <span class="pagination-ellipsis">&hellip;</span>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
+    </section>
+    <section>
+        <div class="box">
+            <div class="level">
+                <div class="level-left">
+                    <p class="level-item">Add a new Event</p>
+                    <a class="button is-link level-item" href="{{ url_for('antennas.antennacreate', username=current_user.name) }}">Add Event</a>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
