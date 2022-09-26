@@ -96,7 +96,7 @@
     </section>
     </section>
         <div class="box">
-            <form method="POST">
+            <form action="{{ url_for ('configurations.configcreate') }}" method="POST">
                 {{ form.csrf_token }}
                 <div class="columns">
                     <div class="column">
@@ -185,6 +185,7 @@
                         <input type="submit" class="button is-link" value="Add Station Configuration">
                     </p>
                 </div>
+                <input type="hidden" name="formsubmitted" value="config">
             </form>
         </div>
     </section>
@@ -198,7 +199,7 @@
             <button class="delete" aria-label="close"></button>
         </header>
         <section class="modal-card-body">
-            <form method="POST">
+            <form method="POST" id="antform">
                 {{ form_ant.csrf_token }}
                 <div class="field">
                     {{ form_ant.name.label(class_='label') }}
@@ -214,10 +215,11 @@
                     {% endfor %}
                 </ul>
                 {% endif %}
+                <input type="hidden" name="formsubmitted" value="antenna">
             </form> 
         </section>
         <footer class="modal-card-foot">
-            <button class="button is-success ant" name="add_ant">Add Antenna</button>
+            <button class="button is-success ant" name="add_ant" type="submit" form="antform">Add Antenna</button>
             <button class="button cancel">Cancel</button>
         </footer>
     </div>
@@ -230,7 +232,7 @@
             <button class="delete" aria-label="close"></button>
         </header>
         <section class="modal-card-body">
-            <form method="POST">
+            <form method="POST" id="rigform">
                 {{ form_rig.csrf_token }}
                 <div class="field">
                     {{ form_rig.name.label(class_='label') }}
@@ -246,10 +248,11 @@
                     {% endfor %}
                 </ul>
                 {% endif %}
+                <input type="hidden" name="formsubmitted" value="rig">
             </form> 
         </section>
         <footer class="modal-card-foot">
-            <button class="button is-success" name="add_rig">Add Rig</button>
+            <button class="button is-success" name="add_rig" type="submit" form="rigform">Add Rig</button>
             <button class="button cancel">Cancel</button>
         </footer>
     </div>

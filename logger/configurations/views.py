@@ -41,15 +41,21 @@ def configcreate():
     form_ant = AntennaForm()
     form_rig = RigForm()
     if request.method == 'POST':
-        name = request.form['name']
-        comment = request.form['comment']
-        antenna = Antenna.query.filter_by(id=request.form['antenna']).first()
-        rig = Rig.query.filter_by(id=request.form['rig']).first()
-        newconfig = Configuration(name=name, comment=comment, antenna=antenna,
-                                  rig=rig, user_id=current_user.get_id())
-        db.session.add(newconfig)
-        db.session.commit()
-        return redirect(url_for('configurations.configlist', username=current_user.name))
+        if request.form['formsubmitted'] == 'antenna':
+            print('antenna')
+        elif request.form['formsubmitted'] == 'rig':
+            print('rig')
+        elif request.form['formsubmitted'] == 'config':
+            print('config')
+            name = request.form['name']
+            comment = request.form['comment']
+            antenna = Antenna.query.filter_by(id=request.form['antenna']).first()
+            rig = Rig.query.filter_by(id=request.form['rig']).first()
+            newconfig = Configuration(name=name, comment=comment, antenna=antenna,
+                                    rig=rig, user_id=current_user.get_id())
+            db.session.add(newconfig)
+            db.session.commit()
+            return redirect(url_for('configurations.configlist', username=current_user.name))
 
     form.antenna.choices = [(a.id, a.name) for a in Antenna.query.filter_by(user_id=current_user.get_id()).order_by('name')]
     form.rig.choices = [(r.id, r.name) for r in Rig.query.filter_by(user_id=current_user.get_id()).order_by('name')]

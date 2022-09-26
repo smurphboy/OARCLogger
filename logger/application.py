@@ -5,6 +5,8 @@ from logger.callsigns.views import callsigns
 from logger.qsos.views import qsos
 from logger.events.views import events
 from logger.configurations.views import configurations
+from logger.antennas.views import antennas
+from logger.rigs.views import rigs
 from logger.config import Config
 from logger.models import db
 from flask_migrate import Migrate
@@ -34,6 +36,8 @@ def create_app():
     app.register_blueprint(qsos, url_prefix='/qsos')
     app.register_blueprint(events, url_prefix='/events')
     app.register_blueprint(configurations, url_prefix='/configs')
+    app.register_blueprint(antennas, url_prefix='/antennas')
+    app.register_blueprint(rigs, url_prefix='/rigs')
 
     @app.route("/")
     def index():
