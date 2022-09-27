@@ -47,7 +47,11 @@ class ConfigForm(FlaskForm):
 
 class RigForm(FlaskForm):
     name = StringField('Name', validators=[InputRequired(), Length(max=50)])
+    manufacturer = StringField('Manufacturer', validators=[Optional(), Length(max=255)])
+    comment = StringField('Comment', validators=[Optional(), Length(max=255)])
 
 
 class AntennaForm(FlaskForm):
     name = StringField('Name', validators=[InputRequired(), Length(max=50)])
+    manufacturer = StringField('Manufacturer', validators=[Optional(), Length(max=255)])
+    comment = StringField('Comment', validators=[Optional(), Length(max=255)])

@@ -1,6 +1,54 @@
 {% extends 'base.html' %}
 
 {% block hero %}is-primary{% endblock %}
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Functions to open and close a modal
+        function openModal($el) {
+        $el.classList.add('is-active');
+        }
+    
+        function closeModal($el) {
+        $el.classList.remove('is-active');
+        }
+    
+        function closeAllModals() {
+        (document.querySelectorAll('.modal') || []).forEach(($modal) => {
+            closeModal($modal);
+        });
+        }
+    
+        // Add a click event on buttons to open a specific modal
+        (document.querySelectorAll('.js-modal-trigger') || []).forEach(($trigger) => {
+        const modal = $trigger.dataset.target;
+        const $target = document.getElementById(modal);
+    
+        $trigger.addEventListener('click', () => {
+            openModal($target);
+        });
+        });
+    
+        // Add a click event on various child elements to close the parent modal
+        (document.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button.cancel') || []).forEach(($close) => {
+        const $target = $close.closest('.modal');
+    
+        $close.addEventListener('click', () => {
+            closeModal($target);
+        });
+        });
+
+        // Add a keyboard event to close all modals
+        document.addEventListener('keydown', (event) => {
+        const e = event || window.event;
+    
+        if (e.keyCode === 27) { // Escape key
+            closeAllModals();
+        }
+        });
+    });
+</script>  
+{% endblock %}
 {% block content %}
             <div class="bd-hero-heading">
                 <h1 class="title is-size-1">
@@ -19,8 +67,10 @@
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
-                        <th>Total QSOs</th>
+                        <th>Manfacturer</th>
+                        <th>Total Configs</th>
                         <th>Comment</th>
+                        <th>Click to Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,8 +78,10 @@
                     <tr>
                         <td>{{ antenna.id }}</td>
                         <td><a href="{{ url_for ('antennas.antennaview', id=antenna.id) }}" title="{{ antenna.name }}">{{ antenna.name }}</a></td>
-                        <td>{% if antenna.qsos %}{{ antenna.qsos|length }}{% endif %}</td>
-                        <td>{{ antenna.comment }}</td>
+                        <td>{{ antenna.manufacturer }}</td>
+                        <td>{% if antenna.configurations %}{{ antenna.configurations|length }}{% endif %}</td>
+                        <td>{% if antenna.comment %}{{ antenna.comment|truncate (10) }}{% endif %}</td>
+                        <td><a class="button is-danger" href="{{ url_for ('antennas.antennadelete', id=antenna.id) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a></td>
                     </tr>
                     {% else %}
                     No Antennas yet
@@ -65,10 +117,74 @@
         <div class="box">
             <div class="level">
                 <div class="level-left">
-                    <p class="level-item">Add a new Event</p>
-                    <a class="button is-link level-item" href="{{ url_for('antennas.antennacreate', username=current_user.name) }}">Add Event</a>
+                    <button type="button" class="js-modal-trigger button is-primary" data-target="modal-add-antenna">
+                        Add a new Antenna
+                    </button>
                 </div>
             </div>
         </div>
     </section>
+{% endblock %}
+{% block bottombody %}
+<div id="modal-add-antenna" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Add Antenna</p>
+            <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <form method="POST" id="antform">
+                {{ form.csrf_token }}
+                <div class="field">
+                    {{ form.name.label(class_='label') }}
+                    <div class="control">
+                        {{ form.name(class_="input ant") }}
+                    </div>
+                    <p class="help">Name your Antenna, for example [EFHW]</p>
+                </div>
+                {% if form.name.errors %}
+                <ul class="errors">
+                    {% for error in form.name.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <div class="field">
+                    {{ form.manufacturer.label(class_='label') }}
+                    <div class="control">
+                        {{ form.manufacturer(class_="input ant") }}
+                    </div>
+                    <p class="help">Add the manufacturer of the antenna [Sotabeams]</p>
+                </div>
+                {% if form.manufacturer.errors %}
+                <ul class="errors">
+                    {% for error in form.manufacturer.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <div class="field">
+                    {{ form.comment.label(class_='label') }}
+                    <div class="control">
+                        {{ form.comment(class_="input ant") }}
+                    </div>
+                    <p class="help">Add any comments about the antenna</p>
+                </div>
+                {% if form.comment.errors %}
+                <ul class="errors">
+                    {% for error in form.comment.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <input type="hidden" name="formsubmitted" value="antenna">
+            </form> 
+        </section>
+        <footer class="modal-card-foot">
+            <button class="button is-success ant" name="add_ant" type="submit" form="antform">Add Antenna</button>
+            <button class="button cancel">Cancel</button>
+        </footer>
+    </div>
+</div>
 {% endblock %}

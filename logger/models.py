@@ -207,6 +207,8 @@ rig_band = db.Table('post_tag',
 class Rig(db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
     name = db.Column(db.String(1000), unique=True)
+    manufacturer = db.Column(db.String(255))
+    comment = db.Column(db.String(255))
     configurations = db.relationship('Configuration', backref='rig', lazy=True)
     bands = db.relationship('Band', secondary=rig_band, backref='rigs')
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
@@ -215,6 +217,8 @@ class Rig(db.Model):
 class Antenna(db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
     name = db.Column(db.String(1000), unique=True)
+    manufacturer = db.Column(db.String(255))
+    comment = db.Column(db.String(255))
     configurations = db.relationship('Configuration', backref='antenna', lazy=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
 

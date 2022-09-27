@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% block scripts %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         // Functions to open and close a modal
@@ -46,41 +45,7 @@
         }
         });
     });
-</script>
-<script>  
-    $(document).ready(function(){  
-         $('#add_ant').click(function(){  
-              var name = $('#name').val(); 
-              console.log(name);
-              console.log('test');  
-              if(username != '')  
-              {  
-                   $.ajax({  
-                        url:"/antenna/create",  
-                        method:"POST",  
-                        data: {name:name},  
-                        success:function(data)  
-                        {  
-                             alert(data);  
-                             if(data == 'No-data')  
-                             {  
-                                  alert("Invalid Name");  
-                             }  
-                             else
-                             {  
-                                  $('#loginModal').hide();  
-                                  location.reload();  
-                             }  
-                        }  
-                   });  
-              }  
-              else
-              {  
-                   alert("Both Fields are required");  
-              }  
-         });    
-    });  
-</script>   
+</script>  
 {% endblock %}
 {% block hero %}is-primary{% endblock %}
 {% block content %}
