@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block hero %}is-primary{% endblock %}
+{% block content %}
+		<div class="bd-hero-heading">
+			<h1 class="title is-size-1">
+			{% block title %} Edit {{ form.name.data }} {% endblock %}
+			</h1>
+			<div class="subtitle is-4 algolia-lvl1">
+				<p>Edit the antenna data</p>     
+			</div>
+		</div>
+	</div>
+</section>
+<section>
+	<div class="box">
+		<form method="POST" id="antform">
+			{{ form.csrf_token }}
+			<div class="field">
+				{{ form.name.label(class_='label') }}
+				<div class="control">
+					{{ form.name(class_="input ant") }}
+				</div>
+				<p class="help">Name your Antenna, for example [EFHW]</p>
+			</div>
+			{% if form.name.errors %}
+			<ul class="errors">
+				{% for error in form.name.errors %}
+					<li>{{ error }}</li>
+				{% endfor %}
+			</ul>
+			{% endif %}
+			<div class="field">
+				{{ form.manufacturer.label(class_='label') }}
+				<div class="control">
+					{{ form.manufacturer(class_="input ant") }}
+				</div>
+				<p class="help">Add the manufacturer of the antenna [Sotabeams]</p>
+			</div>
+			{% if form.manufacturer.errors %}
+			<ul class="errors">
+				{% for error in form.manufacturer.errors %}
+					<li>{{ error }}</li>
+				{% endfor %}
+			</ul>
+			{% endif %}
+			<div class="field">
+				{{ form.comment.label(class_='label') }}
+				<div class="control">
+					{{ form.comment(class_="input ant") }}
+				</div>
+				<p class="help">Add any comments about the antenna</p>
+			</div>
+			{% if form.comment.errors %}
+			<ul class="errors">
+				{% for error in form.comment.errors %}
+					<li>{{ error }}</li>
+				{% endfor %}
+			</ul>
+			{% endif %}
+			<input type="hidden" name="formsubmitted" value="antenna">
+			<div class="control">
+				<p>
+					<input type="submit" class="button is-link" value="Save Changes">
+				</p>
+			</div>
+		</form> 
+	</div>
+</section>
+{% endblock %}

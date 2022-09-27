@@ -59,6 +59,7 @@ def antennacreate():
 @antennas.route("/delete/<int:id>")
 @login_required
 def antennadelete(id):
+    '''deleted selected antenna'''
     antenna = Antenna.query.filter_by(id=id).first()
     if int(antenna.user_id) == int(current_user.get_id()):
         antenna1 = Antenna.query.get_or_404(id)
@@ -67,3 +68,22 @@ def antennadelete(id):
         return redirect(url_for('antennas.antennalist', username=current_user.name))
     else:
         abort(403)
+
+
+@antennas.route("/edit/<int:id>", methods=['GET','POST'])
+@login_required
+def antennaedit(id):
+    '''edit an existing antenna'''
+    form = AntennaForm()
+    antenna = Antenna.query.get_or_404(id)
+    form.name.data = antenna.name
+    form.manufacturer.data = antenna.manufacturer
+    form.comment.data = antenna.comment
+    if request.method == 'POST':
+        antenna.name = request.form['name']
+        antenna.manufacturer = request.form['manufacturer']
+        antenna.comment = request.form['comment']
+        db.session.add(antenna)
+        db.session.commit()
+        return redirect(url_for('antennas.antennalist', username=current_user.name))
+    return render_template('antennaeditform.html', form=form, username=current_user.name)

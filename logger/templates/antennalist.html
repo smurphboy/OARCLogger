@@ -68,8 +68,9 @@
                         <th>ID</th>
                         <th>Name</th>
                         <th>Manfacturer</th>
-                        <th>Total Configs</th>
+                        <th>Used in Configs</th>
                         <th>Comment</th>
+                        <th>Click to Edit</th>
                         <th>Click to Delete</th>
                     </tr>
                 </thead>
@@ -78,9 +79,10 @@
                     <tr>
                         <td>{{ antenna.id }}</td>
                         <td><a href="{{ url_for ('antennas.antennaview', id=antenna.id) }}" title="{{ antenna.name }}">{{ antenna.name }}</a></td>
-                        <td>{{ antenna.manufacturer }}</td>
+                        <td>{% if antenna.manufacturer %}{{ antenna.manufacturer|truncate (20) }}{% endif %}</td>
                         <td>{% if antenna.configurations %}{{ antenna.configurations|length }}{% endif %}</td>
-                        <td>{% if antenna.comment %}{{ antenna.comment|truncate (10) }}{% endif %}</td>
+                        <td>{% if antenna.comment %}{{ antenna.comment|truncate (20) }}{% endif %}</td>
+                        <td><a class="button is-link" href="{{ url_for ('antennas.antennaedit', id=antenna.id) }}">Edit</a></td>
                         <td><a class="button is-danger" href="{{ url_for ('antennas.antennadelete', id=antenna.id) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a></td>
                     </tr>
                     {% else %}
