@@ -37,101 +37,98 @@
 </head>
 
 <body>
-    <nav class="navbar">
-        <div class="container">
-            <div class="navbar-brand">
-                <a class="navbar-item" href="https://oarc.uk">
-                    <img src="{{ url_for('static', filename='OARCLogger.png') }}" width="112" height="28">
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="https://oarc.uk">
+                <img src="{{ url_for('static', filename='OARCLogger.png') }}" width="112" height="28">
+            </a>
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div id="navMenu" class="navbar-menu">
+            <div class="navbar-start">
+                <a href="{{ url_for('users.index') }}" class="navbar-item">
+                    Home
                 </a>
-                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                </a>
-            </div>
-            <div id="navbarMenuHeroA" class="navbar-menu">
-                <div id="navbarBasicExample" class="navbar-menu">
-                    <div class="navbar-start">
-                        <a href="{{ url_for('users.index') }}" class="navbar-item">
-                            Home
+                {% if current_user.is_authenticated %}
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link" href="{{ url_for('users.profile', user=current_user.name) }}">
+                    {{ current_user.name }}'s Logbooks
+                    </a>
+                    <div class="navbar-dropdown">
+                    {% for call in current_user.callsigns %}
+                        <a class="navbar-item" href="{{ url_for('callsigns.call', callsign=call.name | replace('/','_')) }}">
+                            {{ call.name }}
                         </a>
-                        {% if current_user.is_authenticated %}
-                        <div class="navbar-item has-dropdown is-hoverable">
-                            <a class="navbar-link" href="{{ url_for('users.profile', user=current_user.name) }}">
-                            {{ current_user.name }}'s Logbooks
-                            </a>
-                            <div class="navbar-dropdown">
-                            {% for call in current_user.callsigns %}
-                                <a class="navbar-item" href="{{ url_for('callsigns.call', callsign=call.name | replace('/','_')) }}">
-                                    {{ call.name }}
-                                </a>
-                            {% endfor %}
-                            </div>
-                        </div>
-                        {% endif %}
-                        {% if current_user.is_authenticated %}
-                        <div class="navbar-item has-dropdown is-hoverable">
-                            <a class="navbar-link" href="{{ url_for('configurations.configlist', username=current_user.name) }}">
-                            {{ current_user.name }}'s Configs
-                            </a>
-                            <div class="navbar-dropdown">
-                            {% for config in current_user.configurations %}
-                                <a class="navbar-item" href="{{ url_for('configurations.configview', id=config.id) }}">
-                                    {{ config.name }}
-                                </a>
-                            {% endfor %}
-                                <hr class="navbar-divider">
-                                <a class="navbar-item" href="{{ url_for('rigs.riglist', username=current_user.name) }}">
-                                    {{ current_user.name}}'s Rigs
-                                </a>
-                                <hr class="navbar-divider">
-                                <a class="navbar-item" href="{{ url_for('antennas.antennalist', username=current_user.name) }}">
-                                    {{ current_user.name}}'s Antennas
-                                </a>                                
-                            </div>
-                        </div>
-                        {% endif %}
-                        <div class="navbar-item has-dropdown is-hoverable">
-                            <a class="navbar-link">
-                            More
-                            </a>
-                            <div class="navbar-dropdown">
-                                <a class="navbar-item" href="/about">
-                                    About
-                                </a>
-                                <a class="navbar-item" href="/gettingstarted">
-                                    Getting Started
-                                </a>                                
-                                <hr class="navbar-divider">
-                                <a class="navbar-item" href="https://github.com/smurphboy/OARCFieldDayLogger/issues">
-                                    Report an issue (Github)
-                                </a>
-                            </div>
-                        </div>
+                    {% endfor %}
                     </div>
-                <div class="navbar-end">
-                    <div class="buttons">
-                        {% if current_user.is_authenticated %}
-                        <a href="{{ url_for('users.profile', user=current_user.name) }}" class="button is-light">
-                            Profile
+                </div>
+                {% endif %}
+                {% if current_user.is_authenticated %}
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link" href="{{ url_for('configurations.configlist', username=current_user.name) }}">
+                    {{ current_user.name }}'s Configs
+                    </a>
+                    <div class="navbar-dropdown">
+                    {% for config in current_user.configurations %}
+                        <a class="navbar-item" href="{{ url_for('configurations.configview', id=config.id) }}">
+                            {{ config.name }}
                         </a>
-                        {% endif %}
-                        {% if not current_user.is_authenticated %}
-                        <a href="{{ url_for('users.login') }}" class="button is-light">
-                            Login
+                    {% endfor %}
+                        <hr class="navbar-divider">
+                        <a class="navbar-item" href="{{ url_for('rigs.riglist', username=current_user.name) }}">
+                            {{ current_user.name}}'s Rigs
                         </a>
-                        <a href="{{ url_for('users.signup') }}" class="button is-primary">
-                            Sign Up
+                        <hr class="navbar-divider">
+                        <a class="navbar-item" href="{{ url_for('antennas.antennalist', username=current_user.name) }}">
+                            {{ current_user.name}}'s Antennas
+                        </a>                                
+                    </div>
+                </div>
+                {% endif %}
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                    More
+                    </a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" href="/about">
+                            About
                         </a>
-                        {% endif %}
-                        {% if current_user.is_authenticated %}
-                        <a href="{{ url_for('users.logout') }}" class="button">
-                            Logout
+                        <a class="navbar-item" href="/gettingstarted">
+                            Getting Started
+                        </a>                                
+                        <hr class="navbar-divider">
+                        <a class="navbar-item" href="https://github.com/smurphboy/OARCFieldDayLogger/issues">
+                            Report an issue (Github)
                         </a>
-                    </button>
-                    {% endif %}
+                    </div>
                 </div>
             </div>
+        </div>
+        <div class="navbar-end" id="navMenu">
+            <div class="buttons">
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('users.profile', user=current_user.name) }}" class="button is-light">
+                    Profile
+                </a>
+                {% endif %}
+                {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('users.login') }}" class="button is-light">
+                    Login
+                </a>
+                <a href="{{ url_for('users.signup') }}" class="button is-primary">
+                    Sign Up
+                </a>
+                {% endif %}
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('users.logout') }}" class="button">
+                    Logout
+                </a>
+            </button>
+            {% endif %}
         </div>
     </nav>
     <section class="hero {% block hero %}is-light{% endblock %}">
