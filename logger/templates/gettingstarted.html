@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block hero %}is-info{% endblock %}
+{% block content %}
+    {% block title %}<p class="title">Getting started with the OARC Logger</p>
+    <p class="subtitle">Welcome to OARCs Logging website.</p>
+    <p>This was designed to support members of the OARC to log QSOs.</p>
+    <p>It allows OARC members to log all their contacts for either individually, or by importing an ADI file.</p>
+    {% endblock %}
+{% endblock %}
+{% block bottombody%}
+<section>
+    <div class="box">
+        <div class="container">
+            <div class="content">
+                <h1>How to Get Started</h1>
+                <p>This logger can be used in a couple of modes, we will start with the most simple and build from there</p>
+                <ol type="1">
+                    <li>Capture and display existing log files in the ADI format</li>
+                    <li>Live logging of SOTA / POTA / Portable operations of other events</li>
+                    <li>Full QSO management, including Station Configuration and QSL management</li>
+                </ol>
+                <h1>Registration and Logging in</h1>
+                <h2>Registration</h2>
+                <p>Registration is very simple. Click on Sign Up (Green Button in top right of the nav bar), and complete the form.</p>
+                <h2>Logging in</h2>
+                <p>Click on Login (Grey Button next to Sign Up), and fill in your username and password.</p>
+                <p>Sucessful login will send you to your Profile Page</p>
+                <h1>Users, Callsigns and Stations</h1>
+                <h2>Users</h2>
+                <p>This logger collects all your Callsigns, QSOs, Events, Station Configurations, Rigs and Antennas under you as a user. You created a username when you registered and it is this username that determines what data is yours in the logger.</p>
+                <p>Other users see all of their data by logging in as themselves. It is possible for an individual to set up more than one user account and manage callsigns indidviudally, but it is not the recommended mode of operation.</p>
+                <p>A user has one or many Callsigns. Callsigns have one or many QSOs. A QSO can only belong to a single Callsign, and a Callsign to a single User.</p>
+                <p>A user has one or many Station Configurations. These are used to prepopulate QSOs with information about your station.</p>
+                <p>A user can be part of none, or many Events.</p>
+                <h2>Callsigns</h2>
+                <p>Callsigns should be familar to all users. In this logger, we take the callsign as the callsign used to make the QSO. This includes any prefix, suffix or <abbr title="Regional Secondary Locator">RSL</abbr></p>
+                <h3>Adding Callsigns</h3>
+                <nav class="level">
+                    <div class="level-left">
+                        <p class="level-item">From the<a class="level-item" href="{{ url_for('users.profile', user=current_user.name) }}">&nbsp;Profile&nbsp;</a>page, click</p>
+                        <a class="button is-link level-item" disabled>Add a callsign</a>
+                    </div>
+                </nav>
+                <p>You can add as many callsigns as you like, for example, I currently have:</p>
+                <ul>
+                    <li>M7SMU - my foundation</li>
+                    <li>2E0UMS - my intermediate callsign</li>
+                    <li>2E0UMS/P - my intermediate portablem, still used for 2m contesting.</li>
+                    <li>M0SMU - my full callsign</li>
+                    <li>M0SMU/P - my full callsign portable used for SOTA</li>
+                </ul>
+                <p>I might add MW0SMU if I go across the Severn and operate out of Wales</p>
+                <h1>QSOs</h1>
+                <h2>Adding QSOs individually</h2>
+                <p>Coming soon...</p>
+                <h2>Importing QSOs</h2>
+                <p>Coming soon...</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

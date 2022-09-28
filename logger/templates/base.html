@@ -9,6 +9,29 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
     <script src="https://kit.fontawesome.com/0b3761f75b.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@6.5.95/css/materialdesignicons.min.css" />
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+        // Get all "navbar-burger" elements
+        const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+        // Add a click event on each of them
+        $navbarBurgers.forEach( el => {
+        el.addEventListener('click', () => {
+
+            // Get the target from the "data-target" attribute
+            const target = el.dataset.target;
+            const $target = document.getElementById(target);
+
+            // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+            el.classList.toggle('is-active');
+            $target.classList.toggle('is-active');
+
+        });
+        });
+
+        });
+    </script>
     {% block scripts %}
     {% endblock %}
 </head>
@@ -34,7 +57,7 @@
                         </a>
                         {% if current_user.is_authenticated %}
                         <div class="navbar-item has-dropdown is-hoverable">
-                            <a class="navbar-link">
+                            <a class="navbar-link" href="{{ url_for('users.profile', user=current_user.name) }}">
                             {{ current_user.name }}'s Logbooks
                             </a>
                             <div class="navbar-dropdown">
@@ -46,6 +69,28 @@
                             </div>
                         </div>
                         {% endif %}
+                        {% if current_user.is_authenticated %}
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link" href="{{ url_for('configurations.configlist', username=current_user.name) }}">
+                            {{ current_user.name }}'s Configs
+                            </a>
+                            <div class="navbar-dropdown">
+                            {% for config in current_user.configurations %}
+                                <a class="navbar-item" href="{{ url_for('configurations.configview', id=config.id) }}">
+                                    {{ config.name }}
+                                </a>
+                            {% endfor %}
+                                <hr class="navbar-divider">
+                                <a class="navbar-item" href="{{ url_for('rigs.riglist', username=current_user.name) }}">
+                                    {{ current_user.name}}'s Rigs
+                                </a>
+                                <hr class="navbar-divider">
+                                <a class="navbar-item" href="{{ url_for('antennas.antennalist', username=current_user.name) }}">
+                                    {{ current_user.name}}'s Antennas
+                                </a>                                
+                            </div>
+                        </div>
+                        {% endif %}
                         <div class="navbar-item has-dropdown is-hoverable">
                             <a class="navbar-link">
                             More
@@ -54,6 +99,9 @@
                                 <a class="navbar-item" href="/about">
                                     About
                                 </a>
+                                <a class="navbar-item" href="/gettingstarted">
+                                    Getting Started
+                                </a>                                
                                 <hr class="navbar-divider">
                                 <a class="navbar-item" href="https://github.com/smurphboy/OARCFieldDayLogger/issues">
                                     Report an issue (Github)
@@ -63,7 +111,6 @@
                     </div>
                 <div class="navbar-end">
                     <div class="buttons">
-
                         {% if current_user.is_authenticated %}
                         <a href="{{ url_for('users.profile', user=current_user.name) }}" class="button is-light">
                             Profile

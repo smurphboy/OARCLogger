@@ -47,6 +47,10 @@ def create_app():
     def about():
         return render_template('about.html')
 
+    @app.route("/gettingstarted")
+    def gettingstarted():
+        return render_template('gettingstarted.html')
+
     @app.template_filter()
     def MhzFormat(value):
         value = float(value)
