@@ -37,5 +37,12 @@ def callsigncreate():
         newcallsign = Callsign(name=name, user_id=current_user.get_id())
         db.session.add(newcallsign)
         db.session.commit()
-        return redirect(url_for('profile', user=current_user.name, callsigns=current_user.callsigns))
+        return redirect(url_for('users.profile', user=current_user.name))
     return render_template('callsigncreateform.html', form=form, username=current_user.name)
+
+
+@callsigns.post("/delete/<int:id>")
+@login_required
+def callsigndelete(id):
+    print(id)
+    return redirect(url_for('users.profile', user=current_user.name))

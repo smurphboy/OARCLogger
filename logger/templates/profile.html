@@ -62,27 +62,45 @@
 </section>
 <section class="section">
 	<div class="box">
-		{% for callsign in current_user.callsigns %}
-		<div class="level">
-			<div class="level-left">
-				<a class="level-item" href="{{ url_for ('callsigns.call', callsign=callsign['name'] | replace('/','_'))  }}">{{ callsign['name'] }}</a><p class="level-item">which has {{ qsocount(callsign.name) }} QSOs{% if latestqso(callsign.name) != 'N/A' %} and that last QSO was on {{ latestqso(callsign.name) }}{% endif %}</p>
-			</div>
-			<div class="level-right">
-                <a class="button is-link level-item" href="{{ url_for ('callsigns.call', callsign=callsign['name'] | replace('/','_'))  }}" disabled>Manage Duplicates</a>
-				<a class="button is-link level-item" href="{{ url_for ('callsigns.call', callsign=callsign['name'] | replace('/','_'))  }}">View QSOs</a>
-				<a class="button is-link level-item" href="{{ url_for('qsos.postnewqso', station_callsign=callsign.name | replace('/','_')) }}">Log New QSO</a>
-			</div>
-		</div>
-		{% else %}
-		<div class="level">
-			<div class="level-left">
-				<p class="level-item">You have no callsigns defined, please add one.</p>
-			</div>
-			<div class="level-right">
-				<button class="button level-item is-link" onclick='window.location.href="https://twitter.com/home?lang=en";'>Add Callsign</button>
-			</div>
-		</div>
-		{% endfor %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Callsign</th>
+                    <th>QSOs</th>
+                    <th>Last QSO</th>
+                    <th>Manage Duplicates</th>
+                    <th>New QSO</th>
+                    <th>Del Callsign</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for callsign in current_user.callsigns %}
+                <tr>
+                    <td>{{ callsign.id }}</td>
+                    <td><a href="{{ url_for ('callsigns.call', callsign=callsign['name'] | replace('/','_'))  }}">{{ callsign.name }}</a></td>
+                    <td>{{ qsocount(callsign.name) }}</td>
+                    <td>{% if latestqso(callsign.name) != 'N/A' %}{{ latestqso(callsign.name) }}{% endif %}</td>
+                    <td><a class="button is-link" href="{{ url_for ('callsigns.call', callsign=callsign.name | replace('/','_'))  }}" disabled>Manage Duplicates</a></td>
+                    <td><a class="button is-link" href="{{ url_for('qsos.postnewqso', station_callsign=callsign.name | replace('/','_')) }}">Log New QSO</a></td>
+                    <td>
+                        <form method="POST" action="{{ url_for('callsigns.callsigndelete', id=callsign.id) }}">
+                            <input class="button is-danger" type="submit" value="Delete Callsign" onclick="return confirm ('Are you sure you want to delete this callsign, this will only delete the callsign, not associated QSOs')"">
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+            {% else %}
+            <div class="level">
+                <div class="level-left">
+                    <p class="level-item">You have no callsigns defined, please add one.</p>
+                </div>
+                <div class="level-right">
+                    <button class="button level-item is-link" onclick='window.location.href="https://twitter.com/home?lang=en";'>Add Callsign</button>
+                </div>
+            </div>
+            {% endfor %}
+        </table>
 	</div>
 	<div class="box">
 		<div class="level">
