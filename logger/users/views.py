@@ -2,7 +2,8 @@ from datetime import datetime
 from flask import Blueprint, flash, render_template, redirect, request, url_for
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from logger.models import QSO, User, db
+from logger.models import QSO, User, db, Callsign
+from logger.forms import CallsignForm
 from sqlalchemy import desc
 
 users = Blueprint('users', __name__, template_folder='templates')
@@ -23,12 +24,19 @@ def index():
     '''Our intro page'''
     return render_template('index.html')
 
-@users.route('/<user>')
+@users.route('/<user>', methods=['GET','POST'])
 @login_required
 def profile(user):
     '''This page shows all the users callsigns and let them manage them,
     add new calls, edit calls and add information about the callsign'''
-    return render_template('profile.html', name=current_user.name, callsigns=current_user.callsigns)
+    form = CallsignForm()
+    if request.method == 'POST':
+        name = request.form['name']
+        newcallsign = Callsign(name=name, user_id=current_user.get_id())
+        db.session.add(newcallsign)
+        db.session.commit()
+        return redirect(url_for('users.profile', user=current_user.name))
+    return render_template('profile.html', user=current_user.name, form=form)
 
 @users.route('/<user>/<call>')
 def call_homepage(user, call):

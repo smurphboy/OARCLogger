@@ -1,6 +1,7 @@
 from flask import Blueprint, flash, render_template, redirect, request, url_for
 from flask_login import login_required, current_user
 from logger.models import User, db, Callsign, QSO
+from logger.forms import CallsignForm
 
 callsigns = Blueprint('callsigns', __name__, template_folder='templates')
 
@@ -24,3 +25,17 @@ def call(callsign):
     callqsos = QSO.query.filter_by(station_callsign = callsign).order_by(QSO.qso_date.desc(), QSO.time_on.desc()).paginate(page=page, per_page=ROWS_PER_PAGE)
     allqsos = QSO.query.filter_by(station_callsign = callsign).all()
     return render_template('callsign.html', qsos=callqsos, station_callsign=callsign, allqsos=allqsos)
+
+
+@callsigns.route("/create", methods=['GET','POST'])
+@login_required
+def callsigncreate():
+    '''Create a Callsign'''
+    form = CallsignForm()
+    if request.method == 'POST':
+        name = request.form['name']
+        newcallsign = Callsign(name=name, user_id=current_user.get_id())
+        db.session.add(newcallsign)
+        db.session.commit()
+        return redirect(url_for('profile', user=current_user.name, callsigns=current_user.callsigns))
+    return render_template('callsigncreateform.html', form=form, username=current_user.name)

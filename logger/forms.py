@@ -55,3 +55,6 @@ class AntennaForm(FlaskForm):
     name = StringField('Name', validators=[InputRequired(), Length(max=50)])
     manufacturer = StringField('Manufacturer', validators=[Optional(), Length(max=255)])
     comment = StringField('Comment', validators=[Optional(), Length(max=255)])
+
+class CallsignForm(FlaskForm):
+    name = StringField('Name', validators=[InputRequired(), Length(max=50)])
