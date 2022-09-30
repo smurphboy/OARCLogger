@@ -26,9 +26,9 @@ def configlist(username):
 @login_required
 def configview(id):
     '''View a Station Configuration and the Events / QSOs associated with it'''
-    config = Configuration.query.filter_by(user_id=id).first()
-    if int(config.user_id) == int(current_user.get_id()):
-        return render_template('configview.html', config=config)
+    configuration = Configuration.query.filter_by(id=id).first()
+    if int(configuration.user_id) == int(current_user.get_id()):
+        return render_template('configview.html', configuration=configuration)
     else:
         abort(403)
 

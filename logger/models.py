@@ -38,6 +38,13 @@ class Callsign(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     primary = db.Column(db.Boolean, default=False)
 
+
+event_config = db.Table('event_config',
+                    db.Column('event_id', db.Integer, db.ForeignKey('event.id')),
+                    db.Column('config_id', db.Integer, db.ForeignKey('configuration.id'))
+                    )
+
+
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
     name = db.Column(db.String(1000), unique=True)
@@ -46,7 +53,7 @@ class Event(db.Model):
     end_date = db.Column(db.DateTime())
     comment = db.Column(db.String(255))
     qsos = db.relationship('QSO', backref='event', lazy=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)   
 
 class QSO(db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
@@ -191,18 +198,20 @@ class QSO(db.Model):
         print('created')
 
 
+rig_band = db.Table('rig_band',
+                    db.Column('rig_id', db.Integer, db.ForeignKey('rig.id')),
+                    db.Column('band_id', db.Integer, db.ForeignKey('band.id'))
+                    )
+
+
 class Band(db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
     name = db.Column(db.String(1000), unique=True)
+    rigs = db.relationship('Rig', secondary=rig_band, backref='bands')
 
     def __repr__(self):
         return f'<Band "{self.name}">' 
 
-
-rig_band = db.Table('post_tag',
-                    db.Column('rig_id', db.Integer, db.ForeignKey('rig.id')),
-                    db.Column('band_id', db.Integer, db.ForeignKey('band.id'))
-                    )
 
 class Rig(db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
@@ -210,7 +219,6 @@ class Rig(db.Model):
     manufacturer = db.Column(db.String(255))
     comment = db.Column(db.String(255))
     configurations = db.relationship('Configuration', backref='rig', lazy=True)
-    bands = db.relationship('Band', secondary=rig_band, backref='rigs')
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
 
 
@@ -230,4 +238,4 @@ class Configuration(db.Model):
     rig_id = db.Column(db.Integer, db.ForeignKey('rig.id'), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     qsos = db.relationship('QSO', backref='configuration', lazy=True)
-
+    events = db.relationship('Event', secondary=event_config, backref='configurations')

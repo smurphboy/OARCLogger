@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block hero %}is-primary{% endblock %}
+{% block content %}
+		<div class="bd-hero-heading">
+			<h1 class="title is-size-1">
+				{% block title %} <p>View a Station Configuration</p> {% endblock %}
+			</h1>
+			<div class="subtitle is-4 algolia-lvl1">
+				<p>{{ current_user.name}}'s {{ configuration.name }}</p>     
+			</div>
+		</div>
+	</div>
+</section>
+<section>
+	<div class="columns">
+		<div class="column">
+			<div class="box">
+				<nav class="level">
+					<div class="level-left">
+						<div class="level-item">
+							<div class="icon-text">
+								<span class="icon">
+									<i class="fa-regular fa-square-caret-right"></i>
+								</span>
+								<span><abbr class="has-text-weight-semibold" title="Events using this Station Configuration">Events:</abbr> {{ configuration.events|length }}</span>
+							</div>
+						</div>
+					</div>
+					<div class="level-right">
+						<div class="level-item">
+							<div class="icon-text">
+								<span class="icon">
+									<i class="fa-regular fa-square-caret-down"></i>
+								</span>
+								<span><abbr class="has-text-weight-semibold" title="Thw number of QSOs using this Station Configuration">Total QSOs:</abbr>{% if configuration.qsos %}{{ configuration.qsos|length }}{% endif %}</span>
+							</div>
+						</div>
+					</div>
+				</nav>
+				<nav class="level">
+					<div class="level-left">
+						<div class="level-item">
+							<div class="icon-text">
+								<span class="icon">
+									<i class="fa-regular fa-square-caret-right"></i>
+								</span>
+								<span><abbr class="has-text-weight-semibold" title="Rig used in this Station Configuration">Rig:</abbr>{% if configuration.rig %}{{ configuration.rig.name }}{% endif %}</span>
+							</div>
+						</div>
+					</div>
+					<div class="level-right">
+						<div class="level-item">
+							<div class="icon-text">
+								<span class="icon">
+									<i class="fa-regular fa-square-caret-down"></i>
+								</span>
+								<span><abbr class="has-text-weight-semibold" title="Antenna used in this Station Configuration">Antenna:</abbr>{% if configuration.antenna %}{{ configuration.antenna.name }}{% endif %}</span>
+							</div>
+						</div>
+					</div>
+				</nav>
+			</div>
+		</div>
+		<div class="column">
+			<div class="box">
+				<nav class="level">
+					<div class="level-left">
+						<div class="level-item">
+							<div class="icon-text">
+								<span class="icon">
+									<i class="fa-regular fa-comments"></i>
+								</span>
+								<span><abbr class="has-text-weight-semibold" title="">Comment:</abbr> {{ configuration.comment }}</span>
+							</div>
+						</div>
+					</div>
+				</nav>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %}
