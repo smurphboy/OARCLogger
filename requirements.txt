@@ -6,3 +6,4 @@ flask-wtf
 flask-sqlalchemy
 maidenhead
 python-dotenv
+pyhamtools

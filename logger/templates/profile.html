@@ -67,10 +67,11 @@
                 <tr>
                     <th>ID</th>
                     <th>Callsign</th>
+                    <th>DXCC</th>
                     <th>QSOs</th>
                     <th>Last QSO</th>
-                    <th>Manage Duplicates</th>
                     <th>New QSO</th>
+                    <th>Manage</th>
                     <th>Del Callsign</th>
                 </tr>
             </thead>
@@ -79,10 +80,11 @@
                 <tr>
                     <td>{{ callsign.id }}</td>
                     <td><a href="{{ url_for ('callsigns.call', callsign=callsign['name'] | replace('/','_'))  }}">{{ callsign.name }}</a></td>
+                    <td>{{ dxcclookup(callsign.name) }}</td>
                     <td>{{ qsocount(callsign.name) }}</td>
                     <td>{% if latestqso(callsign.name) != 'N/A' %}{{ latestqso(callsign.name) }}{% endif %}</td>
-                    <td><a class="button is-link" href="{{ url_for ('callsigns.call', callsign=callsign.name | replace('/','_'))  }}" disabled>Manage Duplicates</a></td>
-                    <td><a class="button is-link" href="{{ url_for('qsos.postnewqso', station_callsign=callsign.name | replace('/','_')) }}">Log New QSO</a></td>
+                    <td><a class="button is-link" href="{{ url_for('qsos.postnewqso', station_callsign=callsign.name | replace('/','_')) }}">+</a></td>
+                    <td><a class="button is-link" href="{{ url_for ('callsigns.call', callsign=callsign.name | replace('/','_'))  }}" disabled><span class="icon"><i class="fa-solid fa-gear"></i></span></a></td>
                     <td>
                         <form method="POST" action="{{ url_for('callsigns.callsigndelete', id=callsign.id) }}">
                             <input class="button is-danger" type="submit" value="Delete Callsign" onclick="return confirm ('Are you sure you want to delete this callsign, this will only delete the callsign, not associated QSOs')"">

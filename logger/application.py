@@ -8,9 +8,12 @@ from logger.configurations.views import configurations
 from logger.antennas.views import antennas
 from logger.rigs.views import rigs
 from logger.config import Config
-from logger.models import db
+from logger.models import db, QSO
 from flask_migrate import Migrate
+from pyhamtools import LookupLib, Callinfo
 
+my_lookuplib = LookupLib(lookuptype='countryfile')
+cic = Callinfo(my_lookuplib)
 
 def create_app():
     app = Flask(__name__)
@@ -55,5 +58,47 @@ def create_app():
     def MhzFormat(value):
         value = float(value)
         return "{:,.6f} MHz".format(value)
+        
+    @app.context_processor
+    def utility_processor():
+        def qsocount(logbook):
+            '''returns the total number of QSOs in the logbook and date and time of last QSO'''
+            return QSO.query.filter_by(station_callsign=logbook).count()
+        def latestqso(logbook):
+            if QSO.query.filter_by(station_callsign=logbook).count() > 0:
+                latest_qso = QSO.query.filter_by(station_callsign=logbook).order_by(QSO.qso_date.desc(), QSO.time_on.desc()).first()
+                return (latest_qso.qso_date.strftime("%d %b %Y") + ' at ' + latest_qso.time_on.strftime("%X") + ' with ' + latest_qso.call)
+            else: return ('N/A')
+        def dxcclookup(logbook):
+            '''returns the DXCC of the callsign'''
+            try:
+                ret = cic.get_country_name(logbook)
+            except KeyError:
+                ret = "N/A"
+            return ret
+        def dxccituz(logbook):
+            '''returns the ITU Zone for a callsign'''
+            try:
+                ret = cic.get_ituz(logbook)
+            except KeyError:
+                ret = "N/A"
+            return ret
+
+        def dxcccqz(logbook):
+            '''returns the CQ Zone for a callsign'''
+            try:
+                ret = cic.get_cqz(logbook)
+            except KeyError:
+                ret = "N/A"
+            return ret
+
+        def homecallsign(logbook):
+            '''returns home callsign and strips prefix / suffix'''
+            try:
+                ret = cic.get_homecall(logbook)
+            except KeyError:
+                ret = 'N/A'
+            return ret
+        return dict(qsocount=qsocount, latestqso=latestqso, dxcclookup=dxcclookup, dxccituz=dxccituz, dxcccqz=dxcccqz, homecallsign=homecallsign)
 
     return app

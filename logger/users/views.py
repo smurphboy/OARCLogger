@@ -8,16 +8,7 @@ from sqlalchemy import desc
 
 users = Blueprint('users', __name__, template_folder='templates')
 
-@users.context_processor
-def utility_processor():
-    def qsocount(logbook):
-        '''returns the total number of QSOs in the logbook and date and time of last QSO'''
-        return QSO.query.filter_by(station_callsign=logbook).count()
-    def latestqso(logbook):
-        if QSO.query.filter_by(station_callsign=logbook).count() > 0:
-            return QSO.query.filter_by(station_callsign=logbook).order_by(QSO.qso_date.desc(), QSO.time_on.desc()).first().qso_date
-        else: return ('N/A')
-    return dict(qsocount=qsocount, latestqso=latestqso)
+
 
 @users.route("/")
 def index():
