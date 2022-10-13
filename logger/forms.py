@@ -8,6 +8,7 @@ from wtforms.widgets import DateTimeInput
 class QSOForm(FlaskForm):
     qso_date = DateField('QSO Date', validators=[InputRequired()], default=datetime.date.today)
     time_on = TimeField('QSO On Time', validators=[InputRequired()], default=datetime.datetime.now)
+    dxcc = StringField('DXCC', validators=[Length(max=50)])
     call = StringField('Call', validators=[InputRequired(),
                                             Length(max=50)])
     band = SelectField('Band',

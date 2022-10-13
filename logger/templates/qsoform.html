@@ -9,55 +9,86 @@
             <p>Enter QSO details below and press Add:</p>     
         </div>
     </div>
-    <form method="POST">
+    <form method="POST" id="qsoform">
         {{ form.csrf_token }}
         <div class="columns">
             <div class="column">
-                <div class="field">
-                    {{ form.qso_date.label(class_="label") }}
-                    <div class="control">
-                    {{ form.qso_date(class_="input") }}
+                <nav class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <div class="field">
+                                {{ form.qso_date.label(class_="label") }}
+                                <div class="control">
+                                {{ form.qso_date(class_="input") }}
+                                </div>
+                            </div>
+
+                            {% if form.qso_date.errors %}
+                                <ul class="errors">
+                                    {% for error in form.qso_date.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <div class="field">
+                                {{ form.time_on.label(class_="label") }}
+                                <div class="control">
+                                    {{ form.time_on(class_="input") }}
+                                </div>
+                            </div>
 
-                {% if form.qso_date.errors %}
-                    <ul class="errors">
-                        {% for error in form.qso_date.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-
-                <div class="field">
-                    {{ form.time_on.label(class_="label") }}
-                    <div class="control">
-                        {{ form.time_on(class_="input") }}
+                            {% if form.time_on.errors %}
+                                <ul class="errors">
+                                    {% for error in form.time_on.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
+                </nav>
+                <nav class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <div class="field">
+                                {{ form.call.label(class_='label') }}
+                                <div class="control">
+                                    {{ form.call(class_="input") }}
+                                </div>
+                            </div>
 
-                {% if form.time_on.errors %}
-                    <ul class="errors">
-                        {% for error in form.time_on.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
 
-                <div class="field">
-                    {{ form.call.label(class_='label') }}
-                    <div class="control">
-                        {{ form.call(class_="input") }}
+                            {% if form.call.errors %}
+                                <ul class="errors">
+                                    {% for error in form.call.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                        <div class="level-item">
+                            <div class="field">
+                                {{ form.dxcc.label(class_='label') }}
+                                <div class="control">
+                                    {{ form.dxcc(class_="input", value=dxcclookup(station_callsign) ) }}
+                                </div>
+                            </div>
+
+
+                            {% if form.dxcc.errors %}
+                                <ul class="errors">
+                                    {% for error in form.dxcc.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
-
-
-                {% if form.call.errors %}
-                    <ul class="errors">
-                        {% for error in form.call.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
+                </nav>
                 <div class="field">
                     {{ form.mode.label(class_="label") }}
                     <div class="select">
@@ -120,9 +151,7 @@
                 {% endif %}
             </div>
         </div>
-        <p>
-            <input type="submit" value="Add">
-        </p>
+        <button class="button is-link" name="add_qso" type="submit" form="qsoform">Add QSO</button>
     </form>
 
 {% endblock %}
