@@ -57,7 +57,7 @@
                             <div class="field">
                                 {{ form.call.label(class_='label') }}
                                 <div class="control">
-                                    {{ form.call(class_="input") }}
+                                    {{ form.call(class_="input", placeholder_="Called station") }}
                                 </div>
                             </div>
 
@@ -74,7 +74,7 @@
                             <div class="field">
                                 {{ form.dxcc.label(class_='label') }}
                                 <div class="control">
-                                    {{ form.dxcc(class_="input", value=dxcclookup(station_callsign) ) }}
+                                    {{ form.dxcc(class_="input", placeholder_="DXCC of the called station") }}
                                 </div>
                             </div>
 
@@ -82,6 +82,44 @@
                             {% if form.dxcc.errors %}
                                 <ul class="errors">
                                     {% for error in form.dxcc.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                </nav>
+                <nav class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <div class="field">
+                                {{ form.cqz.label(class_='label') }}
+                                <div class="control">
+                                    {{ form.cqz(class_="input", placeholder_="CQ Zone of the called station") }}
+                                </div>
+                            </div>
+
+
+                            {% if form.cqz.errors %}
+                                <ul class="errors">
+                                    {% for error in form.cqz.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                        <div class="level-item">
+                            <div class="field">
+                                {{ form.ituz.label(class_='label') }}
+                                <div class="control">
+                                    {{ form.ituz(class_="input", placeholder_="ITU Zone of the called station") }}
+                                </div>
+                            </div>
+
+
+                            {% if form.ituz.errors %}
+                                <ul class="errors">
+                                    {% for error in form.ituz.errors %}
                                         <li>{{ error }}</li>
                                     {% endfor %}
                                 </ul>
