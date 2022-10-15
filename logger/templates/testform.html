@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="bd-hero-heading">
+        <h1 class="title algolia-lvl0">
+            {% block title %} <p>Add a New QSO for {{ station_callsign }}</p> {% endblock %}
+        </h1>
+        <div class="subtitle is-4 algolia-lvl1">
+            <p>Enter QSO details below and press Add:</p>     
+        </div>
+    </div>
+    <form method="POST" id="qsoform">
+        {{ form.csrf_token }}
+        <div class="columns">
+            <div class="column">
+                <nav class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <div class="field">
+                                {{ form.qso_date.label(class_="label") }}
+                                <div class="control">
+                                {{ form.qso_date(class_="input") }}
+                                </div>
+                            </div>
+
+                            {% if form.qso_date.errors %}
+                                <ul class="errors">
+                                    {% for error in form.qso_date.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <div class="field">
+                                {{ form.time_on.label(class_="label") }}
+                                <div class="control">
+                                    {{ form.time_on(class_="input") }}
+                                </div>
+                            </div>
+
+                            {% if form.time_on.errors %}
+                                <ul class="errors">
+                                    {% for error in form.time_on.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <button class="button is-link" name="add_qso" type="submit" form="qsoform">Add QSO</button>
+    </form>
+
+{% endblock %}
