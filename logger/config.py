@@ -17,6 +17,8 @@ class Config:
         raise ValueError("No SECRET_KEY set for Flask application")
     STATIC_FOLDER = 'static'
     TEMPLATES_FOLDER = 'templates'
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///db.sqlite'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://logger:logger@localhost:5432/logger'
     MAX_CONTENT_LENGTH = 1024 * 1024 * 2
     UPLOAD_EXTENSIONS = '*.adi'
+    POSTGRES_USER = environ.get('POSTGRES_USER')
+    POSTGRES_PW = environ.get('POSTGRES_PW')
