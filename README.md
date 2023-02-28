@@ -14,6 +14,16 @@ Python 3.8 / Flask 2.2 / Postgres (other SQL databases will work / Nginx (other 
 
 1. Install python requirements e.g. pip3 install -r requirements.txt
 1. Install database and web server
+
+```
+CREATE USER logger WITH PASSWORD 'logger';
+ALTER ROLE logger SET client_encoding TO 'utf8';
+ALTER ROLE logger SET default_transaction_isolation TO 'read committed';
+ALTER ROLE logger SET timezone TO 'UTC';
+CREATE DATABASE logger;
+GRANT ALL PRIVILEGES ON DATABASE logger to logger;
+```
+
 1. git clone https://github.com/smurphboy/OARCLogger
 1. edit config.py with database connection details
 
