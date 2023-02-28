@@ -15,7 +15,7 @@ Python 3.8 / Flask 2.2 / Postgres (other SQL databases will work / Nginx (other 
 * Install python requirements e.g. pip3 install -r requirements.txt
 * Install database and web server
 
-```python
+```sql
 CREATE USER logger WITH PASSWORD 'logger';
 ALTER ROLE logger SET client_encoding TO 'utf8';
 ALTER ROLE logger SET default_transaction_isolation TO 'read committed';
