@@ -12,23 +12,33 @@ Python 3.8 / Flask 2.2 / Postgres (other SQL databases will work / Nginx (other 
 
 ## Installation
 
-1. Install python requirements e.g. pip3 install -r requirements.txt
-1. Install database and web server
+* Install python requirements e.g. pip3 install -r requirements.txt
+* Install database and web server
 
-```
+```python
 CREATE USER logger WITH PASSWORD 'logger';
 ALTER ROLE logger SET client_encoding TO 'utf8';
 ALTER ROLE logger SET default_transaction_isolation TO 'read committed';
 ALTER ROLE logger SET timezone TO 'UTC';
 CREATE DATABASE logger;
 GRANT ALL PRIVILEGES ON DATABASE logger to logger;
+GRANT ALL ON SCHEMA public TO logger;
 ```
 
-1. git clone https://github.com/smurphboy/OARCLogger
-1. edit config.py with database connection details
-
+```shell
+git clone https://github.com/smurphboy/OARCLogger
 ```
-$ flask shell
+
+* edit config.py with database connection details if not logger:logger
+
+```shell
+export FLASK_APP=logger.application
+flask db init
+flask db migrate
+flask shell
+```
+
+```python
 >>> from logger.application import db
 >>> db.create_all()
 ```
@@ -37,8 +47,9 @@ $ flask shell
 
 In dev mode use:
 
-```
-$ flask run
+```shell
+export FLASK_APP=logger.application
+flask run
 ```
 
 In live mode use initd??? (TBC)
