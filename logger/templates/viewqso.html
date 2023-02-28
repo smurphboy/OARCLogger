@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="/static/css/leaflet.awesome-markers.css">
 <script src="/static/js/leaflet.awesome-markers.js"></script>
 <script src="/static/js/leaflet-providers.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {% endblock %}
 {% block hero %}is-primary{% endblock %}
 {% block content %}
@@ -194,8 +195,14 @@
 					{% endif %}
 				</div>
                 <div class="box">
-                    <p class="title has-text-grey">Signal Report</p>
-                    <nav class="level">
+                    <p class="title has-text-grey">Signal Report
+                        <a href="#" id="signal">Click here
+                            <span class="icon">
+                                <i class="fas fa-caret-down"></i>
+                            </span>
+                        </a>
+                    </p>
+                    <nav class="level" id="signal-content">
                         <div class="level-left">
                             <div class="level-item">
                                 <div class="icon-text">
@@ -949,6 +956,12 @@
       closeAllModals();
     }
   });
+});
+$(document).ready(function() {
+
+$("#signal").click(function() {
+  $("#signal-content").toggleClass('is-hidden');
+});
 });
 </script>
 {% endif %}
