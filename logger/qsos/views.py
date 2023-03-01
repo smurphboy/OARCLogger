@@ -64,7 +64,10 @@ def uploadqsos(user):
 @login_required
 def viewqso(call, date, time):
     call = call.replace('_', '/')
-    qso = QSO.query.filter_by(call=call, qso_date=date, time_on=time).first()
+    qso = QSO.query.filter_by(call=call, qso_date=date, time_on=time).one()
+    for key in qso.__dict__.keys():
+        if qso.__dict__[key]:
+            print(key, qso.__dict__[key])
     locations = []
     if qso.gridsquare:
         locations.append([mh.to_location(qso.gridsquare, center=True)[0], mh.to_location(qso.gridsquare, center=True)[1], 'star', 'red', 'Gridsquare: ' + qso.gridsquare])
