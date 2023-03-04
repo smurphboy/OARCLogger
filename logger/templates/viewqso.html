@@ -438,8 +438,6 @@
                         {% endif %}
                     </div>
                 </div>
-			</div>
-			<div class="column">
 				<div class="card">
                     <header class="card-header">
                         <p class="card-header-title">Locations</p>
@@ -865,6 +863,8 @@
                         {% endif %}
                     </div>
                 </div>
+			</div>
+			<div class="column">
                 <div class="card">
                     <header class="card-header">
                         <p class="card-header-title">Propogation</p>
@@ -875,7 +875,7 @@
                         </button>
                     </header>
                     <div class="card-content" id="prop-content">
-                        {% if qso.a_index or qso.k_index %}
+                        {% if qso.a_index or qso.k_index or qso.sfi %}
                         <nav class="level">
                             <div class="level-left">
                                 <div class="level-item">
@@ -889,12 +889,14 @@
                                     {% endif %}
                                 </div>
                                 <div class="level-item">
+                                    {% if qso.k_index %}
                                     <div class="icon-text">
                                         <span class="icon">
                                             <i class="fa-regular fa-sun"></i>
                                         </span>
                                         <span><abbr class="has-text-weight-semibold" title="the geomagnetic K index at the time of the QSO in the range 0 to 400 (inclusive)">K Index:</abbr> {{ qso.k_index }}</span>
                                     </div>
+                                    {% endif %}
                                 </div>
                             </div>
                             {% if qso.sfi %}
@@ -905,6 +907,90 @@
                                             <i class="fa-solid fa-solar-panel"></i>
                                         </span>
                                         <span><abbr class="has-text-weight-semibold" title="the solar flux at the time of the QSO in the range 0 to 300 (inclusive).">SFI:</abbr> {{ qso.sfi }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </nav>
+                        {% endif %}
+                        {% if qso.prop_mode or qso.ant_path %}
+                        <nav class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    {% if qso.prop_mode %}
+                                    <div class="icon-text">
+                                        <span class="icon">
+                                            <i class="fa-solid fa-tower-cell"></i>
+                                        </span>
+                                        <span><abbr class="has-text-weight-semibold" title="QSO propagation mode">Prop Mode:</abbr> {{ qso.prop_mode }}</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if qso.ant_path %}
+                            <div class="level-right">
+                                <div class="level-item">
+                                    <div class="icon-text">
+                                        <span class="icon">
+                                            <i class="fa-brands fa-think-peaks"></i>
+                                        </span>
+                                        <span><abbr class="has-text-weight-semibold" title="the signal path">Antenna Path:</abbr> {{ qso.ant_path }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </nav>
+                        {% endif %}
+                        {% if qso.ms_shower or qso.nr_pings %}
+                        <nav class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    {% if qso.ms_shower %}
+                                    <div class="icon-text">
+                                        <span class="icon">
+                                            <i class="fa-solid fa-meteor"></i>
+                                        </span>
+                                        <span><abbr class="has-text-weight-semibold" title="For Meteor Scatter QSOs, the name of the meteor shower in progress">Meteor Shower:</abbr> {{ qso.ms_shower }}</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if qso.nr_pings %}
+                            <div class="level-right">
+                                <div class="level-item">
+                                    <div class="icon-text">
+                                        <span class="icon">
+                                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                        </span>
+                                        <span><abbr class="has-text-weight-semibold" title="the number of meteor scatter pings heard by the logging station with a value greater than or equal to 0"># Pings:</abbr> {{ qso.nr_pings }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </nav>
+                        {% endif %}
+                        {% if qso.nr_bursts or qso.max_bursts %}
+                        <nav class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    {% if qso.nr_bursts %}
+                                    <div class="icon-text">
+                                        <span class="icon">
+                                            <i class="fa-solid fa-burst"></i>
+                                        </span>
+                                        <span><abbr class="has-text-weight-semibold" title="the number of meteor scatter bursts heard by the logging station with a value greater than or equal to 0"># Bursts:</abbr> {{ qso.nr_bursts }}</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if qso.max_bursts %}
+                            <div class="level-right">
+                                <div class="level-item">
+                                    <div class="icon-text">
+                                        <span class="icon">
+                                            <i class="fa-solid fa-burst"></i>
+                                        </span>
+                                        <span><abbr class="has-text-weight-semibold" title="maximum length of meteor scatter bursts heard by the logging station, in seconds with a value greater than or equal to 0">Max Bursts:</abbr> {{ qso.max_bursts }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -942,9 +1028,93 @@
                                 <div class="level-item">
                                     <div class="icon-text">
                                         <span class="icon">
-                                            <i class="fa-solid fa-hashtag"></i>
+                                            <i class="fa-solid fa-box"></i>
                                         </span>
                                         <span><abbr class="has-text-weight-semibold" title="contest check (e.g. for ARRL Sweepstakes)">Check:</abbr> {{ qso.check }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </nav>
+                        {% endif %}
+                        {% if qso.contest_class or qso.precedence %}
+                        <nav class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    {% if qso.contest_class %}
+                                    <div class="icon-text">
+                                        <span class="icon">
+                                            <i class="fa-solid fa-award"></i>
+                                        </span>
+                                        <span><abbr class="has-text-weight-semibold" title="contest class (e.g. for ARRL Field Day)">Class:</abbr> {{ qso.contest_class }}</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if qso.precedence %}
+                            <div class="level-right">
+                                <div class="level-item">
+                                    <div class="icon-text">
+                                        <span class="icon">
+                                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                                        </span>
+                                        <span><abbr class="has-text-weight-semibold" title="contest precedence (e.g. for ARRL Sweepstakes)">Precedence:</abbr> {{ qso.precedence }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </nav>
+                        {% endif %}
+                        {% if qso.srx or qso.srx_string %}
+                        <nav class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    {% if qso.srx %}
+                                    <div class="icon-text">
+                                        <span class="icon">
+                                            <i class="fa-solid fa-file-import"></i>
+                                        </span>
+                                        <span><abbr class="has-text-weight-semibold" title="contest QSO received serial number with a value greater than or equal to 0">SRX:</abbr> {{ qso.srx }}</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if qso.srx_string %}
+                            <div class="level-right">
+                                <div class="level-item">
+                                    <div class="icon-text">
+                                        <span class="icon">
+                                            <i class="fa-solid fa-file-import"></i>
+                                        </span>
+                                        <span><abbr class="has-text-weight-semibold" title="contest QSO received information">SRX String:</abbr> {{ qso.srx_string }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </nav>
+                        {% endif %}
+                        {% if qso.stx or qso.stx_string %}
+                        <nav class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    {% if qso.stx %}
+                                    <div class="icon-text">
+                                        <span class="icon">
+                                            <i class="fa-solid fa-file-export"></i>
+                                        </span>
+                                        <span><abbr class="has-text-weight-semibold" title="contest QSO transmitted serial number with a value greater than or equal to 0">STX:</abbr> {{ qso.stx }}</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if qso.stx_string %}
+                            <div class="level-right">
+                                <div class="level-item">
+                                    <div class="icon-text">
+                                        <span class="icon">
+                                            <i class="fa-solid fa-file-export"></i>
+                                        </span>
+                                        <span><abbr class="has-text-weight-semibold" title="contest QSO transmitted information">STX String:</abbr> {{ qso.stx_string }}</span>
                                     </div>
                                 </div>
                             </div>

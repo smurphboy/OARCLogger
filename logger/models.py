@@ -162,6 +162,13 @@ class QSO(db.Model):
     precedence = db.Column(db.String(1))
     check = db.Column(db.Integer)
     contest_class = db.Column(db.String(25))
+    prop_mode = db.Column(db.String(50))
+    ant_path = db.Column(db.String(10))
+    ms_shower = db.Column(db.String(100))
+    nr_pings = db.Column(db.Integer)
+    nr_bursts = db.Column(db.Integer)
+    max_bursts = db.Column(db.Integer)
+    force_init = db.Column(db.Boolean)
 
 
 # Propogation
