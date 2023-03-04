@@ -159,6 +159,9 @@ class QSO(db.Model):
     import_comments = db.Column(db.String(2000))
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=True)
     config_id = db.Column(db.Integer, db.ForeignKey('configuration.id'), nullable=True)
+    precedence = db.Column(db.String(1))
+    check = db.Column(db.Integer)
+    contest_class = db.Column(db.String(25))
 
 
 # Propogation

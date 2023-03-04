@@ -865,50 +865,93 @@
                         {% endif %}
                     </div>
                 </div>
-                <div class="box">
-                    <nav class="level">
-                        <div class="level-left">
-                            <div class="level-item">
-                                <p class="title has-text-grey">Propogation</p>
-                            </div>
-                        </div>
-                    </nav>
-                    {% if qso.a_index or qso.k_index %}
-                    <nav class="level">
-                        <div class="level-left">
-                            <div class="level-item">
-                                {% if qso.a_index %}
-                                <div class="icon-text">
-                                    <span class="icon">
-                                        <i class="fa-solid fa-sun"></i>
-                                    </span>
-                                    <span><abbr class="has-text-weight-semibold" title="the geomagnetic A index at the time of the QSO in the range 0 to 400 (inclusive)">A Index:</abbr> {{ qso.a_index }}</span>
+                <div class="card">
+                    <header class="card-header">
+                        <p class="card-header-title">Propogation</p>
+                        <button class="card-header-icon" id="prop" aria-label="more options">
+                            <span class="icon">
+                              <i class="fas fa-angle-down" aria-hidden="true"></i>
+                            </span>
+                        </button>
+                    </header>
+                    <div class="card-content" id="prop-content">
+                        {% if qso.a_index or qso.k_index %}
+                        <nav class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    {% if qso.a_index %}
+                                    <div class="icon-text">
+                                        <span class="icon">
+                                            <i class="fa-solid fa-sun"></i>
+                                        </span>
+                                        <span><abbr class="has-text-weight-semibold" title="the geomagnetic A index at the time of the QSO in the range 0 to 400 (inclusive)">A Index:</abbr> {{ qso.a_index }}</span>
+                                    </div>
+                                    {% endif %}
                                 </div>
-                                {% endif %}
-                            </div>
-                            <div class="level-item">
-                                <div class="icon-text">
-                                    <span class="icon">
-                                        <i class="fa-regular fa-sun"></i>
-                                    </span>
-                                    <span><abbr class="has-text-weight-semibold" title="the geomagnetic K index at the time of the QSO in the range 0 to 400 (inclusive)">K Index:</abbr> {{ qso.k_index }}</span>
-                                </div>
-                            </div>
-                        </div>
-                        {% if qso.sfi %}
-                        <div class="level-right">
-                            <div class="level-item">
-                                <div class="icon-text">
-                                    <span class="icon">
-                                        <i class="fa-solid fa-solar-panel"></i>
-                                    </span>
-                                    <span><abbr class="has-text-weight-semibold" title="the solar flux at the time of the QSO in the range 0 to 300 (inclusive).">SFI:</abbr> {{ qso.sfi }}</span>
+                                <div class="level-item">
+                                    <div class="icon-text">
+                                        <span class="icon">
+                                            <i class="fa-regular fa-sun"></i>
+                                        </span>
+                                        <span><abbr class="has-text-weight-semibold" title="the geomagnetic K index at the time of the QSO in the range 0 to 400 (inclusive)">K Index:</abbr> {{ qso.k_index }}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            {% if qso.sfi %}
+                            <div class="level-right">
+                                <div class="level-item">
+                                    <div class="icon-text">
+                                        <span class="icon">
+                                            <i class="fa-solid fa-solar-panel"></i>
+                                        </span>
+                                        <span><abbr class="has-text-weight-semibold" title="the solar flux at the time of the QSO in the range 0 to 300 (inclusive).">SFI:</abbr> {{ qso.sfi }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </nav>
                         {% endif %}
-                    </nav>
-                    {% endif %}
+                    </div>
+                </div>
+                <div class="card">
+                    <header class="card-header">
+                        <p class="card-header-title">Contests</p>
+                        <button class="card-header-icon" id="contests" aria-label="more options">
+                            <span class="icon">
+                              <i class="fas fa-angle-down" aria-hidden="true"></i>
+                            </span>
+                        </button>
+                    </header>
+                    <div class="card-content" id="contests-content">
+                        {% if qso.contest_id or qso.check %}
+                        <nav class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    {% if qso.contest_id %}
+                                    <div class="icon-text">
+                                        <span class="icon">
+                                            <i class="fa-solid fa-award"></i>
+                                        </span>
+                                        <span><abbr class="has-text-weight-semibold" title="QSO Contest Identifier">Contest ID:</abbr> {{ qso.contest_id }}</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if qso.check %}
+                            <div class="level-right">
+                                <div class="level-item">
+                                    <div class="icon-text">
+                                        <span class="icon">
+                                            <i class="fa-solid fa-hashtag"></i>
+                                        </span>
+                                        <span><abbr class="has-text-weight-semibold" title="contest check (e.g. for ARRL Sweepstakes)">Check:</abbr> {{ qso.check }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </nav>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
 		</div>
@@ -1018,6 +1061,14 @@ $(document).ready(function() {
 
     $("#locations").click(function() {
     $("#locations-content").toggleClass('is-hidden');
+    });
+
+    $("#prop").click(function() {
+    $("#prop-content").toggleClass('is-hidden');
+    });
+
+    $("#contests").click(function() {
+    $("#contests-content").toggleClass('is-hidden');
     });
 });
 </script>
