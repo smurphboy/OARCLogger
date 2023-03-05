@@ -1,28 +1,40 @@
 {% extends 'base.html' %}
-
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{% endblock %}
+{% block hero %}is-primary{% endblock %}
 {% block content %}
     <div class="bd-hero-heading">
-        <h1 class="title algolia-lvl0">
+        <h1 class="title is-size-1">
             {% block title %} <p>Add a New QSO for {{ station_callsign }}</p> {% endblock %}
         </h1>
         <div class="subtitle is-4 algolia-lvl1">
             <p>Enter QSO details below and press Add:</p>     
         </div>
     </div>
+</section>
+<section class="section">
     <form method="POST" id="qsoform">
         {{ form.csrf_token }}
-        <div class="columns">
-            <div class="column">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">Date & Time</p>
+                <button class="card-header-icon" id="dateandtime" aria-label="more options">
+                    <span class="icon">
+                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                    </span>
+                </button>
+            </header>
+            <div class="card-content" id="dateandtime-content">
                 <nav class="level">
                     <div class="level-left">
                         <div class="level-item">
                             <div class="field">
                                 {{ form.qso_date.label(class_="label") }}
-                                <div class="control">
+                                <p class="control is-expanded">
                                 {{ form.qso_date(class_="input") }}
-                                </div>
+                                </p>
                             </div>
-
                             {% if form.qso_date.errors %}
                                 <ul class="errors">
                                     {% for error in form.qso_date.errors %}
@@ -31,16 +43,13 @@
                                 </ul>
                             {% endif %}
                         </div>
-                    </div>
-                    <div class="level-right">
                         <div class="level-item">
                             <div class="field">
                                 {{ form.time_on.label(class_="label") }}
-                                <div class="control">
-                                    {{ form.time_on(class_="input") }}
-                                </div>
+                                <p class="control is-expanded">
+                                {{ form.time_on(class_="input") }}
+                                </p>
                             </div>
-
                             {% if form.time_on.errors %}
                                 <ul class="errors">
                                     {% for error in form.time_on.errors %}
@@ -51,6 +60,18 @@
                         </div>
                     </div>
                 </nav>
+            </div>
+        </div>
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">Callsigns</p>
+                <button class="card-header-icon" id="callsigns" aria-label="more options">
+                    <span class="icon">
+                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                    </span>
+                </button>
+            </header>
+            <div class="card-content" id="callsigns-content">
                 <nav class="level">
                     <div class="level-left">
                         <div class="level-item">
@@ -60,8 +81,6 @@
                                     {{ form.call(class_="input", placeholder_="Called station") }}
                                 </div>
                             </div>
-
-
                             {% if form.call.errors %}
                                 <ul class="errors">
                                     {% for error in form.call.errors %}
@@ -77,8 +96,6 @@
                                     {{ form.dxcc(class_="input", placeholder_="DXCC of the called station") }}
                                 </div>
                             </div>
-
-
                             {% if form.dxcc.errors %}
                                 <ul class="errors">
                                     {% for error in form.dxcc.errors %}
@@ -87,10 +104,6 @@
                                 </ul>
                             {% endif %}
                         </div>
-                    </div>
-                </nav>
-                <nav class="level">
-                    <div class="level-left">
                         <div class="level-item">
                             <div class="field">
                                 {{ form.cqz.label(class_='label') }}
@@ -98,8 +111,6 @@
                                     {{ form.cqz(class_="input", placeholder_="CQ Zone of the called station") }}
                                 </div>
                             </div>
-
-
                             {% if form.cqz.errors %}
                                 <ul class="errors">
                                     {% for error in form.cqz.errors %}
@@ -115,8 +126,6 @@
                                     {{ form.ituz(class_="input", placeholder_="ITU Zone of the called station") }}
                                 </div>
                             </div>
-
-
                             {% if form.ituz.errors %}
                                 <ul class="errors">
                                     {% for error in form.ituz.errors %}
@@ -124,72 +133,91 @@
                                     {% endfor %}
                                 </ul>
                             {% endif %}
-                        </div>
+                        </div>    
                     </div>
                 </nav>
-                <div class="field">
-                    {{ form.mode.label(class_="label") }}
-                    <div class="select">
-                    {{ form.mode() }}
-                    </div>
-                </div>
-
-                {% if form.mode.errors %}
-                    <ul class="errors">
-                        {% for error in form.mode.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
             </div>
-            <div class="column">
-                <div class="field">
-                    {{ form.band.label(class_="label") }}
-                    <div class="select">
-                    {{ form.band() }}
-                    </div>
+            <footer class="card-footer">
+                <button class="button card-footer-item">Lookup Callsign</button>
+            </footer>
+        </div>
+        <div class="card">
+            <div class="field">
+                {{ form.mode.label(class_="label") }}
+                <div class="select">
+                {{ form.mode() }}
                 </div>
-
-                {% if form.band.errors %}
-                    <ul class="errors">
-                        {% for error in form.band.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-
-                <div class="field">
-                    {{ form.gridsquare.label(class_='label') }}
-                    <div class="control">
-                        {{ form.gridsquare(class_="input") }}
-                    </div>
-                </div>
-
-                {% if form.gridsquare.errors %}
-                    <ul class="errors">
-                        {% for error in form.gridsquare.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-
-                <div class="field">
-                    {{ form.my_gridsquare.label(class_='label') }}
-                    <div class="control">
-                        {{ form.my_gridsquare(class_="input") }}
-                    </div>
-                </div>
-
-                {% if form.my_gridsquare.errors %}
-                    <ul class="errors">
-                        {% for error in form.my_gridsquare.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
             </div>
+
+            {% if form.mode.errors %}
+                <ul class="errors">
+                    {% for error in form.mode.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        <div class="card">
+            <div class="field">
+                {{ form.band.label(class_="label") }}
+                <div class="select">
+                {{ form.band() }}
+                </div>
+            </div>
+
+            {% if form.band.errors %}
+                <ul class="errors">
+                    {% for error in form.band.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <div class="field">
+                {{ form.gridsquare.label(class_='label') }}
+                <div class="control">
+                    {{ form.gridsquare(class_="input") }}
+                </div>
+            </div>
+
+            {% if form.gridsquare.errors %}
+                <ul class="errors">
+                    {% for error in form.gridsquare.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <div class="field">
+                {{ form.my_gridsquare.label(class_='label') }}
+                <div class="control">
+                    {{ form.my_gridsquare(class_="input") }}
+                </div>
+            </div>
+
+            {% if form.my_gridsquare.errors %}
+                <ul class="errors">
+                    {% for error in form.my_gridsquare.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         </div>
         <button class="button is-link" name="add_qso" type="submit" form="qsoform">Add QSO</button>
     </form>
+</section>
 
+<script>
+
+$(document).ready(function() {
+
+    $("#dateandtime").click(function() {
+    $("#dateandtime-content").toggleClass('is-hidden');
+    });
+
+    $("#callsigns").click(function() {
+    $("#callsigns-content").toggleClass('is-hidden');
+    });
+});
+</script>
 {% endblock %}
