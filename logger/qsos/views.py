@@ -9,6 +9,8 @@ import maidenhead as mh
 from pathlib import Path
 import requests
 from werkzeug.utils import secure_filename
+from logger.application import cic, my_lookuplib
+
 
 qsos = Blueprint('qsos', __name__, template_folder='templates')
 
