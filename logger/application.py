@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, current_app
 from flask_login import LoginManager
 from logger.users.views import users
 from logger.callsigns.views import callsigns
@@ -12,14 +12,11 @@ from logger.models import db, QSO
 from flask_migrate import Migrate
 from pyhamtools import LookupLib, Callinfo
 
-my_lookuplib = LookupLib(lookuptype='countryfile')
-cic = Callinfo(my_lookuplib)
 
 def create_app():
     app = Flask(__name__)
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config.from_object(Config)
-
     db.init_app(app)
     migrate = Migrate(app, db, render_as_batch=True)
 
@@ -28,6 +25,10 @@ def create_app():
     login_manager.init_app(app)
 
     from logger.models import User
+
+    with app.app_context():
+        current_app.my_lookuplib = LookupLib(lookuptype='countryfile')
+        current_app.cic = Callinfo(current_app.my_lookuplib)
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -72,14 +73,14 @@ def create_app():
         def dxcclookup(logbook):
             '''returns the DXCC of the callsign'''
             try:
-                ret = cic.get_country_name(logbook)
+                ret = current_app.cic.get_country_name(logbook)
             except KeyError:
                 ret = "N/A"
             return ret
         def dxccituz(logbook):
             '''returns the ITU Zone for a callsign'''
             try:
-                ret = cic.get_ituz(logbook)
+                ret = current_app.cic.get_ituz(logbook)
             except KeyError:
                 ret = "N/A"
             return ret
@@ -87,7 +88,7 @@ def create_app():
         def dxcccqz(logbook):
             '''returns the CQ Zone for a callsign'''
             try:
-                ret = cic.get_cqz(logbook)
+                ret = current_app.cic.get_cqz(logbook)
             except KeyError:
                 ret = "N/A"
             return ret
@@ -95,7 +96,7 @@ def create_app():
         def homecallsign(logbook):
             '''returns home callsign and strips prefix / suffix'''
             try:
-                ret = cic.get_homecall(logbook)
+                ret = current_app.cic.get_homecall(logbook)
             except KeyError:
                 ret = 'N/A'
             return ret

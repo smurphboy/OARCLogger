@@ -137,8 +137,8 @@
                     </div>
                 </nav>
             </div>
-            <footer class="card-footer">
-                <button class="button card-footer-item">Lookup Callsign</button>
+            <footer class="card-footer" id="lookupfold">
+                <button class="button card-footer-item" id="lookupbutton">Lookup Callsign</button>
             </footer>
         </div>
         <div class="card">
@@ -208,6 +208,9 @@
 </section>
 
 <script>
+    $SCRIPT_ROOT = {{ request.script_root|tojson }};
+</script>
+<script>
 
 $(document).ready(function() {
 
@@ -217,6 +220,19 @@ $(document).ready(function() {
 
     $("#callsigns").click(function() {
     $("#callsigns-content").toggleClass('is-hidden');
+    });
+
+    $(function() {
+        $('#lookupbutton').click(function() {
+        $.getJSON($SCRIPT_ROOT + '/qsos/_dxcc', {
+            callsign: $('input[name="call"]').val()
+        }, function(data) {
+            $("#dxcc").val(data.dxcc),
+            $("#ituz").val(data.ituz),
+            $("#cqz").val(data.cqz);
+        });
+        return false;
+        });
     });
 });
 </script>

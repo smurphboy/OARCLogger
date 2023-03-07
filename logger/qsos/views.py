@@ -1,7 +1,7 @@
 import datetime
 import os
 import adif_io
-from flask import Blueprint, flash, render_template, redirect, request, url_for, abort, current_app
+from flask import Blueprint, flash, render_template, redirect, request, url_for, abort, current_app, jsonify
 from flask_login import login_required, current_user
 from logger.models import User, db, Callsign, QSO
 from logger.forms import QSOForm, QSOUploadForm
@@ -9,7 +9,6 @@ import maidenhead as mh
 from pathlib import Path
 import requests
 from werkzeug.utils import secure_filename
-from logger.application import cic, my_lookuplib
 
 
 qsos = Blueprint('qsos', __name__, template_folder='templates')
@@ -89,6 +88,15 @@ def viewqso(call, date, time):
             locations.append([summit['latitude'], summit['longitude'], 'mountain', 'red', 'SOTA Reference: ' + summit['summitCode'] + ' - ' + summit['name']])
 
     return render_template('viewqso.html', qso=qso, locations=locations)
+
+@qsos.route('/_dxcc')
+def lookupdxcc():
+            callsign = request.args.get('callsign', 0, type=str)
+            dxcc = current_app.cic.get_country_name(callsign)
+            ituz = current_app.cic.get_ituz(callsign)
+            cqz = current_app.cic.get_cqz(callsign)
+            print(dxcc, ituz, cqz)
+            return jsonify(dxcc = dxcc, ituz = ituz, cqz = cqz)
 
 @qsos.errorhandler(400)
 def page_not_found(e):
