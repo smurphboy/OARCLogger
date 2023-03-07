@@ -59,8 +59,44 @@
                             {% endif %}
                         </div>
                     </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <div class="field">
+                                {{ form.qso_date_off.label(class_="label") }}
+                                <p class="control is-expanded">
+                                {{ form.qso_date_off(class_="input") }}
+                                </p>
+                            </div>
+                            {% if form.qso_date_off.errors %}
+                                <ul class="errors">
+                                    {% for error in form.qso_date_off.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                        <div class="level-item">
+                            <div class="field">
+                                {{ form.time_off.label(class_="label") }}
+                                <p class="control is-expanded">
+                                {{ form.time_off(class_="input") }}
+                                </p>
+                            </div>
+                            {% if form.time_off.errors %}
+                                <ul class="errors">
+                                    {% for error in form.time_off.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
                 </nav>
             </div>
+            <footer class="card-footer" id="datetime-footer">
+                <a class="card-footer-item" id="qsoon">Set QSO On</a>
+                <a class="card-footer-item" id="qsooff">Set QSO Off</a>
+            </footer>
         </div>
         <div class="card">
             <header class="card-header">
@@ -137,7 +173,7 @@
                     </div>
                 </nav>
             </div>
-            <footer class="card-footer" id="lookupfold">
+            <footer class="card-footer" id="callsigns-footer">
                 <button class="button card-footer-item" id="lookupbutton">Lookup Callsign</button>
             </footer>
         </div>
@@ -220,6 +256,34 @@ $(document).ready(function() {
 
     $("#callsigns").click(function() {
     $("#callsigns-content").toggleClass('is-hidden');
+    });
+
+    $("#callsigns").click(function() {
+    $("#callsigns-footer").toggleClass('is-hidden');
+    });
+
+    var today = new Date();
+    var dd = today.getUTCDate();
+    var mm = today.getUTCMonth()+1; //January is 0!
+    var yyyy = today.getUTCFullYear();
+    var hh = today.getUTCHours();
+    var minutes = today.getUTCMinutes();
+
+    if(dd<10){dd='0'+dd} 
+    if(mm<10){mm='0'+mm}
+    if(hh<10){hh='0'+hh}
+    if(minutes<10){minutes='0'+minutes} 
+    today = yyyy+'-'+mm+'-'+dd;
+    todaytime = hh+':'+minutes;
+
+    $("#qsoon").click(function() {
+    $("#qso_date").val(today),
+    $("#time_on").val(todaytime);
+    });
+
+    $("#qsooff").click(function() {
+    $("#qso_date_off").val(today),
+    $("#time_off").val(todaytime);
     });
 
     $(function() {

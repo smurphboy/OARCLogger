@@ -20,13 +20,15 @@ def postnewqso(station_callsign):
     if request.method == 'POST':
         qso_date = datetime.datetime.strptime(request.form['qso_date'], '%Y-%m-%d').date()
         time_on = datetime.datetime.strptime(request.form['time_on'], '%H:%M').time()
+        qso_date_off = datetime.datetime.strptime(request.form['qso_date_off'], '%Y-%m-%d').date()
+        time_off = datetime.datetime.strptime(request.form['time_off'], '%H:%M').time()
         call = request.form['call']
         mode = request.form['mode']
         band = request.form['band']
         gridsquare = request.form['gridsquare']
         my_gridsquare = request.form['my_gridsquare']
         station_callsign = station_callsign
-        newqso = QSO(qso_date=qso_date, time_on=time_on, call=call, mode=mode,
+        newqso = QSO(qso_date=qso_date, time_on=time_on, qso_date_off=qso_date_off, time_off=time_off, call=call, mode=mode,
                     band=band, gridsquare=gridsquare, my_gridsquare=my_gridsquare, station_callsign=station_callsign)
         db.session.add(newqso)
         db.session.commit()
