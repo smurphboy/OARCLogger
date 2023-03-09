@@ -169,6 +169,8 @@ class QSO(db.Model):
     nr_bursts = db.Column(db.Integer)
     max_bursts = db.Column(db.Integer)
     force_init = db.Column(db.Boolean)
+    contacted_op = db.Column(db.String(50))
+    eq_call = db.Column(db.String(50))
 
 
 # Propogation

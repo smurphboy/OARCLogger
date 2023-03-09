@@ -24,12 +24,19 @@ def postnewqso(station_callsign):
         time_off = datetime.datetime.strptime(request.form['time_off'], '%H:%M').time()
         call = request.form['call']
         mode = request.form['mode']
+        submode = request.form['submode']
         band = request.form['band']
         gridsquare = request.form['gridsquare']
         my_gridsquare = request.form['my_gridsquare']
         station_callsign = station_callsign
+        operator = operator
+        owner_callsign = owner_callsign
+        contacted_op = contacted_op
+        eq_call = eq_call
         newqso = QSO(qso_date=qso_date, time_on=time_on, qso_date_off=qso_date_off, time_off=time_off, call=call, mode=mode,
-                    band=band, gridsquare=gridsquare, my_gridsquare=my_gridsquare, station_callsign=station_callsign)
+                    band=band, gridsquare=gridsquare, my_gridsquare=my_gridsquare, station_callsign=station_callsign,
+                    operator = operator, owner_callsign = owner_callsign, contacted_op = contacted_op, eq_call = eq_call,
+                    submode = submode)
         db.session.add(newqso)
         db.session.commit()
         return redirect(url_for('callsigns.call',callsign=station_callsign))
