@@ -20,12 +20,17 @@ class QSOForm(FlaskForm):
     owner_callsign = StringField('Owner Callsign')
     contacted_op = StringField('Contacted Operator')
     eq_call = StringField('EQ Callsign')
+    freq = StringField('Freq')
     band = SelectField('Band',
-                       choices=['160m', '80m', '60m', '40m', '30m', '20m', '17m',
-                                '15m', '12m', '10m', '6m', '4m', '2m', '70cms'],
+                       choices=['', '2190m', '630m', '560m', '160m', '80m', '60m', '40m', '30m', '20m', '17m', '15m',
+                                '12m', '10m', '8m', '6m', '5m', '4m', '2m', '1.25m', '70cm', '33cm', '23cm', '13cm',
+                                '9cm', '6cm', '3cm', '1.25cm', '6mm', '4mm', '2.5mm', '2mm', '1mm', 'submm'],
                        validators=[InputRequired()]) # convert this to look at the config selected and bands on the rig
     mode = SelectField('Mode',
-                       choices=['AM', 'DIGITALVOICE', 'FM', 'SSB', 'DSB', 'FT8'],
+                       choices=['AM', 'ATV', 'CW', 'DIGITALVOICE', 'FM', 'FT8', 'HELL', 'MFSK', 'OLIVIA', 'PKT', 'PSK', 'RTTY',
+                                'RTTYM', 'SSB', 'SSTV', 'ARDOP', 'CHIP', 'CLO', 'CONTESTI', 'DOMINO', 'DYNAMIC', 'FAX', 'FSK441',
+                                'ISCAT', 'JT4', 'JT6M', 'JT9', 'JT44', 'JT65', 'MSK144', 'MT63', 'OPERA', 'PAC', 'PAX', 'PSK2K',
+                                'Q15', 'QRA64', 'ROS', 'T10', 'THOR', 'THRB', 'TOR', 'V4', 'VOI', 'WINMOR', 'WSPR'],
                        validators=[InputRequired()]) # convert this to look at the config selected and the modes available
     submode = SelectField('Sub Mode', validators=[InputRequired()])
     gridsquare = StringField('Gridsquare', validators=[InputRequired(),
