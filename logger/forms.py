@@ -21,11 +21,19 @@ class QSOForm(FlaskForm):
     contacted_op = StringField('Contacted Operator')
     eq_call = StringField('EQ Callsign')
     freq = StringField('Freq')
+    freq_rx = StringField('Freq RX')
+    sat_name = StringField('Sat Name')
+    sat_mode = SelectField('Sat Mode',
+                       choices=['', 'H', 'A', 'V', 'U', 'L', 'S', 'S2', 'C', 'X', 'K', 'R']) # convert this to look at the config selected and bands on the rig
     band = SelectField('Band',
                        choices=['', '2190m', '630m', '560m', '160m', '80m', '60m', '40m', '30m', '20m', '17m', '15m',
                                 '12m', '10m', '8m', '6m', '5m', '4m', '2m', '1.25m', '70cm', '33cm', '23cm', '13cm',
                                 '9cm', '6cm', '3cm', '1.25cm', '6mm', '4mm', '2.5mm', '2mm', '1mm', 'submm'],
                        validators=[InputRequired()]) # convert this to look at the config selected and bands on the rig
+    band_rx = SelectField('Band RX',
+                       choices=['', '2190m', '630m', '560m', '160m', '80m', '60m', '40m', '30m', '20m', '17m', '15m',
+                                '12m', '10m', '8m', '6m', '5m', '4m', '2m', '1.25m', '70cm', '33cm', '23cm', '13cm',
+                                '9cm', '6cm', '3cm', '1.25cm', '6mm', '4mm', '2.5mm', '2mm', '1mm', 'submm']) # convert this to look at the config selected and bands on the rig
     mode = SelectField('Mode',
                        choices=['AM', 'ATV', 'CW', 'DIGITALVOICE', 'FM', 'FT8', 'HELL', 'MFSK', 'OLIVIA', 'PKT', 'PSK', 'RTTY',
                                 'RTTYM', 'SSB', 'SSTV', 'ARDOP', 'CHIP', 'CLO', 'CONTESTI', 'DOMINO', 'DYNAMIC', 'FAX', 'FSK441',

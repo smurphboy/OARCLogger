@@ -209,6 +209,10 @@
                                 </ul>
                             {% endif %}
                         </div>
+                    </div>
+                </nav>
+                <nav class="level">
+                    <div class="level-left">
                         <div class="level-item">
                             <div class="field">
                                 {{ form.band.label(class_='label') }}
@@ -238,7 +242,41 @@
                                     {% endfor %}
                                 </ul>
                             {% endif %}
-                        </div>    
+                        </div> 
+                    </div>
+                </nav>
+                <nav class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <div class="field">
+                                {{ form.band_rx.label(class_='label') }}
+                                <div class="select">
+                                    {{ form.band_rx() }}
+                                </div>
+                            </div>
+                            {% if form.band_rx.errors %}
+                                <ul class="errors">
+                                    {% for error in form.band_rx.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                        <div class="level-item">
+                            <div class="field">
+                                {{ form.freq_rx.label(class_='label') }}
+                                <div class="control">
+                                    {{ form.freq_rx(class_="input", placeholder_="RX QSO frequency in Megahertz") }}
+                                </div>
+                            </div>
+                            {% if form.freq_rx.errors %}
+                                <ul class="errors">
+                                    {% for error in form.freq_rx.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>   
                     </div>
                 </nav>
             </div>
