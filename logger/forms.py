@@ -22,6 +22,14 @@ class QSOForm(FlaskForm):
     eq_call = StringField('EQ Callsign')
     freq = StringField('Freq')
     freq_rx = StringField('Freq RX')
+    lat = StringField('Latitude')
+    my_lat = StringField('My Latitude')
+    lon = StringField('Longitude')
+    my_lon = StringField('My Longitude')
+    sota_ref = StringField('SOTA Reference')
+    my_sota_ref = StringField('My SOTA Reference')
+    pota_ref = StringField('POTA Reference')
+    my_pota_ref = StringField('My POTA Reference')
     sat_name = StringField('Sat Name')
     sat_mode = SelectField('Sat Mode',
                        choices=['', 'H', 'A', 'V', 'U', 'L', 'S', 'S2', 'C', 'X', 'K', 'R']) # convert this to look at the config selected and bands on the rig

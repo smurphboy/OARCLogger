@@ -36,12 +36,21 @@ def postnewqso(station_callsign):
         owner_callsign = request.form['owner_callsign']
         contacted_op = request.form['contacted_op']
         eq_call = request.form['eq_call']
+        lat = request.form['lat']
+        my_lat = request.form['my_lat']
+        lon = request.form['lon']
+        my_lon = request.form['my_lon']
+        sota_ref = request.form['sota_ref']
+        my_sota_ref = request.form['my_sota_ref']
+        pota_ref = request.form['pota_ref']
+        my_pota_ref = request.form['my_pota_ref']
         sat_name = request.form['sat_name']
         sat_mode = request.form['sat_mode']
         newqso = QSO(qso_date=qso_date, time_on=time_on, qso_date_off=qso_date_off, time_off=time_off, call=call, mode=mode,
                     band=band, band_rx=band_rx, gridsquare=gridsquare, my_gridsquare=my_gridsquare, station_callsign=station_callsign,
                     operator = operator, owner_callsign = owner_callsign, contacted_op = contacted_op, eq_call = eq_call,
-                    submode = submode, freq=freq, freq_rx=freq_rx, sat_name=sat_name, sat_mode=sat_mode)
+                    submode = submode, freq=freq, freq_rx=freq_rx, sat_name=sat_name, sat_mode=sat_mode, lat=lat, lon=lon, my_lat=my_lat,
+                    my_lon=my_lon, sota_ref=sota_ref, my_sota_ref=my_sota_ref, pota_ref=pota_ref, my_pota_ref=my_pota_ref)
         db.session.add(newqso)
         db.session.commit()
         return redirect(url_for('callsigns.call',callsign=station_callsign))
