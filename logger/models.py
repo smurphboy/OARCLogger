@@ -88,6 +88,8 @@ class QSO(db.Model):
     stx_string = db.Column(db.String(50))
     my_sota_ref = db.Column(db.String(25))
     sota_ref = db.Column(db.String(25))
+    my_pota_ref = db.Column(db.String(25))
+    pota_ref = db.Column(db.String(25))
     my_iota = db.Column(db.String(6))
     iota = db.Column(db.String(6))
     my_iota_island_id = db.Column(db.Integer)

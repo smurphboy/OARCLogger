@@ -20,32 +20,37 @@ def postnewqso(station_callsign):
     if request.method == 'POST':
         qso_date = datetime.datetime.strptime(request.form['qso_date'], '%Y-%m-%d').date()
         time_on = datetime.datetime.strptime(request.form['time_on'], '%H:%M').time()
-        qso_date_off = datetime.datetime.strptime(request.form['qso_date_off'], '%Y-%m-%d').date()
-        time_off = datetime.datetime.strptime(request.form['time_off'], '%H:%M').time()
-        call = request.form['call']
-        mode = request.form['mode']
-        submode = request.form['submode']
-        band = request.form['band']
-        band_rx = request.form['band_rx']
-        gridsquare = request.form['gridsquare']
-        my_gridsquare = request.form['my_gridsquare']
-        station_callsign = request.form['station_callsign']
-        operator = request.form['operator']
-        freq = request.form['freq']
-        freq_rx = request.form['freq_rx']
-        owner_callsign = request.form['owner_callsign']
-        contacted_op = request.form['contacted_op']
-        eq_call = request.form['eq_call']
-        lat = request.form['lat']
-        my_lat = request.form['my_lat']
-        lon = request.form['lon']
-        my_lon = request.form['my_lon']
-        sota_ref = request.form['sota_ref']
-        my_sota_ref = request.form['my_sota_ref']
-        pota_ref = request.form['pota_ref']
-        my_pota_ref = request.form['my_pota_ref']
-        sat_name = request.form['sat_name']
-        sat_mode = request.form['sat_mode']
+        if request.form.get('qso_date_off', '') != '':
+            qso_date_off = datetime.datetime.strptime(request.form['qso_date_off'], '%Y-%m-%d').date()
+        else:
+            qso_date_off = None
+        if request.form.get('time_off', '') != '':
+            time_off = datetime.datetime.strptime(request.form['time_off'], '%H:%M').time()
+        else:
+            time_off = None
+        call = request.form.get('call', None)
+        mode = request.form.get('mode', None)
+        submode = request.form.get('submode', None)
+        band = request.form.get('band', None)
+        band_rx = request.form.get('band_rx', None)
+        gridsquare = request.form.get('gridsquare', None)
+        my_gridsquare = request.form.get('my_gridsquare', None)
+        operator = request.form.get('operator', None)
+        freq = request.form.get('freq', None)
+        freq_rx = request.form.get('freq_rx', None)
+        owner_callsign = request.form.get('owner_callsign', None)
+        contacted_op = request.form.get('contacted_op', None)
+        eq_call = request.form.get('eq_call', None)
+        lat = request.form.get('lat', None)
+        my_lat = request.form.get('my_lat', None)
+        lon = request.form.get('lon', None)
+        my_lon = request.form.get('my_lon', None)
+        sota_ref = request.form.get('sota_ref', None)
+        my_sota_ref = request.form.get('my_sota_ref', None)
+        pota_ref = request.form.get('pota_ref', None)
+        my_pota_ref = request.form.get('my_pota_ref', None)
+        sat_name = request.form.get('sat_name', None)
+        sat_mode = request.form.get('sat_mode', None)
         newqso = QSO(qso_date=qso_date, time_on=time_on, qso_date_off=qso_date_off, time_off=time_off, call=call, mode=mode,
                     band=band, band_rx=band_rx, gridsquare=gridsquare, my_gridsquare=my_gridsquare, station_callsign=station_callsign,
                     operator = operator, owner_callsign = owner_callsign, contacted_op = contacted_op, eq_call = eq_call,
@@ -88,7 +93,7 @@ def uploadqsos(user):
 @login_required
 def viewqso(call, date, time):
     call = call.replace('_', '/')
-    qso = QSO.query.filter_by(call=call, qso_date=date, time_on=time).one()
+    qso = QSO.query.filter_by(call=call, qso_date=date, time_on=time).first()
     for key in qso.__dict__.keys():
         if qso.__dict__[key]:
             print(key, qso.__dict__[key])

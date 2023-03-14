@@ -20,11 +20,11 @@
             <div class="card">
                 <header class="card-header">
                     <p class="card-header-title">Date & Time</p>
-                    <button class="card-header-icon" id="modes_bands" aria-label="more options">
+                    <a class="card-header-icon" id="modes_bands" aria-label="more options">
                         <span class="icon">
                             <i class="fa-solid fa-clock"></i>
                         </span>
-                    </button>
+                    </a>
                 </header>
                 <div class="card-content" id="dateandtime-content">
                     <nav class="level">
@@ -176,11 +176,11 @@
             <div class="card">
                 <header class="card-header">
                     <p class="card-header-title">Modes and Bands</p>
-                    <button class="card-header-icon" id="modes_bands" aria-label="more options">
+                    <a class="card-header-icon" id="modes_bands" aria-label="more options">
                         <span class="icon">
                             <i class="fa-solid fa-wave-square"></i>
                         </span>
-                    </button>
+                    </a>
                 </header>
                 <div class="card-content" id="modes_bands-content">
                     <nav class="level">
@@ -293,11 +293,11 @@
             <div class="card">
                 <header class="card-header">
                     <p class="card-header-title">Additional Callsigns</p>
-                    <button class="card-header-icon" id="add_callsigns" aria-label="more options">
+                    <a class="card-header-icon" id="add_callsigns" aria-label="more options">
                         <span class="icon">
                             <i class="fas fa-angle-down" aria-hidden="true"></i>
                         </span>
-                    </button>
+                    </a>
                 </header>
                 <div class="card-content is-hidden" id="add_callsigns-content">
                     <nav class="level">
@@ -388,11 +388,11 @@
             <div class="card">
                 <header class="card-header">
                     <p class="card-header-title is-info">Locations</p>
-                    <button class="card-header-icon" id="locations" aria-label="more options">
+                    <a class="card-header-icon" id="locations" aria-label="more options">
                         <span class="icon">
                             <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
                         </span>
-                    </button>
+                    </a>
                 </header>
                 <div class="card-content" id="locations-content">
                     <div class="field is-horizontal">
@@ -512,11 +512,11 @@
             <div class="card">
                 <header class="card-header">
                     <p class="card-header-title is-info">SOTA / POTA</p>
-                    <button class="card-header-icon" id="sota_pota" aria-label="more options">
+                    <a class="card-header-icon" id="sota_pota" aria-label="more options">
                         <span class="icon">
                             <i class="fas fa-angle-down" aria-hidden="true"></i>
                         </span>
-                    </button>
+                    </a>
                 </header>
                 <div class="card-content is-hidden" id="sota_pota-content">
                     <div class="field is-horizontal">
@@ -539,6 +539,18 @@
                                 {% endfor %}
                             </ul>
                             {% endif %}
+                            <fieldset disabled>
+                                <div class="field">
+                                    <div class="control is-expanded">
+                                        <p class="control has-icons-left">
+                                            <input class="input" id="mysummitname" placeholder="Summit Name">
+                                            <span class="icon is-small is-left">
+                                                <i class="fa-solid fa-mountain"></i>
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </fieldset>
                         </div>
                     </div>
                     <div class="field is-horizontal">
@@ -554,13 +566,25 @@
                                     <a class="button is-info" id="sota">&gt; Station Location</a>
                                 </div>
                             </div>
-                        {% if form.sota_ref.errors %}
-                        <ul class="errors">
-                            {% for error in form.sota_ref.errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
+                            {% if form.sota_ref.errors %}
+                            <ul class="errors">
+                                {% for error in form.sota_ref.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                            <fieldset disabled>
+                                <div class="field">
+                                    <div class="control is-expanded">
+                                        <p class="control has-icons-left">
+                                            <input class="input" id="summitname" placeholder="Summit Name">
+                                            <span class="icon is-small is-left">
+                                                <i class="fa-solid fa-mountain"></i>
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </fieldset>
                         </div>
                     </div>
                     <div class="field is-horizontal">
@@ -583,6 +607,18 @@
                                 {% endfor %}
                             </ul>
                             {% endif %}
+                            <fieldset disabled>
+                                <div class="field">
+                                    <div class="control is-expanded">
+                                        <p class="control has-icons-left">
+                                            <input class="input" id="myparkname" placeholder="Park Name">
+                                            <span class="icon is-small is-left">
+                                                <i class="fa-solid fa-tree"></i>
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </fieldset>
                         </div>
                     </div>
                     <div class="field is-horizontal">
@@ -598,13 +634,25 @@
                                     <a class="button is-info" id="pota">&gt; Station Location</a>
                                 </div>
                             </div>
-                        {% if form.pota_ref.errors %}
-                        <ul class="errors">
-                            {% for error in form.pota_ref.errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
+                            {% if form.pota_ref.errors %}
+                            <ul class="errors">
+                                {% for error in form.pota_ref.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                            <fieldset disabled>
+                                <div class="field">
+                                    <div class="control is-expanded">
+                                        <p class="control has-icons-left">
+                                            <input class="input" id="parkname" placeholder="Park Name">
+                                            <span class="icon is-small is-left">
+                                                <i class="fa-solid fa-tree"></i>
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </fieldset>
                         </div>
                     </div>
                 </div>
@@ -676,7 +724,51 @@ $(document).ready(function() {
                 function(data) {
                 $("#my_lat").val(data.latitude),
                 $("#my_lon").val(data.longitude),
-                $("#my_gridsquare").val(data.locator);
+                $("#my_gridsquare").val(data.locator),
+                $("#mysummitname").val(data.name);
+            });
+        return false;
+        });
+    });
+
+    $(function() {
+        $('#sota').click(function() {
+            var $sotaapi2 = 'https://api2.sota.org.uk/api/summits/'+ $('input[name="sota_ref"]').val().split("/")[0]+ '/'+
+            $('input[name="sota_ref"]').val().split("/")[1];
+            $.getJSON($sotaapi2,
+                function(data) {
+                $("#lat").val(data.latitude),
+                $("#lon").val(data.longitude),
+                $("#gridsquare").val(data.locator),
+                $("#summitname").val(data.name);
+            });
+        return false;
+        });
+    });
+
+    $(function() {
+        $('#my_pota').click(function() {
+            var $potaapi = 'https://api.pota.app/park/'+ $('input[name="my_pota_ref"]').val();
+            $.getJSON($potaapi,
+                function(data) {
+                $("#my_lat").val(data.latitude),
+                $("#my_lon").val(data.longitude),
+                $("#my_gridsquare").val(data.grid6),
+                $("#myparkname").val(data.name);
+            });
+        return false;
+        });
+    });
+
+    $(function() {
+        $('#pota').click(function() {
+            var $potaapi2 = 'https://api.pota.app/park/'+ $('input[name="pota_ref"]').val();
+            $.getJSON($potaapi2,
+                function(data) {
+                $("#lat").val(data.latitude),
+                $("#lon").val(data.longitude),
+                $("#gridsquare").val(data.grid6),
+                $("#parkname").val(data.name);
             });
         return false;
         });
