@@ -28,29 +28,33 @@ def postnewqso(station_callsign):
             time_off = datetime.datetime.strptime(request.form['time_off'], '%H:%M').time()
         else:
             time_off = None
-        call = request.form.get('call', None)
-        mode = request.form.get('mode', None)
-        submode = request.form.get('submode', None)
-        band = request.form.get('band', None)
-        band_rx = request.form.get('band_rx', None)
-        gridsquare = request.form.get('gridsquare', None)
-        my_gridsquare = request.form.get('my_gridsquare', None)
-        operator = request.form.get('operator', None)
-        freq = request.form.get('freq', None)
-        freq_rx = request.form.get('freq_rx', None)
-        owner_callsign = request.form.get('owner_callsign', None)
-        contacted_op = request.form.get('contacted_op', None)
-        eq_call = request.form.get('eq_call', None)
-        lat = request.form.get('lat', None)
-        my_lat = request.form.get('my_lat', None)
-        lon = request.form.get('lon', None)
-        my_lon = request.form.get('my_lon', None)
-        sota_ref = request.form.get('sota_ref', None)
-        my_sota_ref = request.form.get('my_sota_ref', None)
-        pota_ref = request.form.get('pota_ref', None)
-        my_pota_ref = request.form.get('my_pota_ref', None)
-        sat_name = request.form.get('sat_name', None)
-        sat_mode = request.form.get('sat_mode', None)
+        call = request.form.get('call', '').upper() or None
+        mode = request.form.get('mode', '') or None
+        submode = request.form.get('submode', '') or None
+        band = request.form.get('band', '') or None
+        band_rx = request.form.get('band_rx', '') or None
+        gridsquare = request.form.get('gridsquare', '') or None
+        if gridsquare:
+            gridsquare = gridsquare[:2].upper() + gridsquare[2:4] + gridsquare[4:].lower()
+        my_gridsquare = request.form.get('my_gridsquare', '') or None
+        if my_gridsquare:
+            my_gridsquare = my_gridsquare[:2].upper() + my_gridsquare[2:4] + my_gridsquare[4:].lower()
+        operator = request.form.get('operator', '').upper() or None
+        freq = request.form.get('freq', '') or None
+        freq_rx = request.form.get('freq_rx', '') or None
+        owner_callsign = request.form.get('owner_callsign', '').upper() or None
+        contacted_op = request.form.get('contacted_op', '').upper() or None
+        eq_call = request.form.get('eq_call', '').upper() or None
+        lat = request.form.get('lat', '') or None
+        my_lat = request.form.get('my_lat', '') or None
+        lon = request.form.get('lon', '') or None
+        my_lon = request.form.get('my_lon', '') or None
+        sota_ref = request.form.get('sota_ref', '').upper() or None
+        my_sota_ref = request.form.get('my_sota_ref', '').upper() or None
+        pota_ref = request.form.get('pota_ref', '').upper() or None
+        my_pota_ref = request.form.get('my_pota_ref', '').upper() or None
+        sat_name = request.form.get('sat_name', '') or None
+        sat_mode = request.form.get('sat_mode', '') or None
         newqso = QSO(qso_date=qso_date, time_on=time_on, qso_date_off=qso_date_off, time_off=time_off, call=call, mode=mode,
                     band=band, band_rx=band_rx, gridsquare=gridsquare, my_gridsquare=my_gridsquare, station_callsign=station_callsign.replace('_', '/'),
                     operator = operator, owner_callsign = owner_callsign, contacted_op = contacted_op, eq_call = eq_call,

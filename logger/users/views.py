@@ -22,7 +22,7 @@ def profile(user):
     add new calls, edit calls and add information about the callsign'''
     form = CallsignForm()
     if request.method == 'POST':
-        name = request.form['name']
+        name = request.form.get('name','').upper() or None
         newcallsign = Callsign(name=name, user_id=current_user.get_id())
         db.session.add(newcallsign)
         db.session.commit()
