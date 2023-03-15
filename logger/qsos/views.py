@@ -52,14 +52,14 @@ def postnewqso(station_callsign):
         sat_name = request.form.get('sat_name', None)
         sat_mode = request.form.get('sat_mode', None)
         newqso = QSO(qso_date=qso_date, time_on=time_on, qso_date_off=qso_date_off, time_off=time_off, call=call, mode=mode,
-                    band=band, band_rx=band_rx, gridsquare=gridsquare, my_gridsquare=my_gridsquare, station_callsign=station_callsign,
+                    band=band, band_rx=band_rx, gridsquare=gridsquare, my_gridsquare=my_gridsquare, station_callsign=station_callsign.replace('_', '/'),
                     operator = operator, owner_callsign = owner_callsign, contacted_op = contacted_op, eq_call = eq_call,
                     submode = submode, freq=freq, freq_rx=freq_rx, sat_name=sat_name, sat_mode=sat_mode, lat=lat, lon=lon, my_lat=my_lat,
                     my_lon=my_lon, sota_ref=sota_ref, my_sota_ref=my_sota_ref, pota_ref=pota_ref, my_pota_ref=my_pota_ref)
         db.session.add(newqso)
         db.session.commit()
-        return redirect(url_for('callsigns.call',callsign=station_callsign))
-    return render_template('qsoform.html', form=form, station_callsign=station_callsign)
+        return redirect(url_for('callsigns.call',callsign=station_callsign.replace('/', '_')))
+    return render_template('qsoform.html', form=form, station_callsign=station_callsign.replace('/', '_'))
 
 @qsos.route("/<user>/upload", methods=['GET', 'POST'])
 @login_required
