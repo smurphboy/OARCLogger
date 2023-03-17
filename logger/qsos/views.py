@@ -63,7 +63,7 @@ def postnewqso(station_callsign):
         db.session.add(newqso)
         db.session.commit()
         return redirect(url_for('callsigns.call',callsign=station_callsign.replace('/', '_')))
-    return render_template('qsoform.html', form=form, station_callsign=station_callsign.replace('/', '_'))
+    return render_template('qsoform.html', form=form, station_callsign=station_callsign.replace('_', '/'))
 
 @qsos.route("/<user>/upload", methods=['GET', 'POST'])
 @login_required
