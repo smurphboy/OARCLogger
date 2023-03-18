@@ -52,10 +52,10 @@
 {% block content %}
             <div class="bd-hero-heading">
                 <h1 class="title is-size-1">
-                    {% block title %} Antennas for {{ username }} {% endblock %}
+                    {% block title %} Rigs for {{ username }} {% endblock %}
                 </h1>
                 <div class="subtitle is-4 algolia-lvl1">
-                    <p>{{ allantennas|length }} antennas for this user.</p>     
+                    <p>{{ allrigs|length }} Rigs for this user.</p>     
                 </div>
             </div>
         </div>
@@ -75,34 +75,34 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for antenna in antennapage.items %}
+                    {% for rig in rigpage.items %}
                     <tr>
-                        <td>{{ antenna.id }}</td>
-                        <td><a href="{{ url_for ('antennas.antennaview', id=antenna.id) }}" title="{{ antenna.name }}">{{ antenna.name }}</a></td>
-                        <td>{% if antenna.manufacturer %}{{ antenna.manufacturer|truncate (20) }}{% endif %}</td>
-                        <td>{% if antenna.configurations %}{{ antenna.configurations|length }}{% endif %}</td>
-                        <td>{% if antenna.comment %}{{ antenna.comment|truncate (20) }}{% endif %}</td>
-                        <td><a class="button is-link" href="{{ url_for ('antennas.antennaedit', id=antenna.id) }}">Edit</a></td>
-                        <td><a class="button is-danger" href="{{ url_for ('antennas.antennadelete', id=antenna.id) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a></td>
+                        <td>{{ rig.id }}</td>
+                        <td><a href="{{ url_for ('rigs.rigview', id=rig.id) }}" title="{{ rig.name }}">{{ rig.name }}</a></td>
+                        <td>{% if rig.manufacturer %}{{ rig.manufacturer|truncate (20) }}{% endif %}</td>
+                        <td>{% if rig.configurations %}{{ rig.configurations|length }}{% endif %}</td>
+                        <td>{% if rig.comment %}{{ rig.comment|truncate (20) }}{% endif %}</td>
+                        <td><a class="button is-link" href="{{ url_for ('rigs.rigedit', id=rig.id) }}">Edit</a></td>
+                        <td><a class="button is-danger" href="{{ url_for ('rigs.rigdelete', id=rig.id) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a></td>
                     </tr>
                     {% else %}
-                    No Antennas yet
+                    No Rigs yet
                     {% endfor %}
                 </tbody>
             </table>
             <nav class="pagination" role="navigation" aria-label="pagination">
-                <a class="pagination-previous" {% if antennapage.has_prev %} href="{{ url_for('antennas.antennalist', username=current_user.name, page=antennalist.prev_num) }}"{% else %}disabled {% endif %} title="This is the first page">Previous</a>
-                <a class="pagination-next" {% if antennapage.has_next %}href="{{ url_for('antennas.antennalist', username=current_user.name, page=antennalist.next_num) }}"{% else %}disabled {% endif %}>Next page</a>
+                <a class="pagination-previous" {% if rigpage.has_prev %} href="{{ url_for('rigs.riglist', username=current_user.name, page=riglist.prev_num) }}"{% else %}disabled {% endif %} title="This is the first page">Previous</a>
+                <a class="pagination-next" {% if rigpage.has_next %}href="{{ url_for('rigs.riglist', username=current_user.name, page=riglist.next_num) }}"{% else %}disabled {% endif %}>Next page</a>
                 <ul class="pagination-list">
-                    {% for page_num in antennapage.iter_pages() %}
+                    {% for page_num in rigpage.iter_pages() %}
                         {% if page_num %}
-                            {% if page_num != antennapage.page %}
+                            {% if page_num != rigpage.page %}
                             <li>
-                                <a class="pagination-link" href="{{ url_for('antennas.antennalist', username=current_user.name, page=page_num) }}" aria-label="Goto page {{ page_num }}">{{ page_num }}</a>
+                                <a class="pagination-link" href="{{ url_for('rigs.riglist', username=current_user.name, page=page_num) }}" aria-label="Goto page {{ page_num }}">{{ page_num }}</a>
                             </li>
                             {% else %}
                             <li>
-                                <a class="pagination-link is-current" href="{{ url_for('antennas.antennalist', username=current_user.name, page=page_num) }}" aria-label="Page {{ page_num }}" aria-current="page">{{ page_num }}</a>
+                                <a class="pagination-link is-current" href="{{ url_for('rigs.riglist', username=current_user.name, page=page_num) }}" aria-label="Page {{ page_num }}" aria-current="page">{{ page_num }}</a>
                             </li>
                             {% endif %}
                         {% else %}
@@ -119,8 +119,8 @@
         <div class="box">
             <div class="level">
                 <div class="level-left">
-                    <button type="button" class="js-modal-trigger button is-primary" data-target="modal-add-antenna">
-                        Add a new Antenna
+                    <button type="button" class="js-modal-trigger button is-primary" data-target="modal-add-rig">
+                        Add a new Rig
                     </button>
                 </div>
             </div>
@@ -128,11 +128,11 @@
     </section>
 {% endblock %}
 {% block bottombody %}
-<div id="modal-add-antenna" class="modal">
+<div id="modal-add-rig" class="modal">
     <div class="modal-background"></div>
     <div class="modal-card">
         <header class="modal-card-head">
-            <p class="modal-card-title">Add Antenna</p>
+            <p class="modal-card-title">Add Rig</p>
             <button class="delete" aria-label="close"></button>
         </header>
         <section class="modal-card-body">
@@ -143,7 +143,7 @@
                     <div class="control">
                         {{ form.name(class_="input ant") }}
                     </div>
-                    <p class="help">Name your Antenna, for example [EFHW]</p>
+                    <p class="help">Name your Rig, for example [IC-705]</p>
                 </div>
                 {% if form.name.errors %}
                 <ul class="errors">
@@ -157,7 +157,7 @@
                     <div class="control">
                         {{ form.manufacturer(class_="input ant") }}
                     </div>
-                    <p class="help">Add the manufacturer of the antenna [Sotabeams]</p>
+                    <p class="help">Add the manufacturer of the rig [ICOM]</p>
                 </div>
                 {% if form.manufacturer.errors %}
                 <ul class="errors">
@@ -171,7 +171,7 @@
                     <div class="control">
                         {{ form.comment(class_="input ant") }}
                     </div>
-                    <p class="help">Add any comments about the antenna</p>
+                    <p class="help">Add any comments about the Rig</p>
                 </div>
                 {% if form.comment.errors %}
                 <ul class="errors">
@@ -180,11 +180,11 @@
                     {% endfor %}
                 </ul>
                 {% endif %}
-                <input type="hidden" name="formsubmitted" value="antenna">
+                <input type="hidden" name="formsubmitted" value="rig">
             </form> 
         </section>
         <footer class="modal-card-foot">
-            <button class="button is-success ant" name="add_ant" type="submit" form="antform">Add Antenna</button>
+            <button class="button is-success ant" name="add_ant" type="submit" form="antform">Add Rig</button>
             <button class="button cancel">Cancel</button>
         </footer>
     </div>
