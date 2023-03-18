@@ -37,7 +37,7 @@
                         <td>{% if config.qsos %}{{ config.qsos|length }}{% endif %}</td>
                         <td>{% if config.events %}{{ config.events|length }}{% endif %}</td>
                         <td>{{ config.comment }}</td>
-                        <td><a class="button is-danger" href="{{ url_for ('configurations.configdelete', id=config.id) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a></td>
+                        <td><a class="button is-danger is-small" href="{{ url_for ('configurations.configdelete', id=config.id) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a></td>
                     </tr>
                     {% else %}
                     No Station Configurations yet

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block hero %}is-primary{% endblock %}
+{% block hero %}is-primary is-info{% endblock %}
 {% block content %}
             <div class="bd-hero-heading">
                 <h1 class="title is-size-1">
@@ -25,6 +25,7 @@
                         <th>Total QSOs</th>
                         <th>Comment</th>
                         <th>Export QSOs</th>
+                        <th>Click to Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,6 +39,7 @@
                         <td>{% if event.qsos %}{{ event.qsos|length }}{% endif %}</td>
                         <td>{{ event.comment }}</td>
                         <td><a class="js-modal-trigger button is-link is-small" href="{{ url_for ('events.export', id=event.id) }}">Export QSOs</button></td>
+                        <td><a class="button is-danger is-small" href="{{ url_for ('events.eventdelete', id=event.id) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a></td>
                     </tr>
                     {% else %}
                     No Events yet

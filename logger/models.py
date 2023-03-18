@@ -40,6 +40,7 @@ class Callsign(db.Model):
 
 
 event_config = db.Table('event_config',
+                    db.Column('id', db.Integer, primary_key=True),
                     db.Column('event_id', db.Integer, db.ForeignKey('event.id')),
                     db.Column('config_id', db.Integer, db.ForeignKey('configuration.id'))
                     )
@@ -213,6 +214,7 @@ class QSO(db.Model):
 
 
 rig_band = db.Table('rig_band',
+                    db.Column('id', db.Integer, primary_key=True),
                     db.Column('rig_id', db.Integer, db.ForeignKey('rig.id')),
                     db.Column('band_id', db.Integer, db.ForeignKey('band.id'))
                     )

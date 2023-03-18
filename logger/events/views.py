@@ -101,6 +101,20 @@ def eventcreate():
         return redirect(url_for('events.eventlist', username=current_user.name))
     return render_template('eventcreateform.html', form=form, username=current_user.name)
 
+
+@events.route("/delete/<int:id>")
+@login_required
+def eventdelete(id):
+    event = Event.query.filter_by(id=id).first()
+    if int(event.user_id) == int(current_user.get_id()):
+        event1 = event.query.get_or_404(id)
+        db.session.delete(event1)
+        db.session.commit()
+        return redirect(url_for('events.eventlist', username=current_user.name))
+    else:
+        abort(403)
+
+
 @events.errorhandler(403)
 def page_not_found(e):
     # note that we set the 403 status explicitly
