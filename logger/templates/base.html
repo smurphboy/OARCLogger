@@ -73,11 +73,17 @@
                     {{ current_user.name }}'s Configs
                     </a>
                     <div class="navbar-dropdown">
-                    {% for config in current_user.configurations %}
-                        <a class="navbar-item" href="{{ url_for('configurations.configview', id=config.id) }}">
-                            {{ config.name }}
+                    {% if current_user.configurations|count > 0 %}
+                        {% for config in current_user.configurations %}
+                            <a class="navbar-item" href="{{ url_for('configurations.configview', id=config.id) }}">
+                                {{ config.name }}
+                            </a>
+                        {% endfor %}
+                    {% else %}
+                        <a class="navbar-item" href="{{ url_for('configurations.configlist', username=current_user.name) }}">
+                            You have no configurations.
                         </a>
-                    {% endfor %}
+                    {% endif %}
                         <hr class="navbar-divider">
                         <a class="navbar-item" href="{{ url_for('rigs.riglist', username=current_user.name) }}">
                             {{ current_user.name}}'s Rigs
@@ -86,6 +92,26 @@
                         <a class="navbar-item" href="{{ url_for('antennas.antennalist', username=current_user.name) }}">
                             {{ current_user.name}}'s Antennas
                         </a>                                
+                    </div>
+                </div>
+                {% endif %}
+                {% if current_user.is_authenticated %}
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link" href="{{ url_for('events.eventlist', username=current_user.name) }}">
+                    {{ current_user.name }}'s Events
+                    </a>
+                    <div class="navbar-dropdown">
+                    {% if current_user.events|count > 0 %}
+                        {% for event in current_user.events %}
+                            <a class="navbar-item" href="{{ url_for('events.eventview', id=event.id) }}">
+                                {{ event.name }}
+                            </a>
+                        {% endfor %}
+                    {% else %}
+                            <a class="navbar-item" href="{{ url_for('events.eventlist', username=current_user.name) }}">
+                                You have no events.
+                            </a>
+                    {% endif %}                             
                     </div>
                 </div>
                 {% endif %}
@@ -101,7 +127,7 @@
                             Getting Started
                         </a>                                
                         <hr class="navbar-divider">
-                        <a class="navbar-item" href="https://github.com/smurphboy/OARCFieldDayLogger/issues">
+                        <a class="navbar-item" href="https://github.com/smurphboy/OARCLogger/issues">
                             Report an issue (Github)
                         </a>
                     </div>
