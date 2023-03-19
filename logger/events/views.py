@@ -78,26 +78,33 @@ def export(id):
     else:
         abort(403)
 
+
+def save_changes(event, form, new):
+        start_date = datetime.datetime.strptime(request.form['start_date'], '%Y-%m-%d').date()
+        start_time = datetime.datetime.strptime(request.form['start_time'], '%H:%M').time()
+        event.start_date = datetime.datetime.combine(start_date, start_time)
+        print(event.start_date)
+        end_date = datetime.datetime.strptime(request.form['end_date'], '%Y-%m-%d').date()
+        end_time = datetime.datetime.strptime(request.form['end_time'], '%H:%M').time()
+        event.end_date = datetime.datetime.combine(end_date, end_time)
+        event.name = request.form['name']
+        event.type = request.form['type']
+        event.comment = request.form['comment']
+        event.user_id=current_user.get_id()
+        if new:
+            db.session.add(event)
+        db.session.commit()
+
+
 @events.route("/create", methods=['GET','POST'])
 @login_required
 def eventcreate():
     '''Create an Event'''
     form = EventForm()
     if request.method == 'POST':
-        start_date = datetime.datetime.strptime(request.form['start_date'], '%Y-%m-%d').date()
-        start_time = datetime.datetime.strptime(request.form['start_time'], '%H:%M').time()
-        start_date = datetime.datetime.combine(start_date, start_time)
-        print(start_date)
-        end_date = datetime.datetime.strptime(request.form['end_date'], '%Y-%m-%d').date()
-        end_time = datetime.datetime.strptime(request.form['end_time'], '%H:%M').time()
-        end_date = datetime.datetime.combine(end_date, end_time)
-        name = request.form['name']
-        type = request.form['type']
-        comment = request.form['comment']
-        newevent = Event(start_date=start_date, end_date=end_date, name=name, comment=comment,
-                         type=type, user_id=current_user.get_id())
-        db.session.add(newevent)
-        db.session.commit()
+        event = Event()
+        save_changes(event, form, new=True)
+        flash('Event created successfully!')
         return redirect(url_for('events.eventlist', username=current_user.name))
     return render_template('eventcreateform.html', form=form, username=current_user.name)
 
@@ -113,6 +120,23 @@ def eventdelete(id):
         return redirect(url_for('events.eventlist', username=current_user.name))
     else:
         abort(403)
+
+
+@events.route("/edit/<int:id>", methods=['GET', 'POST'])
+@login_required
+def eventedit(id):
+    event = Event.query.filter_by(id=id).first()
+    if int(event.user_id) == int(current_user.get_id()):
+        event1 = event.query.get_or_404(id)
+        if event1:
+            form = EventForm(formdata=request.form, obj=event1)
+            if request.method == 'POST' and form.validate():
+                save_changes(event1, form, new=False)
+                flash('Event updated successfully!')
+                return redirect(url_for('events.eventlist', username=current_user.name))
+            return render_template('eventcreateform.html', form=form, username=current_user.name)
+        else:
+            return 'Error loading event #{id}'.format(id=id)
 
 
 @events.errorhandler(403)
