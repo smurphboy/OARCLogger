@@ -40,31 +40,27 @@ def configcreate():
     form = ConfigForm()
     form_ant = AntennaForm()
     form_rig = RigForm()
+    form.antenna.choices = [(a.id, a.name) for a in Antenna.query.filter_by(user_id=current_user.get_id()).order_by('name')]
+    form.rig.choices = [(r.id, r.name) for r in Rig.query.filter_by(user_id=current_user.get_id()).order_by('name')]
     if request.method == 'POST':
         if request.form['formsubmitted'] == 'antenna':
             print('antenna')
-            name = request.form['name']
-            manufacturer = request.form['manufacturer']
-            comment = request.form['comment']
-            newantenna = Antenna(name=name, manufacturer=manufacturer, comment=comment, user_id=current_user.get_id())
+            antname = request.form['name']
+            antmanufacturer = request.form['manufacturer']
+            antcomment = request.form['comment']
+            newantenna = Antenna(name=antname, manufacturer=antmanufacturer, comment=antcomment, user_id=current_user.get_id())
             db.session.add(newantenna)
             db.session.commit()
-            form.antenna.choices = [(a.id, a.name) for a in Antenna.query.filter_by(user_id=current_user.get_id()).order_by('name')]
-            form.rig.choices = [(r.id, r.name) for r in Rig.query.filter_by(user_id=current_user.get_id()).order_by('name')]
-            form.name.data='' #stops our form name leaking into the config form
-            return render_template('configcreateform.html', form=form, form_ant=form_ant, form_rig=form_rig, username=current_user.name)
+            return redirect(url_for('configurations.configcreate', username=current_user.name))
         elif request.form['formsubmitted'] == 'rig':
             print('rig')
-            name = request.form['name']
-            manufacturer = request.form['manufacturer']
-            comment = request.form['comment']
-            newrig = Rig(name=name, manufacturer=manufacturer, comment=comment, user_id=current_user.get_id())
+            rigname = request.form['name']
+            rigmanufacturer = request.form['manufacturer']
+            rigcomment = request.form['comment']
+            newrig = Rig(name=rigname, manufacturer=rigmanufacturer, comment=rigcomment, user_id=current_user.get_id())
             db.session.add(newrig)
             db.session.commit()
-            form.antenna.choices = [(a.id, a.name) for a in Antenna.query.filter_by(user_id=current_user.get_id()).order_by('name')]
-            form.rig.choices = [(r.id, r.name) for r in Rig.query.filter_by(user_id=current_user.get_id()).order_by('name')]
-            form.name.data='' #stops our form name leaking into the config form
-            return render_template('configcreateform.html', form=form, form_ant=form_ant, form_rig=form_rig, username=current_user.name)
+            return redirect(url_for('configurations.configcreate', username=current_user.name))
         elif request.form['formsubmitted'] == 'config':
             print('config')
             name = request.form['name']
@@ -76,15 +72,58 @@ def configcreate():
             db.session.add(newconfig)
             db.session.commit()
             return redirect(url_for('configurations.configlist', username=current_user.name))
-    form.antenna.choices = [(a.id, a.name) for a in Antenna.query.filter_by(user_id=current_user.get_id()).order_by('name')]
-    form.rig.choices = [(r.id, r.name) for r in Rig.query.filter_by(user_id=current_user.get_id()).order_by('name')]
     return render_template('configcreateform.html', form=form, form_ant=form_ant, form_rig=form_rig, username=current_user.name)
 
 
 @configurations.route("/edit/<id>", methods=['GET','POST'])
 @login_required
 def configedit(id):
-    pass
+    config = Configuration.query.filter_by(id=id).first()
+    if int(config.user_id) == int(current_user.get_id()):
+        config1 = config.query.get_or_404(id)
+        if config1:
+            form = ConfigForm(formdata=request.form, obj=config1)
+            form_ant = AntennaForm()
+            form_rig = RigForm()
+            form.antenna.choices = [(a.id, a.name) for a in Antenna.query.filter_by(user_id=current_user.get_id()).order_by('name')]
+            form.rig.choices = [(r.id, r.name) for r in Rig.query.filter_by(user_id=current_user.get_id()).order_by('name')]
+            form.name.default = config.name
+            form.comment.default = config.comment
+            form.antenna.default = config.antenna_id
+            form.rig.default = config.rig_id
+            form.process()
+            if request.method == 'POST' and form.validate():
+                if request.form['formsubmitted'] == 'antenna':
+                    print('ant')
+                    antname = request.form['name']
+                    antmanufacturer = request.form['manufacturer']
+                    antcomment = request.form['comment']
+                    newantenna = Antenna(name=antname, manufacturer=antmanufacturer, comment=antcomment, user_id=current_user.get_id())
+                    db.session.add(newantenna)
+                    db.session.commit()
+                    return redirect(url_for('configurations.configedit', username=current_user.name, id=id))
+                elif request.form['formsubmitted'] == 'rig':
+                    print('rig')
+                    rigname = request.form['name']
+                    rigmanufacturer = request.form['manufacturer']
+                    rigcomment = request.form['comment']
+                    newrig = Rig(name=rigname, manufacturer=rigmanufacturer, comment=rigcomment, user_id=current_user.get_id())
+                    db.session.add(newrig)
+                    db.session.commit()
+                    return redirect(url_for('configurations.configedit', username=current_user.name, id=id))
+                elif request.form['formsubmitted'] == 'config':
+                    print('config')
+                    config.name = request.form['name']
+                    config.comment = request.form['comment']
+                    config.antenna = Antenna.query.filter_by(id=request.form['antenna']).first()
+                    config.rig = Rig.query.filter_by(id=request.form['rig']).first()
+                    db.session.commit()
+                    return redirect(url_for('configurations.configlist', username=current_user.name))
+                else:
+                    return 'Error loading config #{id}'.format(id=id)
+            print('wasnt post')
+            return render_template('configcreateform.html', form=form, form_ant=form_ant, form_rig=form_rig, username=current_user.name)
+
 
 
 @configurations.route("/delete/<int:id>")

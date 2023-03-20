@@ -51,17 +51,17 @@
 {% block content %}
             <div class="bd-hero-heading">
                 <h1 class="title algolia-lvl0">
-                    {% block title %} <p>Add a New Station Configuration for {{ username }}</p> {% endblock %}
+                    {% block title %} <p>Add / Edit a Station Configuration for {{ username }}</p> {% endblock %}
                 </h1>
                 <div class="subtitle is-4 algolia-lvl1">
-                    <p>Enter Station Configuration details below and press Add:</p>     
+                    <p>Enter Station Configuration details below and press Submit:</p>     
                 </div>
             </div>
         </div>
     </section>
     <section class="section">
         <div class="container is-max-desktop">
-            <form action="{{ url_for ('configurations.configcreate') }}" method="POST" id="configform">
+            <form method="POST" id="configform">
                 {{ form.csrf_token }}
                 <div class="field is-horizontal">
                     <div class="field-label is-normal">
@@ -148,11 +148,9 @@
                 <nav class="level">
                     <div class="level-left">
                         <div class="level-item">
-                            <div class="control">
-                                <p>
-                                    <input type="submit" class="button is-link" value="Save Changes">
-                                </p>
-                            </div>
+                            <p>
+                                <input type="submit" form="configform" class="button is-link" value="Save Changes">
+                            </p>
                         </div>
                     </div>
                     <div class="level-right">
