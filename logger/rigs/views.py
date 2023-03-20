@@ -7,6 +7,17 @@ rigs = Blueprint('rigs', __name__, template_folder='templates')
 
 ROWS_PER_PAGE = 10
 
+
+
+def save_changes(rig, form, new):
+    rig.name = request.form['name']
+    rig.manufacturer = request.form['manufacturer']
+    rig.comment = request.form['comment']
+    rig.user_id=current_user.get_id()
+    if new:
+        db.session.add(rig)
+    db.session.commit()
+
 @rigs.route("/<username>", methods=['GET', 'POST'])
 @login_required
 def riglist(username):
@@ -14,12 +25,9 @@ def riglist(username):
     this user.'''
     form = RigForm()
     if request.method == 'POST':
-        name = request.form['name']
-        manufacturer = request.form['manufacturer']
-        comment = request.form['comment']
-        newrig = Rig(name=name, manufacturer=manufacturer, comment=comment, user_id=current_user.get_id())
-        db.session.add(newrig)
-        db.session.commit()
+        rig = Rig()
+        save_changes(rig, form, new=True)
+        flash('Rig creted successfully!')
         return redirect(url_for('rigs.riglist', username=current_user.name))   
     if username == current_user.name:
         page = request.args.get('page', 1, type=int)
@@ -47,12 +55,10 @@ def rigcreate():
     '''Create a Rig'''
     form = RigForm()
     if request.method == 'POST':
-        name = request.form['name']
-        newrig = Rig(name=name, user_id=current_user.get_id())
-        db.session.add(newrig)
-        db.session.commit()
+        rig = Rig()
+        save_changes(rig, form, new=True)
+        flash('Rig creted successfully!')
         return redirect(url_for('rigs.riglist', username=current_user.name))
-        form.rig.choices = [(r.id, r.name) for r in Rig.query.filter_by(user_id=current_user.get_id()).order_by('name')]
     return render_template('rigcreateform.html', form=form, username=current_user.name)
 
 
@@ -74,16 +80,15 @@ def rigdelete(id):
 @login_required
 def rigedit(id):
     '''edit an existing rig'''
-    form = RigForm()
-    rig = Rig.query.get_or_404(id)
-    form.name.data = rig.name
-    form.manufacturer.data = rig.manufacturer
-    form.comment.data = rig.comment
-    if request.method == 'POST':
-        rig.name = request.form['name']
-        rig.manufacturer = request.form['manufacturer']
-        rig.comment = request.form['comment']
-        db.session.add(rig)
-        db.session.commit()
-        return redirect(url_for('rigs.riglist', username=current_user.name))
-    return render_template('rigeditform.html', form=form, username=current_user.name)
+    rig = Rig.query.filter_by(id=id).first()
+    if int(rig.user_id) == int(current_user.get_id()):
+        rig1 = Rig.query.get_or_404(id)
+        if rig1:
+            form = RigForm(formdata=request.form, obj=rig1)
+            if request.method == 'POST' and form.validate():
+                save_changes(rig1, form, new=False)
+                flash('Rig updated successfully!')
+                return redirect(url_for('rigs.riglist', username=current_user.name))
+            return render_template('rigeditform.html', form=form, username=current_user.name)
+        else:
+            return 'Error loading rig #{id}'.format(id=id)

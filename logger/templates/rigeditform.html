@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block hero %}is-warning{% endblock %}
+{% block content %}
+		<div class="bd-hero-heading">
+			<h1 class="title is-size-1">
+			{% block title %} Edit {{ form.name.data }} {% endblock %}
+			</h1>
+			<div class="subtitle is-4 algolia-lvl1">
+				<p>Edit the rig data</p>     
+			</div>
+		</div>
+	</div>
+</section>
+<section class="section">
+	<div class="container is-max-desktop">
+		<form method="POST" id="rigform">
+			{{ form.csrf_token }}
+            <div class="card">
+                <div class="card-content">
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            {{ form.name.label(class_='label') }}
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="control">
+                                    {{ form.name(class_="input ant") }}
+                                </div>
+                                <p class="help">Name your Rig, for example [IC-705]</p>
+                            </div>
+                        </div>
+                        {% if form.name.errors %}
+                        <ul class="errors">
+                            {% for error in form.name.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            {{ form.manufacturer.label(class_='label') }}
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="control">
+                                    {{ form.manufacturer(class_="input ant") }}
+                                </div>
+                                <p class="help">Add the manufacturer of the rig, for example [ICOM]</p>
+                            </div>
+                        </div>
+                        {% if form.manufacturer.errors %}
+                        <ul class="errors">
+                            {% for error in form.manufacturer.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            {{ form.comment.label(class_='label') }}
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="control">
+                                    {{ form.comment(class_="input ant") }}
+                                </div>
+                                <p class="help">Add any comments about the rig</p>
+                            </div>
+                        </div>
+                        {% if form.comment.errors %}
+                        <ul class="errors">
+                            {% for error in form.comment.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="field is-horizontal">
+                        <div class="field-label">
+                            <!-- Left empty for spacing -->
+                        </div>
+                        <div class="field-body">
+                            <div class="field is-grouped">
+                                <div class="control">
+                                    <button class="button is-primary">
+                                        Submit
+                                    </button>
+                                </div>
+                                <a class="button is-link is-light" href="{{ url_for ('rigs.riglist', username=current_user.name) }}">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</form> 
+	</div>
+</section>
+{% endblock %}

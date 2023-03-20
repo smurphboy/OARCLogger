@@ -44,7 +44,9 @@ def configcreate():
         if request.form['formsubmitted'] == 'antenna':
             print('antenna')
             name = request.form['name']
-            newantenna = Antenna(name=name, user_id=current_user.get_id())
+            manufacturer = request.form['manufacturer']
+            comment = request.form['comment']
+            newantenna = Antenna(name=name, manufacturer=manufacturer, comment=comment, user_id=current_user.get_id())
             db.session.add(newantenna)
             db.session.commit()
             form.antenna.choices = [(a.id, a.name) for a in Antenna.query.filter_by(user_id=current_user.get_id()).order_by('name')]
@@ -54,7 +56,9 @@ def configcreate():
         elif request.form['formsubmitted'] == 'rig':
             print('rig')
             name = request.form['name']
-            newrig = Rig(name=name, user_id=current_user.get_id())
+            manufacturer = request.form['manufacturer']
+            comment = request.form['comment']
+            newrig = Rig(name=name, manufacturer=manufacturer, comment=comment, user_id=current_user.get_id())
             db.session.add(newrig)
             db.session.commit()
             form.antenna.choices = [(a.id, a.name) for a in Antenna.query.filter_by(user_id=current_user.get_id()).order_by('name')]
@@ -75,6 +79,12 @@ def configcreate():
     form.antenna.choices = [(a.id, a.name) for a in Antenna.query.filter_by(user_id=current_user.get_id()).order_by('name')]
     form.rig.choices = [(r.id, r.name) for r in Rig.query.filter_by(user_id=current_user.get_id()).order_by('name')]
     return render_template('configcreateform.html', form=form, form_ant=form_ant, form_rig=form_rig, username=current_user.name)
+
+
+@configurations.route("/edit/<id>", methods=['GET','POST'])
+@login_required
+def configedit(id):
+    pass
 
 
 @configurations.route("/delete/<int:id>")

@@ -66,24 +66,24 @@
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Edit</th>
                         <th>Name</th>
                         <th>Manfacturer</th>
                         <th>Used in Configs</th>
                         <th>Comment</th>
-                        <th>Click to Edit</th>
-                        <th>Click to Delete</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for rig in rigpage.items %}
                     <tr>
                         <td>{{ rig.id }}</td>
+                        <td><a class="button is-link is-small" href="{{ url_for ('rigs.rigedit', id=rig.id) }}"><span class="icon is-small"><i class="fa-solid fa-pen-to-square"></i></span><span>Edit</span></a></td>
                         <td><a href="{{ url_for ('rigs.rigview', id=rig.id) }}" title="{{ rig.name }}">{{ rig.name }}</a></td>
                         <td>{% if rig.manufacturer %}{{ rig.manufacturer|truncate (20) }}{% endif %}</td>
                         <td>{% if rig.configurations %}{{ rig.configurations|length }}{% endif %}</td>
                         <td>{% if rig.comment %}{{ rig.comment|truncate (20) }}{% endif %}</td>
-                        <td><a class="button is-link" href="{{ url_for ('rigs.rigedit', id=rig.id) }}">Edit</a></td>
-                        <td><a class="button is-danger" href="{{ url_for ('rigs.rigdelete', id=rig.id) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a></td>
+                        <td><a class="button is-danger is-small" href="{{ url_for ('rigs.rigdelete', id=rig.id) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a></td>
                     </tr>
                     {% else %}
                     No Rigs yet
