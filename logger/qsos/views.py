@@ -130,6 +130,17 @@ def lookupdxcc():
             print(dxcc, ituz, cqz)
             return jsonify(dxcc = dxcc, ituz = ituz, cqz = cqz)
 
+
+@qsos.route('delete/<int:id>/<callsign>')
+@login_required
+def qsodelete(id, callsign):
+    '''deleted selected qso'''
+    qso = QSO.query.filter_by(id=id).first()
+    db.session.delete(qso)
+    db.session.commit()
+    return redirect(url_for('callsigns.call', callsign=callsign))
+
+
 @qsos.errorhandler(400)
 def page_not_found(e):
     # note that we set the 400 status explicitly

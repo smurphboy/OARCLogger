@@ -75,7 +75,7 @@ def configcreate():
     return render_template('configcreateform.html', form=form, form_ant=form_ant, form_rig=form_rig, username=current_user.name)
 
 
-@configurations.route("/edit/<id>", methods=['GET','POST'])
+@configurations.route("/edit/<int:id>", methods=['GET','POST'])
 @login_required
 def configedit(id):
     config = Configuration.query.filter_by(id=id).first()
