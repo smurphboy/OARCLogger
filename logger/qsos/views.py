@@ -138,7 +138,7 @@ def qsodelete(id, callsign):
     qso = QSO.query.filter_by(id=id).first()
     db.session.delete(qso)
     db.session.commit()
-    return redirect(url_for('callsigns.call', callsign=callsign))
+    return redirect(url_for('callsigns.call', callsign=callsign.replace('/', '_')))
 
 
 @qsos.errorhandler(400)
