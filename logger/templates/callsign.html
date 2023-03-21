@@ -13,66 +13,66 @@
         </div>
     </section>
     <section>
-        <div class="box">
-            <table class="table is-striped is-hoverable">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Callsign</th>
-                        <th>Band</th>
-                        <th>Mode</th>
-                        <th>Gridsquare</th>
-                        <th>My Gridsquare</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for qso in qsos.items %}
-                    <tr>
-                        <td>{{ qso.qso_date }}</td>
-                        <td>{{ qso.time_on }}</td>
-                        <td><a href="/qsos/view/{{ qso.call| replace("/","_") }}/{{ qso.qso_date}}/{{ qso.time_on.strftime('%H:%M:%S.%f') }}" title="{{ qso.call }}">{{ qso.call }}</a></td>
-                        <td>{{ qso.band }}</td>
-                        <td>{{ qso.mode }}</td>
-                        <td>{{ qso.gridsquare }}</td>
-                        <td>{{ qso.my_gridsquare }}</td>
-                    </tr>
-                    {% else %}
-                    No QSOs
-                    {% endfor %}
-                </tbody>
-            </table>
-            <nav class="pagination" role="navigation" aria-label="pagination">
-                <a class="pagination-previous" {% if qsos.has_prev %}href="{{ url_for('callsigns.call', callsign=station_callsign | replace('/','_'), page=qsos.prev_num) }}"{% else %}disabled {% endif %} title="This is the first page">Previous</a>
-                <a class="pagination-next" {% if qsos.has_next %}href="{{ url_for('callsigns.call', callsign=station_callsign | replace('/','_'), page=qsos.next_num) }}"{% else %}disabled {% endif %}>Next page</a>
-                <ul class="pagination-list">
-                    {% for page_num in qsos.iter_pages() %}
-                        {% if page_num %}
-                            {% if page_num != qsos.page %}
-                            <li>
-                                <a class="pagination-link" href="{{ url_for('callsigns.call', callsign=station_callsign | replace('/','_'), page=page_num) }}" aria-label="Goto page {{ page_num }}">{{ page_num }}</a>
-                            </li>
-                            {% else %}
-                            <li>
-                                <a class="pagination-link is-current" href="{{ url_for('callsigns.call', callsign=station_callsign | replace('/','_'), page=page_num) }}" aria-label="Page {{ page_num }}" aria-current="page">{{ page_num }}</a>
-                            </li>
-                            {% endif %}
+        <div class="container is-max-desktop">
+            <div class="box">
+                <table class="table is-striped is-hoverable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Callsign</th>
+                            <th>Band</th>
+                            <th>Mode</th>
+                            <th>Gridsquare</th>
+                            <th>My Gridsquare</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for qso in qsos.items %}
+                        <tr>
+                            <td>{{ qso.qso_date }}</td>
+                            <td>{{ qso.time_on }}</td>
+                            <td><a href="/qsos/view/{{ qso.call| replace("/","_") }}/{{ qso.qso_date}}/{{ qso.time_on.strftime('%H:%M:%S.%f') }}" title="{{ qso.call }}">{{ qso.call }}</a></td>
+                            <td>{{ qso.band }}</td>
+                            <td>{{ qso.mode }}</td>
+                            <td>{{ qso.gridsquare }}</td>
+                            <td>{{ qso.my_gridsquare }}</td>
+                        </tr>
                         {% else %}
-                            <li>
-                                <span class="pagination-ellipsis">&hellip;</span>
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-            </nav>
-        </div>
-    </section>
-    <section>
-        <div class="box">
-            <div class="level">
-                <div class="level-left">
-                    <p class="level-item">Add a new QSO for this callsign</p>
-                    <a class="button is-link level-item" href="{{ url_for('qsos.postnewqso', station_callsign=station_callsign | replace('/','_')) }}">Add QSO</a>
+                        No QSOs
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <nav class="pagination" role="navigation" aria-label="pagination">
+                    <a class="pagination-previous" {% if qsos.has_prev %}href="{{ url_for('callsigns.call', callsign=station_callsign | replace('/','_'), page=qsos.prev_num) }}"{% else %}disabled {% endif %} title="This is the first page">Previous</a>
+                    <a class="pagination-next" {% if qsos.has_next %}href="{{ url_for('callsigns.call', callsign=station_callsign | replace('/','_'), page=qsos.next_num) }}"{% else %}disabled {% endif %}>Next page</a>
+                    <ul class="pagination-list">
+                        {% for page_num in qsos.iter_pages() %}
+                            {% if page_num %}
+                                {% if page_num != qsos.page %}
+                                <li>
+                                    <a class="pagination-link" href="{{ url_for('callsigns.call', callsign=station_callsign | replace('/','_'), page=page_num) }}" aria-label="Goto page {{ page_num }}">{{ page_num }}</a>
+                                </li>
+                                {% else %}
+                                <li>
+                                    <a class="pagination-link is-current" href="{{ url_for('callsigns.call', callsign=station_callsign | replace('/','_'), page=page_num) }}" aria-label="Page {{ page_num }}" aria-current="page">{{ page_num }}</a>
+                                </li>
+                                {% endif %}
+                            {% else %}
+                                <li>
+                                    <span class="pagination-ellipsis">&hellip;</span>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </nav>
+            </div>
+            <div class="box">
+                <div class="level">
+                    <div class="level-left">
+                        <p class="level-item">Add a new QSO for this callsign</p>
+                        <a class="button is-link level-item" href="{{ url_for('qsos.postnewqso', station_callsign=station_callsign | replace('/','_')) }}">Add QSO</a>
+                    </div>
                 </div>
             </div>
         </div>
