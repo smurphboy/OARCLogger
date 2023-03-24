@@ -42,7 +42,7 @@ class Callsign(db.Model):
 event_config = db.Table('event_config',
                     db.Column('id', db.Integer, primary_key=True),
                     db.Column('event_id', db.Integer, db.ForeignKey('event.id')),
-                    db.Column('config_id', db.Integer, db.ForeignKey('configuration.id'))
+                    db.Column('config_id', db.Integer, db.ForeignKey('configuration.id')),
                     )
 
 
@@ -53,6 +53,13 @@ class Event(db.Model):
     start_date = db.Column(db.DateTime())
     end_date = db.Column(db.DateTime())
     comment = db.Column(db.String(255))
+    sota_ref = db.Column(db.String(25))
+    pota_ref = db.Column(db.String(255))
+    wwff_ref = db.Column(db.String(255))
+    iota_ref = db.Column(db.String(255))
+    sat_name = db.Column(db.String(255))
+    square = db.Column(db.String(4))
+    configs = db.relationship('Configuration', secondary='event_config', back_populates="events")
     qsos = db.relationship('QSO', backref='event', lazy=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)   
 
@@ -254,4 +261,4 @@ class Configuration(db.Model):
     rig_id = db.Column(db.Integer, db.ForeignKey('rig.id'), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     qsos = db.relationship('QSO', backref='configuration', lazy=True)
-    events = db.relationship('Event', secondary=event_config, backref='configurations')
+    events = db.relationship('Event', secondary=event_config, back_populates='configs')
