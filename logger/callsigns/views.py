@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, render_template, redirect, request, url_for
+from flask import Blueprint, flash, render_template, redirect, request, url_for, abort
 from flask_login import login_required, current_user
 from logger.models import User, db, Callsign, QSO
 from logger.forms import CallsignForm
@@ -44,5 +44,12 @@ def callsigncreate():
 @callsigns.post("/delete/<int:id>")
 @login_required
 def callsigndelete(id):
-    print(id)
-    return redirect(url_for('users.profile', user=current_user.name))
+    callsign = Callsign.query.filter_by(id=id).first()
+    if int(callsign.user_id) == int(current_user.get_id()):
+        callsign1 = callsign.query.get_or_404(id)
+        db.session.delete(callsign1)
+        db.session.commit()
+        return redirect(url_for('users.profile', user=current_user.name))
+    else:
+        abort(403)
+    
