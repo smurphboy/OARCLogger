@@ -31,6 +31,7 @@ class User(UserMixin, db.Model):
     rigs = db.relationship('Rig', backref='owner', lazy=True)
     configurations = db.relationship('Configuration', backref='owner', lazy=True)
     antennas = db.relationship('Antenna', backref='owner', lazy=True)
+    selected = db.relationship('Selected', backref='owner', lazy=True)
 
 class Callsign(db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
@@ -61,7 +62,15 @@ class Event(db.Model):
     square = db.Column(db.String(4))
     configs = db.relationship('Configuration', secondary='event_config', back_populates="events")
     qsos = db.relationship('QSO', backref='event', lazy=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)   
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    selected = db.relationship('Selected', backref='selevent', lazy=True)
+
+
+class Selected(db.Model):
+    id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
+    event = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
+    user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
 
 class QSO(db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy

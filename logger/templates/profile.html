@@ -63,6 +63,11 @@
 <section class="section">
     <div class="container">
         <div class="box">
+            <h1 class="title"><a href="{{ url_for('events.eventlist', username=current_user.name) }}">Selected Events</a></h1>
+            <a class="button is-link" href="{{ url_for('events.selectevents', username=current_user.name) }}">Selected Simon</a>
+        </div>
+        <div class="box">
+            <h1 class="title">Callsigns</h1>
             <table class="table">
                 <thead>
                     <tr>

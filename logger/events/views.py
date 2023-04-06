@@ -1,7 +1,7 @@
 import datetime
 from flask import Blueprint, flash, render_template, redirect, request, url_for, abort
 from flask_login import login_required, current_user
-from logger.models import User, db, Callsign, QSO, Event
+from logger.models import User, db, Callsign, QSO, Event, Selected
 from logger.forms import EventForm
 
 events = Blueprint('events', __name__, template_folder='templates')
@@ -143,3 +143,13 @@ def eventedit(id):
 def page_not_found(e):
     # note that we set the 403 status explicitly
     return render_template('403.html'), 403
+
+
+@events.route("/select/<username>", methods=['GET', 'POST'])
+@login_required
+def selectevents(username):
+    userid = User.query.filter_by(name = username).first()
+    allevents = Event.query.filter_by(user_id = userid.id).all()
+    selectedevents = Selected.query.filter_by(user = userid.id)
+    print('userid= ', userid.id, 'allevents= ', allevents)
+    return render_template('selectedeventsform.html', username=current_user.name)
