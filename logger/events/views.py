@@ -2,7 +2,7 @@ import datetime
 from flask import Blueprint, flash, render_template, redirect, request, url_for, abort
 from flask_login import login_required, current_user
 from logger.models import User, db, Callsign, QSO, Event, Selected
-from logger.forms import EventForm
+from logger.forms import EventForm, SelectedEventForm
 
 events = Blueprint('events', __name__, template_folder='templates')
 
@@ -148,8 +148,17 @@ def page_not_found(e):
 @events.route("/select/<username>", methods=['GET', 'POST'])
 @login_required
 def selectevents(username):
+    form = SelectedEventForm()
+    if request.method == 'POST' and form.validate():
+        print (request.form.getlist('Search'))
+        return redirect(url_for('users.profile', user=current_user.name))
     userid = User.query.filter_by(name = username).first()
-    allevents = Event.query.filter_by(user_id = userid.id).all()
-    selectedevents = Selected.query.filter_by(user = userid.id)
-    print('userid= ', userid.id, 'allevents= ', allevents)
-    return render_template('selectedeventsform.html', username=current_user.name)
+    allevents = Event.query.filter_by(user_id=current_user.get_id()).all()
+    alleventsjson = []
+    for e in allevents:
+        alleventsjson.append({'val': e.name})
+    page = request.args.get('page', 1, type=int)
+    eventpage = Event.query.filter_by(user_id=current_user.get_id()).order_by(Event.start_date.desc()).paginate(page=page, per_page=ROWS_PER_PAGE)
+    selectedevents = Selected.query.filter_by(user = userid.id).all()
+    return render_template('selectedeventsform.html', username=current_user.name, eventpage=eventpage, selectedevents=selectedevents,
+                           allevents=allevents, alleventsjson=alleventsjson, form=form)

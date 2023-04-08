@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.default.min.css"
+  integrity="sha512-pTaEn+6gF1IeWv3W1+7X7eM60TFu/agjgoHmYhAfLEU8Phuf6JKiiE8YmsNC0aCgQv4192s4Vai8YZ6VNM6vyQ=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+/>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js"
+  integrity="sha512-IOebNkvA/HZjMM7MxL0NYeLYEalloZ8ckak+NDtOViP7oiYzG5vn6WVXyrJDiJPhl4yRdmNAG49iuLmhkUdVsQ=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+{% endblock %}
+{% block hero %}is-primary is-info{% endblock %}
+{% block content %}
+            <div class="bd-hero-heading">
+                <h1 class="title is-size-1">
+                    {% block title %} Selected Events for {{ username }} {% endblock %}
+                </h1>
+                <div class="subtitle is-4 algolia-lvl1">
+                    <p>{{ selectedevents|length }} events selected from {{ allevents|length }} events for this user.</p>     
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="container">
+            <div class="box">
+                <form method="POST">
+                    {{ form.csrf_token }}
+                    <h1 class="title">Select Events</h1>
+                    <div class='exampleSearch'>
+                        <label class="label">Selected Events</label>
+                        <p class="control">
+                            <select name="Search" id="Search" multiple class="demo-default">
+                                <option value="">select</option>
+                            </select>
+                        </p>
+                    </div>
+                    <div class="control">
+                        <p>
+                            <input type="submit" class="button is-link" value="Select">
+                        </p>
+                    </div>
+                </form>
+            </div>
+            <div class="box">
+                <table class="table is-striped is-hoverable">
+                    <thead>
+                        <tr>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Edit</th>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Total QSOs</th>
+                            <th>Export QSOs</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event in eventpage.items %}
+                        <tr>
+                            <td>{{ event.start_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>{{ event.end_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td><a class="button is-link is-small" href="{{ url_for ('events.eventedit', id=event.id) }}"><span class="icon is-small"><i class="fa-solid fa-pen-to-square"></i></span><span>Edit</span></a></td>
+                            <td><a href="{{ url_for ('events.eventview', id=event.id) }}" title="{{ event.name }}">{{ event.name }}</a></td>
+                            <td>{{ event.type }}</td>
+                            <td>{% if event.qsos %}{{ event.qsos|length }}{% endif %}</td>
+                            <td><a class="js-modal-trigger button is-link is-small" href="{{ url_for ('events.export', id=event.id) }}">Export QSOs</button></td>
+                            <td><a class="button is-danger is-small" href="{{ url_for ('events.eventdelete', id=event.id) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a></td>
+                        </tr>
+                        {% else %}
+                        No Events yet
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <nav class="pagination" role="navigation" aria-label="pagination">
+                    <a class="pagination-previous" {% if eventpage.has_prev %}href="{{ url_for('events.eventlist', username=current_user.name, page=eventlist.prev_num) }}"{% else %}disabled {% endif %} title="This is the first page">Previous</a>
+                    <a class="pagination-next" {% if eventpage.has_next %}href="{{ url_for('events.eventlist', username=current_user.name, page=eventlist.next_num) }}"{% else %}disabled {% endif %}>Next page</a>
+                    <ul class="pagination-list">
+                        {% for page_num in eventpage.iter_pages() %}
+                            {% if page_num %}
+                                {% if page_num != eventpage.page %}
+                                <li>
+                                    <a class="pagination-link" href="{{ url_for('events.eventlist', username=current_user.name, page=page_num) }}" aria-label="Goto page {{ page_num }}">{{ page_num }}</a>
+                                </li>
+                                {% else %}
+                                <li>
+                                    <a class="pagination-link is-current" href="{{ url_for('events.eventlist', username=current_user.name, page=page_num) }}" aria-label="Page {{ page_num }}" aria-current="page">{{ page_num }}</a>
+                                </li>
+                                {% endif %}
+                            {% else %}
+                                <li>
+                                    <span class="pagination-ellipsis">&hellip;</span>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </nav>
+            </div>
+            <div class="box">
+                <div class="level">
+                    <div class="level-left">
+                        <p class="level-item">Add a new Event</p>
+                        <a class="button is-link level-item" href="{{ url_for('events.eventcreate', username=current_user.name) }}">Add Event</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+<script>
+$(document).ready(function()
+{
+    var events = {{alleventsjson | safe}};
+
+    $("#Search").selectize({
+    valueField: 'val',
+    labelField: 'val',
+    searchField: ['val'],
+    options: events,
+    });
+});
+</script>
+{% endblock %}
