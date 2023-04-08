@@ -64,6 +64,13 @@
     <div class="container">
         <div class="box">
             <h1 class="title"><a href="{{ url_for('events.eventlist', username=current_user.name) }}">Selected Events</a></h1>
+            <nav class="breadcrumb" aria-label="breadcrumbs">
+                <ul>
+                {% for event in current_user.selected %}
+                    <li><a href="{{ url_for ('events.eventview', id=event.selevent.id) }}">{{ event.selevent.name }}</a></li>
+                {% endfor %}
+                </ul>
+            </nav>
             <a class="button is-link" href="{{ url_for('events.selectevents', username=current_user.name) }}">Selected Simon</a>
         </div>
         <div class="box">
@@ -82,7 +89,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for callsign in current_user.callsigns %}
+                {% for callsign in current_user.callsigns %}
                     <tr>
                         <td>{{ callsign.id }}</td>
                         <td><a href="{{ url_for ('callsigns.call', callsign=callsign['name'] | replace('/','_'))  }}">{{ callsign.name }}</a></td>
