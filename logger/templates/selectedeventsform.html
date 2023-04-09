@@ -117,12 +117,14 @@
 $(document).ready(function()
 {
     var events = {{alleventsjson | safe}};
+    var selsafe = {{seleventsjson | safe}};
 
     $("#Search").selectize({
-    valueField: 'val',
+    valueField: 'id',
     labelField: 'val',
     searchField: ['val'],
     options: events,
+    items: selsafe
     });
 });
 </script>

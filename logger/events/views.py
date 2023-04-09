@@ -150,15 +150,27 @@ def page_not_found(e):
 def selectevents(username):
     form = SelectedEventForm()
     if request.method == 'POST' and form.validate():
+        for ev in Selected.query.filter_by(user = current_user.id).all():
+            db.session.delete(ev)
+        for event in request.form.getlist('Search'): #we need to make sure we get an id from Search
+            print (current_user.id, event)
+            sel = Selected()
+            sel.user = current_user.id
+            sel.event = event
+            db.session.add(sel)
+        db.session.commit()
         print (request.form.getlist('Search'))
         return redirect(url_for('users.profile', user=current_user.name))
     userid = User.query.filter_by(name = username).first()
     allevents = Event.query.filter_by(user_id=current_user.get_id()).all()
     alleventsjson = []
     for e in allevents:
-        alleventsjson.append({'val': e.name})
+        alleventsjson.append({'val': e.name, 'id' : e.id})
     page = request.args.get('page', 1, type=int)
     eventpage = Event.query.filter_by(user_id=current_user.get_id()).order_by(Event.start_date.desc()).paginate(page=page, per_page=ROWS_PER_PAGE)
     selectedevents = Selected.query.filter_by(user = userid.id).all()
+    seleventsjson = []
+    for e in selectedevents:
+        seleventsjson.append(Event.query.filter_by(id=e.event).first().id)
     return render_template('selectedeventsform.html', username=current_user.name, eventpage=eventpage, selectedevents=selectedevents,
-                           allevents=allevents, alleventsjson=alleventsjson, form=form)
+                           allevents=allevents, alleventsjson=alleventsjson, form=form, seleventsjson=seleventsjson)
