@@ -97,6 +97,14 @@ def uploadqsos(user):
                 print('qso')
                 newqso = QSO()
                 newqso.create(update_dictionary=qso)
+                for qsoevent in QSOEvent.query.filter_by(id = newqso.id).all():
+                    db.session.delete(qsoevent)
+                for event in Selected.query.filter_by(user = current_user.id).all():
+                    qsoevent = QSOEvent()
+                    qsoevent.qso = newqso.id
+                    qsoevent.event = event.event
+                    db.session.add(qsoevent)
+                db.session.commit()
 
         return redirect(url_for('users.profile',user=current_user.name))
     return render_template('qsoupload.html')
