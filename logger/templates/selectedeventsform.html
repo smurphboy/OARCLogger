@@ -1,19 +1,53 @@
 {% extends 'base.html' %}
-
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.default.min.css"
+  integrity="sha512-pTaEn+6gF1IeWv3W1+7X7eM60TFu/agjgoHmYhAfLEU8Phuf6JKiiE8YmsNC0aCgQv4192s4Vai8YZ6VNM6vyQ=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+/>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js"
+  integrity="sha512-IOebNkvA/HZjMM7MxL0NYeLYEalloZ8ckak+NDtOViP7oiYzG5vn6WVXyrJDiJPhl4yRdmNAG49iuLmhkUdVsQ=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+{% endblock %}
 {% block hero %}is-primary is-info{% endblock %}
 {% block content %}
             <div class="bd-hero-heading">
                 <h1 class="title is-size-1">
-                    {% block title %} Events for {{ username }} {% endblock %}
+                    {% block title %} Selected Events for {{ username }} {% endblock %}
                 </h1>
                 <div class="subtitle is-4 algolia-lvl1">
-                    <p>{{ allevents|length }} events for this user.</p>     
+                    <p>{{ selectedevents|length }} events selected from {{ allevents|length }} events for this user.</p>     
                 </div>
             </div>
         </div>
     </section>
     <section>
         <div class="container">
+            <div class="box">
+                <form method="POST">
+                    {{ form.csrf_token }}
+                    <h1 class="title">Select Events</h1>
+                    <div class='exampleSearch'>
+                        <label class="label">Selected Events</label>
+                        <p class="control">
+                            <select name="Search" id="Search" multiple class="demo-default">
+                                <option value="">select</option>
+                            </select>
+                        </p>
+                    </div>
+                    <div class="control">
+                        <p>
+                            <input type="submit" class="button is-link" value="Select">
+                        </p>
+                    </div>
+                </form>
+            </div>
             <div class="box">
                 <table class="table is-striped is-hoverable">
                     <thead>
@@ -79,4 +113,19 @@
             </div>
         </div>
     </section>
+<script>
+$(document).ready(function()
+{
+    var events = {{alleventsjson | safe}};
+    var selsafe = {{seleventsjson | safe}};
+
+    $("#Search").selectize({
+    valueField: 'id',
+    labelField: 'val',
+    searchField: ['val'],
+    options: events,
+    items: selsafe
+    });
+});
+</script>
 {% endblock %}

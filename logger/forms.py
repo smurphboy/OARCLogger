@@ -1,7 +1,7 @@
 import datetime
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, IntegerField, BooleanField,\
-                    RadioField, DateField, TimeField, SelectField, FileField, SubmitField, DateTimeField
+                    RadioField, DateField, TimeField, SelectField, FileField, SubmitField, DateTimeField, SelectMultipleField
 from wtforms.validators import InputRequired, Length, Optional
 from wtforms.widgets import DateTimeInput
 
@@ -86,3 +86,7 @@ class AntennaForm(FlaskForm):
 
 class CallsignForm(FlaskForm):
     name = StringField('Name', validators=[InputRequired(), Length(max=50)])
+
+
+class SelectedEventForm(FlaskForm):
+    selectedevents = SelectMultipleField('Search', choices=())
