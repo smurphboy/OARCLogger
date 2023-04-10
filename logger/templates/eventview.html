@@ -95,7 +95,7 @@
                     <tr>
                         <td>{{ qso.qso_event.qso_date }}</td>
                         <td>{{ qso.qso_event.time_on }}</td>
-                        <td><a href="/qsos/view/{{ qso.call| replace("/","_") }}/{{ qso.qso_event.qso_date}}/{{ qso.qso_event.time_on.strftime('%H:%M:%S.%f') }}" title="{{ qso.qso_event.call }}">{{ qso.qso_event.call }}</a></td>
+                        <td><a href="/qsos/view/{{ qso.qso_event.call| replace("/","_") }}/{{ qso.qso_event.qso_date}}/{{ qso.qso_event.time_on.strftime('%H:%M:%S.%f') }}" title="{{ qso.qso_event.call }}">{{ qso.qso_event.call }}</a></td>
                         <td>{{ qso.qso_event.band }}</td>
                         <td>{{ qso.qso_event.mode }}</td>
                         <td>{{ qso.qso_event.gridsquare }}</td>
