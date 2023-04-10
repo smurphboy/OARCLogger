@@ -13,8 +13,30 @@
         </div>
     </section>
     <section>
-        <div class="container is-max-desktop">
+        <div class="container">
             <div class="box">
+                <h1 class="title"><a href="{{ url_for('events.eventlist', username=current_user.name) }}">Selected Events</a></h1>
+                <nav class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <nav class="breadcrumb" aria-label="breadcrumbs">
+                                <ul>
+                                {% for event in current_user.selected %}
+                                    <li><a href="{{ url_for ('events.eventview', id=event.selevent.id) }}">{{ event.selevent.name }}</a></li>
+                                {% endfor %}
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <a class="button is-link" href="{{ url_for('events.selectevents', username=current_user.name) }}">Change Selected</a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="box">
+                <h1 class="title">QSOs</h1>
                 <table class="table is-striped is-hoverable">
                     <thead>
                         <tr>

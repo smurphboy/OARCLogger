@@ -61,7 +61,7 @@ class Event(db.Model):
     sat_name = db.Column(db.String(255))
     square = db.Column(db.String(4))
     configs = db.relationship('Configuration', secondary='event_config', back_populates="events")
-    qsos = db.relationship('QSO', backref='event', lazy=True)
+    qsos = db.relationship('QSOEvent', backref='event_qso', lazy=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     selected = db.relationship('Selected', backref='selevent', lazy=True)
 
@@ -70,9 +70,10 @@ class Selected(db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
     event = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
     user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-
+  
 
 class QSO(db.Model):
+    __tablename__ = 'qso'
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
     band = db.Column(db.String(25))
     band_rx = db.Column(db.String(25))
@@ -176,7 +177,7 @@ class QSO(db.Model):
     import_source = db.Column(db.String(255))
     import_date = db.Column(db.Date())
     import_comments = db.Column(db.String(2000))
-    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=True)
+    events = db.relationship('QSOEvent', backref='qso_event', lazy=True)
     config_id = db.Column(db.Integer, db.ForeignKey('configuration.id'), nullable=True)
     precedence = db.Column(db.String(1))
     check = db.Column(db.Integer)
@@ -227,6 +228,13 @@ class QSO(db.Model):
         db.session.add(self)
         db.session.commit()
         print('created')
+
+
+class QSOEvent(db.Model):
+    __tablename__ = 'qsoevent'
+    id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
+    event = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=True)
+    qso = db.Column(db.Integer, db.ForeignKey('qso.id'), nullable=True)
 
 
 rig_band = db.Table('rig_band',

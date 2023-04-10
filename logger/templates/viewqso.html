@@ -30,1102 +30,1115 @@
 }
 </style>
 <section class="section">
-	<div class="box">
-        <h3 class="title">QSO from <a href="{{ url_for('callsigns.call', callsign=qso.station_callsign | replace('/', '_')) }}">{{ qso.station_callsign }}</a> to {{ qso.call }} on {{ qso.qso_date }} at {{ qso.time_on }}</h3>
-    </div>
-    <div class="box">
-		<div class="columns">
-			<div class="column">
-				<div class="card">
-					<header class="card-header">
-                        <p class="card-header-title">Date & Time</p>
-                        <a class="card-header-icon" id="dateandtime" aria-label="more options">
-                            <span class="icon">
-                              <i class="fas fa-angle-down" aria-hidden="true"></i>
-                            </span>
-                        </a>
-                    </header>
-                    <div class="card-content" id="dateandtime-content">
-                        <div class="content">
-                            <nav class="level">
-                                <div class="level-left">
-                                    <div class="level-item">
-                                        <div class="icon-text">
-                                            <span class="icon">
-                                                <i class="far fa-calendar"></i>
-                                            </span>
-                                            <span><abbr class="has-text-weight-semibold" title="date on which the QSO started">QSO Date:</abbr> {{ qso.qso_date }}</span>
+    <div class="container">
+        <div class="box">
+            <h3 class="title">QSO from <a href="{{ url_for('callsigns.call', callsign=qso.station_callsign | replace('/', '_')) }}">{{ qso.station_callsign }}</a> to {{ qso.call }} on {{ qso.qso_date }} at {{ qso.time_on }}</h3>
+        </div>
+        <div class="box">
+            <h1 class="title">QSO Events</h1>
+            <nav class="breadcrumb" aria-label="breadcrumbs">
+                <ul>
+                {% for event in qso.events %}
+                    <li><a href="{{ url_for ('events.eventview', id=event.event_qso.id) }}">{{ event.event_qso.name }}</a></li>
+                {% endfor %}
+                    <li>{{ qso.id }}</li>
+                </ul>
+            </nav>
+        </div>
+        <div class="box">
+            <div class="columns">
+                <div class="column">
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title">Date & Time</p>
+                            <a class="card-header-icon" id="dateandtime" aria-label="more options">
+                                <span class="icon">
+                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </a>
+                        </header>
+                        <div class="card-content" id="dateandtime-content">
+                            <div class="content">
+                                <nav class="level">
+                                    <div class="level-left">
+                                        <div class="level-item">
+                                            <div class="icon-text">
+                                                <span class="icon">
+                                                    <i class="far fa-calendar"></i>
+                                                </span>
+                                                <span><abbr class="has-text-weight-semibold" title="date on which the QSO started">QSO Date:</abbr> {{ qso.qso_date }}</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                {% if qso.qso_date_off %}
-                                <div class="level-right">
-                                    <div class="level-item">
-                                        <div class="icon-text">
-                                            <span class="icon">
-                                                <i class="far fa-calendar"></i>
-                                            </span>
-                                            <span><abbr class="has-text-weight-semibold" title="date on which the QSO ended">QSO Date Off:</abbr> {{ qso.qso_date_off }}</span>
+                                    {% if qso.qso_date_off %}
+                                    <div class="level-right">
+                                        <div class="level-item">
+                                            <div class="icon-text">
+                                                <span class="icon">
+                                                    <i class="far fa-calendar"></i>
+                                                </span>
+                                                <span><abbr class="has-text-weight-semibold" title="date on which the QSO ended">QSO Date Off:</abbr> {{ qso.qso_date_off }}</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                {% endif %}
-                            </nav>
-                            <nav class="level">
-                                <div class="level-left">
-                                    <div class="level-item">
-                                        <div class="icon-text">
-                                            <span class="icon">
-                                                <i class="far fa-clock"></i>
-                                            </span>
-                                            <span><abbr class="has-text-weight-semibold" title="HHMM or HHMMSS in UTC">QSO Time On:</abbr> {{ qso.time_on }}</span>
+                                    {% endif %}
+                                </nav>
+                                <nav class="level">
+                                    <div class="level-left">
+                                        <div class="level-item">
+                                            <div class="icon-text">
+                                                <span class="icon">
+                                                    <i class="far fa-clock"></i>
+                                                </span>
+                                                <span><abbr class="has-text-weight-semibold" title="HHMM or HHMMSS in UTC">QSO Time On:</abbr> {{ qso.time_on }}</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                {% if qso.time_off %}
-                                <div class="level-right">
-                                    <div class="level-item">
-                                        <div class="icon-text">
-                                            <span class="icon">
-                                                <i class="far fa-clock"></i>
-                                            </span>
-                                            <span><abbr class="has-text-weight-semibold" title="HHMM or HHMMSS in UTC in the absence of <QSO_DATE_OFF>, the QSO duration is less than 24 hours.  For example, the following is a QSO starting at 14 July 2020 23:55 and finishing at 15 July 2020 01:00: <QSO_DATE:8>20200714 <TIME_ON:4>2355 <TIME_OFF:4>0100">QSO Date Off:</abbr> {{ qso.time_off }}</span>
+                                    {% if qso.time_off %}
+                                    <div class="level-right">
+                                        <div class="level-item">
+                                            <div class="icon-text">
+                                                <span class="icon">
+                                                    <i class="far fa-clock"></i>
+                                                </span>
+                                                <span><abbr class="has-text-weight-semibold" title="HHMM or HHMMSS in UTC in the absence of <QSO_DATE_OFF>, the QSO duration is less than 24 hours.  For example, the following is a QSO starting at 14 July 2020 23:55 and finishing at 15 July 2020 01:00: <QSO_DATE:8>20200714 <TIME_ON:4>2355 <TIME_OFF:4>0100">QSO Date Off:</abbr> {{ qso.time_off }}</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                {% endif %}
-                            </nav>
+                                    {% endif %}
+                                </nav>
+                            </div>
                         </div>
                     </div>
-				</div>
-				<div class="card">
-                    <header class="card-header">
-                        <p class="card-header-title">Bands & Modes</p>
-                        <a class="card-header-icon" id="bandsandmodes" aria-label="more options">
-                            <span class="icon">
-                              <i class="fas fa-angle-down" aria-hidden="true"></i>
-                            </span>
-                        </a>
-                    </header>
-                    <div class="card-content" id="bandsandmodes-content">
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-tower-broadcast"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="QSO Band">Band:</abbr> {{ qso.band }}</span>
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title">Bands & Modes</p>
+                            <a class="card-header-icon" id="bandsandmodes" aria-label="more options">
+                                <span class="icon">
+                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </a>
+                        </header>
+                        <div class="card-content" id="bandsandmodes-content">
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-tower-broadcast"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="QSO Band">Band:</abbr> {{ qso.band }}</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            {% if qso.band_rx %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-tower-broadcast"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="in a split frequency QSO, the logging station's receiving band">Band RX:</abbr> {{ qso.band_rx }}</span>
+                                {% if qso.band_rx %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-tower-broadcast"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="in a split frequency QSO, the logging station's receiving band">Band RX:</abbr> {{ qso.band_rx }}</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                                {% endif %}
+                            </nav>
+                            {% if qso.freq or qso.freq_rx %}
+                            <nav class="level">
+                                {% if qso.freq %}
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-tower-broadcast"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="QSO frequency in Megahertz">Freq:</abbr> {{ qso.freq | MhzFormat }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if qso.freq_rx %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-tower-broadcast"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="in a split frequency QSO, the logging station's receiving frequency in Megahertz">Freq RX:</abbr> {{ qso.freq_rx | MhzFormat }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                        </nav>
-                        {% if qso.freq or qso.freq_rx %}
-                        <nav class="level">
-                            {% if qso.freq %}
-                            <div class="level-left">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-tower-broadcast"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="QSO frequency in Megahertz">Freq:</abbr> {{ qso.freq | MhzFormat }}</span>
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-wave-square"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="QSO Mode">Mode:</abbr> {{ qso.mode }}</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                                {% if qso.submode %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-wave-square"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="QSO Submode">Submode:</abbr> {{ qso.submode }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
+                            {% if qso.sat_mode or qso.sat_name %}
+                            <nav class="level">
+                                {% if qso.sat_name %}
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-satellite"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="name of satellite">Sat Name:</abbr> {{ qso.sat_name}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if qso.sat_mode %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-satellite"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="satellite mode">Sat Mode:</abbr> {{ qso.sat_mode }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                            {% if qso.freq_rx %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-tower-broadcast"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="in a split frequency QSO, the logging station's receiving frequency in Megahertz">Freq RX:</abbr> {{ qso.freq_rx | MhzFormat }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endif %}
-                        </nav>
-                        {% endif %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-wave-square"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="QSO Mode">Mode:</abbr> {{ qso.mode }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            {% if qso.submode %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-wave-square"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="QSO Submode">Submode:</abbr> {{ qso.submode }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endif %}
-                        </nav>
-                        {% if qso.sat_mode or qso.sat_name %}
-                        <nav class="level">
-                            {% if qso.sat_name %}
-                            <div class="level-left">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-satellite"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="name of satellite">Sat Name:</abbr> {{ qso.sat_name}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endif %}
-                            {% if qso.sat_mode %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-satellite"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="satellite mode">Sat Mode:</abbr> {{ qso.sat_mode }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endif %}
-                        </nav>
-					    {% endif %}
+                        </div>
                     </div>
-				</div>
-				<div class="card">
-                    <header class="card-header">
-                        <p class="card-header-title">Signal Report</p>
-                        <a class="card-header-icon" id="signalreport" aria-label="more options">
-                            <span class="icon">
-                              <i class="fas fa-angle-down" aria-hidden="true"></i>
-                            </span>
-                        </a>
-                    </header>
-                    <div class="card-content" id="signalreport-content">
-                        <nav class="level" id="signalreport-content">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-signal"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="signal report sent to the contacted station">RST Sent:</abbr> {{ qso.rst_sent }}</span>
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title">Signal Report</p>
+                            <a class="card-header-icon" id="signalreport" aria-label="more options">
+                                <span class="icon">
+                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </a>
+                        </header>
+                        <div class="card-content" id="signalreport-content">
+                            <nav class="level" id="signalreport-content">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-signal"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="signal report sent to the contacted station">RST Sent:</abbr> {{ qso.rst_sent }}</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-signal"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="signal report from the contacted station">RST Received:</abbr> {{ qso.rst_rcvd }}</span>
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-signal"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="signal report from the contacted station">RST Received:</abbr> {{ qso.rst_rcvd }}</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </nav>
-                        {% if qso.srx or qso.stx %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.stx %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="mdi mdi-numeric"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="contest QSO transmitted serial number with a value greater than or equal to 0">Serial Sent:</abbr> {{ qso.stx }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.srx %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="mdi mdi-numeric"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="contest QSO received serial number with a value greater than or equal to 0">Serial Received:</abbr> {{ qso.srx }}</span>
+                            </nav>
+                            {% if qso.srx or qso.stx %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.stx %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="mdi mdi-numeric"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="contest QSO transmitted serial number with a value greater than or equal to 0">Serial Sent:</abbr> {{ qso.stx }}</span>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
-                            </div>
+                                {% if qso.srx %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="mdi mdi-numeric"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="contest QSO received serial number with a value greater than or equal to 0">Serial Received:</abbr> {{ qso.srx }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                        </nav>
-                        {% endif %}
-                        {% if qso.srx_string or qso.stx_string %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.stx_string %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-quote-left"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="contest QSO transmitted information use Cabrillo format to convey contest information for which ADIF fields are not specified in the event of a conflict between information in a dedicated contest field and this field, information in the dedicated contest field shall prevail">Serial String Sent:</abbr> {{ qso.stx_string }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.srx_string %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-quote-right"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="contest QSO received information use Cabrillo format to convey contest information for which ADIF fields are not specified in the event of a conflict between information in a dedicated contest field and this field, information in the dedicated contest field shall prevail">Serial String Received:</abbr> {{ qso.srx_string }}</span>
+                            {% if qso.srx_string or qso.stx_string %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.stx_string %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-quote-left"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="contest QSO transmitted information use Cabrillo format to convey contest information for which ADIF fields are not specified in the event of a conflict between information in a dedicated contest field and this field, information in the dedicated contest field shall prevail">Serial String Sent:</abbr> {{ qso.stx_string }}</span>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
-                            </div>
+                                {% if qso.srx_string %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-quote-right"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="contest QSO received information use Cabrillo format to convey contest information for which ADIF fields are not specified in the event of a conflict between information in a dedicated contest field and this field, information in the dedicated contest field shall prevail">Serial String Received:</abbr> {{ qso.srx_string }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                        </nav>
-                        {% endif %}
+                        </div>
                     </div>
-                </div>
-				<div class="card">
-                    <header class="card-header">
-                        <p class="card-header-title">Station Info</p>
-                        <a class="card-header-icon" id="stationinfo" aria-label="more options">
-                            <span class="icon">
-                              <i class="fas fa-angle-down" aria-hidden="true"></i>
-                            </span>
-                        </a>
-                    </header>
-                    <div class="card-content" id="stationinfo-content">
-                        {% if qso.rig or qso.my_rig %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.rig %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="mdi mdi-radio-handheld"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="description of the contacted station's equipment">Rig:</abbr> {{ qso.rig }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.my_rig %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="mdi mdi-radio-handheld"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="description of the logging station's equipment">My Rig:</abbr> {{ qso.my_rig }}</span>
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title">Station Info</p>
+                            <a class="card-header-icon" id="stationinfo" aria-label="more options">
+                                <span class="icon">
+                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </a>
+                        </header>
+                        <div class="card-content" id="stationinfo-content">
+                            {% if qso.rig or qso.my_rig %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.rig %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="mdi mdi-radio-handheld"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="description of the contacted station's equipment">Rig:</abbr> {{ qso.rig }}</span>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
-                            </div>
+                                {% if qso.my_rig %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="mdi mdi-radio-handheld"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="description of the logging station's equipment">My Rig:</abbr> {{ qso.my_rig }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                        </nav>
-                        {% endif %}
-                        {% if qso.tx_pwr or qso.my_antenna %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.tx_pwr %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-tachometer-alt"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the logging station's power in Watts with a value greater than 0">TX Power:</abbr> {{ qso.tx_pwr }}W</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.my_antenna %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="mdi mdi-antenna"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the logging station's antenna">My Antenna:</abbr> {{ qso.my_antenna }}</span>
+                            {% if qso.tx_pwr or qso.my_antenna %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.tx_pwr %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-tachometer-alt"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the logging station's power in Watts with a value greater than 0">TX Power:</abbr> {{ qso.tx_pwr }}W</span>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
-                            </div>
+                                {% if qso.my_antenna %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="mdi mdi-antenna"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the logging station's antenna">My Antenna:</abbr> {{ qso.my_antenna }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                        </nav>
-                        {% endif %}
-                        {% if qso.ant_az or qso.ant_el %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.ant_az %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="mdi mdi-sun-compass"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="	the logging station's antenna azimuth, in degrees with a value between 0 to 360 (inclusive). Values outside this range are import-only and must be normalized for export (e.g. 370 is exported as 10). True north is 0 degrees with values increasing in a clockwise direction.">Antenna Azimuth:</abbr> {{ qso.ant_az }}W</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.ant_el %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="mdi mdi-angle-acute"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the logging station's antenna elevation, in degrees with a value between -90 to 90 (inclusive).  Values outside this range are import-only and must be normalized for export (e.g. 100 is exported as 80). The horizon is 0 degrees with values increasing as the angle moves in an upward direction.">Antenna Elevation:</abbr> {{ qso.ant_el }}</span>
+                            {% if qso.ant_az or qso.ant_el %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.ant_az %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="mdi mdi-sun-compass"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="	the logging station's antenna azimuth, in degrees with a value between 0 to 360 (inclusive). Values outside this range are import-only and must be normalized for export (e.g. 370 is exported as 10). True north is 0 degrees with values increasing in a clockwise direction.">Antenna Azimuth:</abbr> {{ qso.ant_az }}W</span>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
-                            </div>
+                                {% if qso.ant_el %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="mdi mdi-angle-acute"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the logging station's antenna elevation, in degrees with a value between -90 to 90 (inclusive).  Values outside this range are import-only and must be normalized for export (e.g. 100 is exported as 80). The horizon is 0 degrees with values increasing as the angle moves in an upward direction.">Antenna Elevation:</abbr> {{ qso.ant_el }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                        </nav>
-                        {% endif %}
-                        {% if qso.swl or qso.qso_complete %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.swl %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-tachometer-alt"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="indicates that the QSO information pertains to an SWL report">SWL?:</abbr> {{ qso.swl }}</span>
+                            {% if qso.swl or qso.qso_complete %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.swl %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-tachometer-alt"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="indicates that the QSO information pertains to an SWL report">SWL?:</abbr> {{ qso.swl }}</span>
+                                        </div>
+                                        {% endif %}
                                     </div>
-                                    {% endif %}
-                                </div>
-                                <div class="level-item">
-                                    {% if qso.qso_random %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-random"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="indicates whether the QSO was random or scheduled">Random?:</abbr> {{ qso.qso_random }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.my_antenna %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="mdi mdi-antenna"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="indicates whether the QSO was complete from the perspective of the logging station [Y - yes: N - no : NIL - not heard : ? - uncertain">QSO Complete:</abbr> {{ qso.qso_complete }}</span>
+                                    <div class="level-item">
+                                        {% if qso.qso_random %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-random"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="indicates whether the QSO was random or scheduled">Random?:</abbr> {{ qso.qso_random }}</span>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
-                            </div>
+                                {% if qso.my_antenna %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="mdi mdi-antenna"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="indicates whether the QSO was complete from the perspective of the logging station [Y - yes: N - no : NIL - not heard : ? - uncertain">QSO Complete:</abbr> {{ qso.qso_complete }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                        </nav>
-                        {% endif %}
+                        </div>
                     </div>
-                </div>
-				<div class="card">
-                    <header class="card-header">
-                        <p class="card-header-title">Locations</p>
-                        <a class="card-header-icon" id="locations" aria-label="more options">
-                            <span class="icon">
-                              <i class="fas fa-angle-down" aria-hidden="true"></i>
-                            </span>
-                        </a>
-                    </header>
-                    <div class="card-content" id="locations-content">
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    <p class="title has-text-grey">Locations</p>
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title">Locations</p>
+                            <a class="card-header-icon" id="locations" aria-label="more options">
+                                <span class="icon">
+                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </a>
+                        </header>
+                        <div class="card-content" id="locations-content">
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        <p class="title has-text-grey">Locations</p>
+                                    </div>
                                 </div>
-                            </div>
-                            {% if qso.my_gridsquare and qso.gridsquare %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <button class="js-modal-trigger button is-link is-small" data-target="modal-js-map">
-                                        View Map
-                                    </button>
+                                {% if qso.my_gridsquare and qso.gridsquare %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <button class="js-modal-trigger button is-link is-small" data-target="modal-js-map">
+                                            View Map
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
+                                {% endif %}
+                            </nav>
+                            {% if qso.gridsquare or qso.my_gridsquare %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.gridsquare %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-location-arrow"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the contacted station's 2-character, 4-character, 6-character, or 8-character Maidenhead Grid Square">Gridsquare:</abbr> {{ qso.gridsquare }}</span>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if qso.my_gridsquare %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-location-arrow"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the logging station's 2-character, 4-character, 6-character, or 8-character Maidenhead Grid Square">My Gridsquare:</abbr> {{ qso.my_gridsquare }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                        </nav>
-                        {% if qso.gridsquare or qso.my_gridsquare %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.gridsquare %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-location-arrow"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the contacted station's 2-character, 4-character, 6-character, or 8-character Maidenhead Grid Square">Gridsquare:</abbr> {{ qso.gridsquare }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.my_gridsquare %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-location-arrow"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the logging station's 2-character, 4-character, 6-character, or 8-character Maidenhead Grid Square">My Gridsquare:</abbr> {{ qso.my_gridsquare }}</span>
+                            {% if qso.lat or qso.my_lat %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.lat %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-map-pin"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the contacted station's latitude and longitude">Lat, Long:</abbr> {{ qso.lat }}, {{ qso.lon }}</span>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
-                            </div>
+                                {% if qso.my_lat %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-map-pin"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the logging station's latitude and longitude">My Lat, My Long:</abbr> {{ qso.my_lat }}, {{ qso.my_lon }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                        </nav>
-                        {% endif %}
-                        {% if qso.lat or qso.my_lat %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.lat %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-map-pin"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the contacted station's latitude and longitude">Lat, Long:</abbr> {{ qso.lat }}, {{ qso.lon }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.my_lat %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-map-pin"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the logging station's latitude and longitude">My Lat, My Long:</abbr> {{ qso.my_lat }}, {{ qso.my_lon }}</span>
+                            {% if qso.sota_ref or qso.my_sota_ref %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.sota_ref %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-mountain"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the contacted station's International SOTA Reference.">SOTA Ref:</abbr> {{ qso.sota_ref }}</span>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
-                            </div>
+                                {% if qso.my_sota_ref %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-mountain"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="	the logging station's International SOTA Reference.">My SOTA Ref:</abbr> {{ qso.my_sota_ref }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                        </nav>
-                        {% endif %}
-                        {% if qso.sota_ref or qso.my_sota_ref %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.sota_ref %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-mountain"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the contacted station's International SOTA Reference.">SOTA Ref:</abbr> {{ qso.sota_ref }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.my_sota_ref %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-mountain"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="	the logging station's International SOTA Reference.">My SOTA Ref:</abbr> {{ qso.my_sota_ref }}</span>
+                            {% if qso.iota or qso.my_iota %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.iota %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="mdi mdi-island"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="	the contacted station's IOTA designator, in format CC-XXX, where CC is a member of the Continent enumeration, XXX is the island group designator, where 1 <= XXX <= 999  [use leading zeroes]">IOTA Ref:</abbr> {{ qso.iota }}</span>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
-                            </div>
-                            {% endif %}
-                        </nav>
-                        {% endif %}
-                        {% if qso.iota or qso.my_iota %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.iota %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="mdi mdi-island"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="	the contacted station's IOTA designator, in format CC-XXX, where CC is a member of the Continent enumeration, XXX is the island group designator, where 1 <= XXX <= 999  [use leading zeroes]">IOTA Ref:</abbr> {{ qso.iota }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
 
-                            {% if qso.my_iota %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="mdi mdi-island"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the logging station's IOTA designator, in format CC-XXX, where CC is a member of the Continent enumeration, XXX is the island group designator, where 1 <= XXX <= 999  [use leading zeroes]">My IOTA Ref:</abbr> {{ qso.my_iota }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endif %}
-                        </nav>
-                        {% endif %}
-                        {% if qso.wwff_ref or qso.my_wwff_ref %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.wwff_ref %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-seedling"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the contacted station's WWFF (World Wildlife Flora & Fauna) reference">WWFF Ref:</abbr> {{ qso.wwff_ref }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.my_wwff_ref %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-seedling"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the logging station's WWFF (World Wildlife Flora & Fauna) reference">My WWFF Ref:</abbr> {{ qso.my_wwff_ref }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endif %}
-                        </nav>
-                        {% endif %}
-                        {% if qso.dxcc or qso.my_dxcc %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.dxcc %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-flag"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="	the contacted station's DXCC Entity Code <DXCC:1>0 means that the contacted station is known not to be within a DXCC entity.">DXCC:</abbr> {{ qso.dxcc }} : {{ qso.country }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.my_dxcc %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-flag"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the logging station's DXCC Entity Code <MY_DXCC:1>0 means that the logging station is known not to be within a DXCC entity.">My DXCC:</abbr> {{ qso.my_dxcc }} : {{ qso.my_country }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endif %}
-                        </nav>
-                        {% endif %}
-                        {% if qso.cqz or qso.my_cq_zone %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.cqz %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-globe-europe"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="	the contacted station's CQ Zone in the range 1 to 40 (inclusive)">CQ Zone:</abbr> {{ qso.cqz }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.my_cq_zone %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-globe-europe"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the logging station's CQ Zone in the range 1 to 40 (inclusive)">My CQ Zone:</abbr> {{ qso.my_cq_zone }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endif %}
-                        </nav>
-                        {% endif %}
-                        {% if qso.ituz or qso.my_itu_zone %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.ituz %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-globe-europe"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the contacted station's ITU zone in the range 1 to 90 (inclusive)">ITU Zone:</abbr> {{ qso.ituz }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.my_itu_zone %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-globe-europe"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the logging station's ITU zone in the range 1 to 90 (inclusive)">My ITU Zone:</abbr> {{ qso.my_itu_zone }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endif %}
-                        </nav>
-                        {% endif %}
-                        {% if qso.sig or qso.my_sig %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.sig %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-users"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the name of the contacted station's special activity or interest group and reference">Sig: Sig Info</abbr> {{ qso.sig }} : {{ qso.sig_info }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.my_sig %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-users"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the name of the logging station's special activity or interest group and reference">My Sig: My Sig Info</abbr> {{ qso.my_sig }} : {{ qso.my_sig_info }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endif %}
-                        </nav>
-                        {% endif %}
-                        {% if qso.address or qso.my_street or qso.my_city or qso.my_postal_code or qso.my_country or qso.my_state %}
-                        <nav class="level">
-                            {% if qso.address %}
-                            <div class="box">
-                                <div class="level-left level-is-shrinkable">
-                                    <div class="level-item level-is-shrinkable">
+                                {% if qso.my_iota %}
+                                <div class="level-right">
+                                    <div class="level-item">
                                         <div class="icon-text">
                                             <span class="icon">
-                                                <i class="far fa-address-card"></i>
+                                                <i class="mdi mdi-island"></i>
                                             </span>
-                                            <span class="is-flex-wrap-wrap"><abbr class="has-text-weight-semibold" title="the contacted station's complete mailing address: full name, street address, city, postal code, and country">Address:</abbr> {{ qso.address }}</span>
+                                            <span><abbr class="has-text-weight-semibold" title="the logging station's IOTA designator, in format CC-XXX, where CC is a member of the Continent enumeration, XXX is the island group designator, where 1 <= XXX <= 999  [use leading zeroes]">My IOTA Ref:</abbr> {{ qso.my_iota }}</span>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                            {% if qso.my_street or qso.my_city or qso.my_postal_code or qso.my_country or qso_my_state %}
-                            <div class="box" style="margin-bottom : 24px">
-                                <div class="level-right level-is-shrinkable">
-                                    <div class="level-item level-is-shrinkable">
+                            {% if qso.wwff_ref or qso.my_wwff_ref %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.wwff_ref %}
                                         <div class="icon-text">
                                             <span class="icon">
-                                                <i class="far fa-address-card"></i>
+                                                <i class="fas fa-seedling"></i>
                                             </span>
-                                            <span style="flex-shrink : 1; flex-wrap : wrap"><abbr class="has-text-weight-semibold" title="the logging station's street, city, postal code and country">My Address:</abbr> {{ qso.my_street }}, {{ qso.my_city }}, {{ qso.my_postal_code }}, {{ qso.my_state}} {{ qso.my_country}}</span>
+                                            <span><abbr class="has-text-weight-semibold" title="the contacted station's WWFF (World Wildlife Flora & Fauna) reference">WWFF Ref:</abbr> {{ qso.wwff_ref }}</span>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if qso.my_wwff_ref %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-seedling"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the logging station's WWFF (World Wildlife Flora & Fauna) reference">My WWFF Ref:</abbr> {{ qso.my_wwff_ref }}</span>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                        </nav>
-                        {% endif %}
-                        {% if qso.vucc_grids or qso.my_vucc_grids %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.vucc_grids %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-th"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="two or four adjacent Maidenhead grid locators, each four characters long, representing the contacted station's grid squares credited to the QSO for the ARRL VUCC award program.  E.g. EN98,FM08,EM97,FM07">VUCC Grids:</abbr> {{ qso.vucc_grids }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.my_vucc_grids %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-th"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="two or four adjacent Maidenhead grid locators, each four characters long, representing the logging station's grid squares that the contacted station may claim for the ARRL VUCC award program.  E.g. EN98,FM08,EM97,FM07">My VUCC Grids:</abbr> {{ qso.my_vucc_grids }}</span>
+                            {% if qso.dxcc or qso.my_dxcc %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.dxcc %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-flag"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="	the contacted station's DXCC Entity Code <DXCC:1>0 means that the contacted station is known not to be within a DXCC entity.">DXCC:</abbr> {{ qso.dxcc }} : {{ qso.country }}</span>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
-                            </div>
+                                {% if qso.my_dxcc %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-flag"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the logging station's DXCC Entity Code <MY_DXCC:1>0 means that the logging station is known not to be within a DXCC entity.">My DXCC:</abbr> {{ qso.my_dxcc }} : {{ qso.my_country }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                        </nav>
-                        {% endif %}
-                        {% if qso.usaca_counties or qso.my_usaca_counties %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.usaca_counties %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="mdi mdi-town-hall"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="two US counties in the case where the contacted station is located on a border between two counties, representing counties credited to the QSO for the CQ Magazine USA-CA award program.  E.g. MA,Franklin:MA,Hampshire">USACA Counties:</abbr> {{ qso.usaca_counties }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.my_usaca_counties %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="mdi mdi-town-hall"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="two US counties in the case where the logging station is located on a border between two counties, representing counties that the contacted station may claim for the CQ Magazine USA-CA award program.  E.g. MA,Franklin:MA,Hampshire">My USACA Counties:</abbr> {{ qso.my_usaca_counties }}</span>
+                            {% if qso.cqz or qso.my_cq_zone %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.cqz %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-globe-europe"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="	the contacted station's CQ Zone in the range 1 to 40 (inclusive)">CQ Zone:</abbr> {{ qso.cqz }}</span>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
-                            </div>
+                                {% if qso.my_cq_zone %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-globe-europe"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the logging station's CQ Zone in the range 1 to 40 (inclusive)">My CQ Zone:</abbr> {{ qso.my_cq_zone }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                        </nav>
-                        {% endif %}
-                        {% if qso.cnty or qso.my_cnty %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.cnty %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="mdi mdi-town-hall"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the contacted station's Secondary Administrative Subdivision (e.g. US county, JA Gun), in the specified format">County:</abbr> {{ qso.cnty }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.my_cnty %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="mdi mdi-town-hall"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the logging station's Secondary Administrative Subdivision (e.g. US county, JA Gun), in the specified format">My County:</abbr> {{ qso.my_cnty }}</span>
+                            {% if qso.ituz or qso.my_itu_zone %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.ituz %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-globe-europe"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the contacted station's ITU zone in the range 1 to 90 (inclusive)">ITU Zone:</abbr> {{ qso.ituz }}</span>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
-                            </div>
+                                {% if qso.my_itu_zone %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-globe-europe"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the logging station's ITU zone in the range 1 to 90 (inclusive)">My ITU Zone:</abbr> {{ qso.my_itu_zone }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                        </nav>
-                        {% endif %}
-                        {% if qso.state or qso.cont %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.state %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="far fa-flag"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the code for the contacted station's Primary Administrative Subdivision (e.g. US State, JA Island, VE Province)">State:</abbr> {{ qso.state }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.cont %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fas fa-globe-asia"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the contacted station's Continent">Continent:</abbr> {{ qso.cont }}</span>
+                            {% if qso.sig or qso.my_sig %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.sig %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-users"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the name of the contacted station's special activity or interest group and reference">Sig: Sig Info</abbr> {{ qso.sig }} : {{ qso.sig_info }}</span>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
-                            </div>
+                                {% if qso.my_sig %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-users"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the name of the logging station's special activity or interest group and reference">My Sig: My Sig Info</abbr> {{ qso.my_sig }} : {{ qso.my_sig_info }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                        </nav>
-                        {% endif %}
+                            {% if qso.address or qso.my_street or qso.my_city or qso.my_postal_code or qso.my_country or qso.my_state %}
+                            <nav class="level">
+                                {% if qso.address %}
+                                <div class="box">
+                                    <div class="level-left level-is-shrinkable">
+                                        <div class="level-item level-is-shrinkable">
+                                            <div class="icon-text">
+                                                <span class="icon">
+                                                    <i class="far fa-address-card"></i>
+                                                </span>
+                                                <span class="is-flex-wrap-wrap"><abbr class="has-text-weight-semibold" title="the contacted station's complete mailing address: full name, street address, city, postal code, and country">Address:</abbr> {{ qso.address }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if qso.my_street or qso.my_city or qso.my_postal_code or qso.my_country or qso_my_state %}
+                                <div class="box" style="margin-bottom : 24px">
+                                    <div class="level-right level-is-shrinkable">
+                                        <div class="level-item level-is-shrinkable">
+                                            <div class="icon-text">
+                                                <span class="icon">
+                                                    <i class="far fa-address-card"></i>
+                                                </span>
+                                                <span style="flex-shrink : 1; flex-wrap : wrap"><abbr class="has-text-weight-semibold" title="the logging station's street, city, postal code and country">My Address:</abbr> {{ qso.my_street }}, {{ qso.my_city }}, {{ qso.my_postal_code }}, {{ qso.my_state}} {{ qso.my_country}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
+                            {% endif %}
+                            {% if qso.vucc_grids or qso.my_vucc_grids %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.vucc_grids %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-th"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="two or four adjacent Maidenhead grid locators, each four characters long, representing the contacted station's grid squares credited to the QSO for the ARRL VUCC award program.  E.g. EN98,FM08,EM97,FM07">VUCC Grids:</abbr> {{ qso.vucc_grids }}</span>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if qso.my_vucc_grids %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-th"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="two or four adjacent Maidenhead grid locators, each four characters long, representing the logging station's grid squares that the contacted station may claim for the ARRL VUCC award program.  E.g. EN98,FM08,EM97,FM07">My VUCC Grids:</abbr> {{ qso.my_vucc_grids }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
+                            {% endif %}
+                            {% if qso.usaca_counties or qso.my_usaca_counties %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.usaca_counties %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="mdi mdi-town-hall"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="two US counties in the case where the contacted station is located on a border between two counties, representing counties credited to the QSO for the CQ Magazine USA-CA award program.  E.g. MA,Franklin:MA,Hampshire">USACA Counties:</abbr> {{ qso.usaca_counties }}</span>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if qso.my_usaca_counties %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="mdi mdi-town-hall"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="two US counties in the case where the logging station is located on a border between two counties, representing counties that the contacted station may claim for the CQ Magazine USA-CA award program.  E.g. MA,Franklin:MA,Hampshire">My USACA Counties:</abbr> {{ qso.my_usaca_counties }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
+                            {% endif %}
+                            {% if qso.cnty or qso.my_cnty %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.cnty %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="mdi mdi-town-hall"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the contacted station's Secondary Administrative Subdivision (e.g. US county, JA Gun), in the specified format">County:</abbr> {{ qso.cnty }}</span>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if qso.my_cnty %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="mdi mdi-town-hall"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the logging station's Secondary Administrative Subdivision (e.g. US county, JA Gun), in the specified format">My County:</abbr> {{ qso.my_cnty }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
+                            {% endif %}
+                            {% if qso.state or qso.cont %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.state %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="far fa-flag"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the code for the contacted station's Primary Administrative Subdivision (e.g. US State, JA Island, VE Province)">State:</abbr> {{ qso.state }}</span>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if qso.cont %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fas fa-globe-asia"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the contacted station's Continent">Continent:</abbr> {{ qso.cont }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-			</div>
-			<div class="column">
-                <div class="card">
-                    <header class="card-header">
-                        <p class="card-header-title">Propogation</p>
-                        <a class="card-header-icon" id="prop" aria-label="more options">
-                            <span class="icon">
-                              <i class="fas fa-angle-down" aria-hidden="true"></i>
-                            </span>
-                        </a>
-                    </header>
-                    <div class="card-content" id="prop-content">
-                        {% if qso.a_index or qso.k_index or qso.sfi %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.a_index %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-sun"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the geomagnetic A index at the time of the QSO in the range 0 to 400 (inclusive)">A Index:</abbr> {{ qso.a_index }}</span>
+                <div class="column">
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title">Propogation</p>
+                            <a class="card-header-icon" id="prop" aria-label="more options">
+                                <span class="icon">
+                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </a>
+                        </header>
+                        <div class="card-content" id="prop-content">
+                            {% if qso.a_index or qso.k_index or qso.sfi %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.a_index %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-sun"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the geomagnetic A index at the time of the QSO in the range 0 to 400 (inclusive)">A Index:</abbr> {{ qso.a_index }}</span>
+                                        </div>
+                                        {% endif %}
                                     </div>
-                                    {% endif %}
-                                </div>
-                                <div class="level-item">
-                                    {% if qso.k_index %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-regular fa-sun"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the geomagnetic K index at the time of the QSO in the range 0 to 400 (inclusive)">K Index:</abbr> {{ qso.k_index }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.sfi %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-solar-panel"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the solar flux at the time of the QSO in the range 0 to 300 (inclusive).">SFI:</abbr> {{ qso.sfi }}</span>
+                                    <div class="level-item">
+                                        {% if qso.k_index %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-regular fa-sun"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the geomagnetic K index at the time of the QSO in the range 0 to 400 (inclusive)">K Index:</abbr> {{ qso.k_index }}</span>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
-                            </div>
+                                {% if qso.sfi %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-solar-panel"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the solar flux at the time of the QSO in the range 0 to 300 (inclusive).">SFI:</abbr> {{ qso.sfi }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                        </nav>
-                        {% endif %}
-                        {% if qso.prop_mode or qso.ant_path %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.prop_mode %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-tower-cell"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="QSO propagation mode">Prop Mode:</abbr> {{ qso.prop_mode }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.ant_path %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-brands fa-think-peaks"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the signal path">Antenna Path:</abbr> {{ qso.ant_path }}</span>
+                            {% if qso.prop_mode or qso.ant_path %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.prop_mode %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-tower-cell"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="QSO propagation mode">Prop Mode:</abbr> {{ qso.prop_mode }}</span>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
-                            </div>
+                                {% if qso.ant_path %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-brands fa-think-peaks"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the signal path">Antenna Path:</abbr> {{ qso.ant_path }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                        </nav>
-                        {% endif %}
-                        {% if qso.ms_shower or qso.nr_pings %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.ms_shower %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-meteor"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="For Meteor Scatter QSOs, the name of the meteor shower in progress">Meteor Shower:</abbr> {{ qso.ms_shower }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.nr_pings %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-wand-magic-sparkles"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the number of meteor scatter pings heard by the logging station with a value greater than or equal to 0"># Pings:</abbr> {{ qso.nr_pings }}</span>
+                            {% if qso.ms_shower or qso.nr_pings %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.ms_shower %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-meteor"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="For Meteor Scatter QSOs, the name of the meteor shower in progress">Meteor Shower:</abbr> {{ qso.ms_shower }}</span>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
-                            </div>
+                                {% if qso.nr_pings %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the number of meteor scatter pings heard by the logging station with a value greater than or equal to 0"># Pings:</abbr> {{ qso.nr_pings }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                        </nav>
-                        {% endif %}
-                        {% if qso.nr_bursts or qso.max_bursts %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.nr_bursts %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-burst"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="the number of meteor scatter bursts heard by the logging station with a value greater than or equal to 0"># Bursts:</abbr> {{ qso.nr_bursts }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.max_bursts %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-burst"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="maximum length of meteor scatter bursts heard by the logging station, in seconds with a value greater than or equal to 0">Max Bursts:</abbr> {{ qso.max_bursts }}</span>
+                            {% if qso.nr_bursts or qso.max_bursts %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.nr_bursts %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-burst"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the number of meteor scatter bursts heard by the logging station with a value greater than or equal to 0"># Bursts:</abbr> {{ qso.nr_bursts }}</span>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
-                            </div>
+                                {% if qso.max_bursts %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-burst"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="maximum length of meteor scatter bursts heard by the logging station, in seconds with a value greater than or equal to 0">Max Bursts:</abbr> {{ qso.max_bursts }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                        </nav>
-                        {% endif %}
+                        </div>
                     </div>
-                </div>
-                <div class="card">
-                    <header class="card-header">
-                        <p class="card-header-title">Contests</p>
-                        <a class="card-header-icon" id="contests" aria-label="more options">
-                            <span class="icon">
-                              <i class="fas fa-angle-down" aria-hidden="true"></i>
-                            </span>
-                        </a>
-                    </header>
-                    <div class="card-content" id="contests-content">
-                        {% if qso.contest_id or qso.check %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.contest_id %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-award"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="QSO Contest Identifier">Contest ID:</abbr> {{ qso.contest_id }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.check %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-box"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="contest check (e.g. for ARRL Sweepstakes)">Check:</abbr> {{ qso.check }}</span>
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title">Contests</p>
+                            <a class="card-header-icon" id="contests" aria-label="more options">
+                                <span class="icon">
+                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </a>
+                        </header>
+                        <div class="card-content" id="contests-content">
+                            {% if qso.contest_id or qso.check %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.contest_id %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-award"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="QSO Contest Identifier">Contest ID:</abbr> {{ qso.contest_id }}</span>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
-                            </div>
+                                {% if qso.check %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-box"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="contest check (e.g. for ARRL Sweepstakes)">Check:</abbr> {{ qso.check }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                        </nav>
-                        {% endif %}
-                        {% if qso.contest_class or qso.precedence %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.contest_class %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-award"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="contest class (e.g. for ARRL Field Day)">Class:</abbr> {{ qso.contest_class }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.precedence %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-arrow-down-a-z"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="contest precedence (e.g. for ARRL Sweepstakes)">Precedence:</abbr> {{ qso.precedence }}</span>
+                            {% if qso.contest_class or qso.precedence %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.contest_class %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-award"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="contest class (e.g. for ARRL Field Day)">Class:</abbr> {{ qso.contest_class }}</span>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
-                            </div>
+                                {% if qso.precedence %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-arrow-down-a-z"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="contest precedence (e.g. for ARRL Sweepstakes)">Precedence:</abbr> {{ qso.precedence }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                        </nav>
-                        {% endif %}
-                        {% if qso.srx or qso.srx_string %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.srx %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-file-import"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="contest QSO received serial number with a value greater than or equal to 0">SRX:</abbr> {{ qso.srx }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.srx_string %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-file-import"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="contest QSO received information">SRX String:</abbr> {{ qso.srx_string }}</span>
+                            {% if qso.srx or qso.srx_string %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.srx %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-file-import"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="contest QSO received serial number with a value greater than or equal to 0">SRX:</abbr> {{ qso.srx }}</span>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
-                            </div>
+                                {% if qso.srx_string %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-file-import"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="contest QSO received information">SRX String:</abbr> {{ qso.srx_string }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                        </nav>
-                        {% endif %}
-                        {% if qso.stx or qso.stx_string %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    {% if qso.stx %}
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-file-export"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="contest QSO transmitted serial number with a value greater than or equal to 0">STX:</abbr> {{ qso.stx }}</span>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% if qso.stx_string %}
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="icon-text">
-                                        <span class="icon">
-                                            <i class="fa-solid fa-file-export"></i>
-                                        </span>
-                                        <span><abbr class="has-text-weight-semibold" title="contest QSO transmitted information">STX String:</abbr> {{ qso.stx_string }}</span>
+                            {% if qso.stx or qso.stx_string %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.stx %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-file-export"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="contest QSO transmitted serial number with a value greater than or equal to 0">STX:</abbr> {{ qso.stx }}</span>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
-                            </div>
+                                {% if qso.stx_string %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-file-export"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="contest QSO transmitted information">STX String:</abbr> {{ qso.stx_string }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
                             {% endif %}
-                        </nav>
-                        {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
-		</div>
-	</div>
+        </div>
+    </div>
 </section>
 {% endblock %}
 {% block bottombody %}
