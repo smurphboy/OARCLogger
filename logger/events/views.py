@@ -30,9 +30,17 @@ def eventlist(username):
     this user.'''
     if username == current_user.name:
         page = request.args.get('page', 1, type=int)
+        todays_date = datetime.datetime.now()
+        future = Event.query.filter(Event.user_id==current_user.get_id(), 
+                                    Event.start_date >= todays_date).order_by(Event.start_date.desc()).limit(10).all()
+        current = Event.query.filter(Event.user_id==current_user.get_id(), 
+                                     Event.start_date <= todays_date, Event.end_date >= todays_date).order_by(Event.start_date.desc()).limit(5).all()
+        past = Event.query.filter(Event.user_id==current_user.get_id(), 
+                                  Event.end_date <= todays_date).order_by(Event.start_date.desc()).limit(10).all()
+        print (future, current, past)
         eventpage = Event.query.filter_by(user_id=current_user.get_id()).order_by(Event.start_date.desc()).paginate(page=page, per_page=ROWS_PER_PAGE)
         allevents = Event.query.filter_by(user_id=current_user.get_id()).all()
-        return render_template('eventlist.html', eventpage=eventpage, allevents=allevents, username=username)
+        return render_template('eventlist.html', eventpage=eventpage, allevents=allevents, username=username, future=future, current=current, past=past)
     else:
         abort(403)
 
