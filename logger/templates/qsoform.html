@@ -700,6 +700,7 @@ $(document).ready(function() {
     $("#sota_pota-content").toggleClass('is-hidden');
     });
 
+    $("#qsoon").click(function() {
     var today = new Date();
     var dd = today.getUTCDate();
     var mm = today.getUTCMonth()+1; //January is 0!
@@ -713,13 +714,24 @@ $(document).ready(function() {
     if(minutes<10){minutes='0'+minutes} 
     today = yyyy+'-'+mm+'-'+dd;
     todaytime = hh+':'+minutes;
-
-    $("#qsoon").click(function() {
     $("#qso_date").val(today),
     $("#time_on").val(todaytime);
     });
 
     $("#qsooff").click(function() {
+    var today = new Date();
+    var dd = today.getUTCDate();
+    var mm = today.getUTCMonth()+1; //January is 0!
+    var yyyy = today.getUTCFullYear();
+    var hh = today.getUTCHours();
+    var minutes = today.getUTCMinutes();
+
+    if(dd<10){dd='0'+dd} 
+    if(mm<10){mm='0'+mm}
+    if(hh<10){hh='0'+hh}
+    if(minutes<10){minutes='0'+minutes} 
+    today = yyyy+'-'+mm+'-'+dd;
+    todaytime = hh+':'+minutes;
     $("#qso_date_off").val(today),
     $("#time_off").val(todaytime);
     });

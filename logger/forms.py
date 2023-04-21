@@ -6,8 +6,8 @@ from wtforms.validators import InputRequired, Length, Optional
 from wtforms.widgets import DateTimeInput
 
 class QSOForm(FlaskForm):
-    qso_date = DateField('QSO Date', validators=[InputRequired()], default=datetime.date.today)
-    time_on = TimeField('QSO On Time', validators=[InputRequired()], default=datetime.datetime.now)
+    qso_date = DateField('QSO Date', validators=[InputRequired()], default=datetime.datetime.utcnow().date())
+    time_on = TimeField('QSO On Time', validators=[InputRequired()], default=datetime.datetime.utcnow())
     qso_date_off = DateField('QSO Date Off')
     time_off = TimeField('QSO Off Time')
     dxcc = StringField('DXCC')
