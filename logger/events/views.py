@@ -1,7 +1,7 @@
 import datetime
-from flask import Blueprint, flash, render_template, redirect, request, url_for, abort
+from flask import Blueprint, flash, render_template, redirect, request, url_for, abort, make_response
 from flask_login import login_required, current_user
-from logger.models import User, db, Callsign, QSO, Event, Selected
+from logger.models import User, db, Callsign, QSO, Event, Selected, QSOEvent
 from logger.forms import EventForm, SelectedEventForm
 
 events = Blueprint('events', __name__, template_folder='templates')
@@ -50,33 +50,52 @@ def eventview(id):
 @login_required
 def export(id):
     '''Export and events QSOs associated with it'''
-    event = Event.query.filter_by(id=id).first()
-    if int(event.owner.id) == int(current_user.get_id()):
-        # we want to export an ADIF header with information about our export and then an ADI row for each record
-        header = {'ADIF_VER' : '3.1.3', 'CREATED_TIMESTAMP' : datetime.datetime.now().strftime("%Y%m%d %H%M%S"),
-                  'PROGRAMID' : 'OARC Logger', 'PROGRAMVERSION' : '0.1 Alpha'}
-        ADIF = ""
-        for key, value in header.items():
-            ADIF += "".join("<%s:%s>%s\n" % (key, len(value), value))
-        ADIF += "".join("<eoh>\n")
-        print (ADIF)
-        for qso in QSO.query.filter_by(event_id=id).all():
-            for col in EXPORT_FIELDS:
-                if getattr(qso,col):
-                    ADIF += "".join("<%s:%s>%s" % (col, len(str(getattr(qso,col))), getattr(qso,col)))
-            for col in EXPORT_DATES:
-                if getattr(qso,col):
-                    dateused = getattr(qso,col)
-                    ADIF += "".join("<{0}:8>{1:%Y%m%d}".format(col, dateused))
-            for col in EXPORT_TIMES:
-                if getattr(qso,col):
-                    timeused = getattr(qso,col)
-                    ADIF += "".join("<{0}:6>{1:%H%M%S}".format(col, timeused))
-            ADIF += "".join("\n")
-        print (ADIF)
-        return render_template('eventexport.html', event=event, qsos=event.qsos, eventid=id, header=header)
-    else:
-        abort(403)
+    def adiftext(id):
+        event = Event.query.filter_by(id=id).first()
+        if int(event.owner.id) == int(current_user.get_id()):
+            # we want to export an ADIF header with information about our export and then an ADI row for each record
+            header = {'ADIF_VER' : '3.1.2', 'CREATED_TIMESTAMP' : datetime.datetime.now().strftime("%Y%m%d %H%M%S"),
+                    'PROGRAMID' : 'OARC Logger', 'PROGRAMVERSION' : '0.1 Alpha'}
+            ADIF = "OARC Logger ADIF Export\n"
+            for key, value in header.items():
+                ADIF += "".join("<%s:%s>%s\n" % (key, len(value), value))
+            ADIF += "".join("<EOH>\n\n")
+            eventqsos = QSOEvent.query.filter_by(event=id).all()
+            qsos = []
+            qsoids = []
+            allqsos = QSO.query.all()
+            for qsoid in eventqsos:
+                qsoids.append(qsoid.id)
+            for qso in allqsos:
+                if qso.id in qsoids:
+                    qsos.append(qso)
+            for qso in qsos:
+                for col in QSO.__table__.columns:
+                    if str(col).split('.')[1] in EXPORT_DATES: 
+                        if getattr(qso,str(col).split('.')[1]):
+                            dateused = getattr(qso,str(col).split('.')[1])
+                            ADIF += "".join("<{0}:8>{1:%Y%m%d}\n".format(str(col).split('.')[1], dateused))
+                            continue
+                    if str(col).split('.')[1] in EXPORT_TIMES:
+                        if getattr(qso,str(col).split('.')[1]):
+                            timeused = getattr(qso,str(col).split('.')[1])
+                            ADIF += "".join("<{0}:6>{1:%H%M%S}\n".format(str(col).split('.')[1], timeused))
+                    if str(col).split('.')[1] == "id":
+                        continue
+                    else:
+                        if getattr(qso,str(col).split('.')[1]):
+                            ADIF += "".join("<%s:%s>%s \n" % (str(col).split('.')[1], len(str(getattr(qso,str(col).split('.')[1]))), str(getattr(qso,str(col).split('.')[1]))))
+                ADIF += "".join("<EOR>\n\n")
+        else:
+            abort(403)
+
+        return ADIF
+    response = make_response(adiftext(id), 200)
+    response.mimetype = "text/plain"
+    exportevent = Event.query.filter_by(id=id).first()
+    cdtext = 'attachment; filename=' + exportevent.name + '.adi'
+    response.headers = {'Content-disposition': cdtext}
+    return response
 
 
 def save_changes(event, form, new):
