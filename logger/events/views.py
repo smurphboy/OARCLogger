@@ -88,6 +88,7 @@ def export(id):
                         if getattr(qso,str(col).split('.')[1]):
                             timeused = getattr(qso,str(col).split('.')[1])
                             ADIF += "".join("<{0}:6>{1:%H%M%S}\n".format(str(col).split('.')[1], timeused))
+                            continue
                     if str(col).split('.')[1] == "id":
                         continue
                     else:
