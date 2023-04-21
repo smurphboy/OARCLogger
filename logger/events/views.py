@@ -73,7 +73,7 @@ def export(id):
             qsoids = []
             allqsos = QSO.query.all()
             for qsoid in eventqsos:
-                qsoids.append(qsoid.id)
+                qsoids.append(qsoid.qso)
             for qso in allqsos:
                 if qso.id in qsoids:
                     qsos.append(qso)
