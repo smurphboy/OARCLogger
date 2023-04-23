@@ -90,3 +90,14 @@ def logout():
     logout_user()
     #return render_template('logout.html')   
     return redirect(url_for('users.index'))
+
+@users.route('/home')
+@login_required
+def home():
+    callsigns = Callsign.query.filter_by(user_id=current_user.get_id()).all()
+    calls = []
+    for callname in callsigns:
+        calls.append(callname.name)
+    totalqsos = QSO.query.filter(QSO.station_callsign.in_(calls)).count()
+    allqsos = QSO.query.filter(QSO.station_callsign.in_(calls)).all()
+    return render_template('home.html', totalqsos=totalqsos, allqsos=allqsos)
