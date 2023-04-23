@@ -82,7 +82,8 @@
                     <tr>
                         <th>Date</th>
                         <th>Time</th>
-                        <th>Callsign</th>
+                        <th>Station Callsign</th>
+                        <th>Call</th>
                         <th>Band</th>
                         <th>Mode</th>
                         <th>Gridsquare</th>
@@ -95,6 +96,7 @@
                     <tr>
                         <td>{{ qso.qso_event.qso_date }}</td>
                         <td>{{ qso.qso_event.time_on }}</td>
+                        <td>{{ qso.qso_event.station_callsign }}</td>
                         <td><a href="/qsos/view/{{ qso.qso_event.call| replace("/","_") }}/{{ qso.qso_event.qso_date}}/{{ qso.qso_event.time_on.strftime('%H:%M:%S.%f') }}" title="{{ qso.qso_event.call }}">{{ qso.qso_event.call }}</a></td>
                         <td>{{ qso.qso_event.band }}</td>
                         <td>{{ qso.qso_event.mode }}</td>
@@ -106,6 +108,14 @@
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
+        <div class="box">
+            <nav class="level">
+                <div class="level-left">
+                    <p class="level-item">Export QSOs for this event</p>
+                    <a class="button is-link level-item" href="{{ url_for ('events.export', id=event.id )  }}"><span class="icon"><i class="fa-solid fa-file-arrow-down"></i></span></a>
+                </div>
+            </nav>    
         </div>
     </div>
 </section>

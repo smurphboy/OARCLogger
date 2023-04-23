@@ -96,6 +96,10 @@
                         <p class="level-item">Add a new QSO for this callsign</p>
                         <a class="button is-link level-item" href="{{ url_for('qsos.postnewqso', station_callsign=station_callsign | replace('/','_')) }}">Add QSO</a>
                     </div>
+                    <div class="level-right">
+                        <p class="level-item">Export QSOs for this callsign</p>
+                        <a class="button is-link" href="{{ url_for ('callsigns.callsignexport', id=callsignid | replace('/','_'))  }}"><span class="icon"><i class="fa-solid fa-file-arrow-down"></i></span></a>
+                    </div>
                 </div>
             </div>
         </div>

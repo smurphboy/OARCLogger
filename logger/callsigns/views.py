@@ -1,7 +1,10 @@
-from flask import Blueprint, flash, render_template, redirect, request, url_for, abort
-from flask_login import login_required, current_user
-from logger.models import User, db, Callsign, QSO
+from flask import (Blueprint, abort, flash, make_response, redirect,
+                   render_template, request, url_for)
+from flask_login import current_user, login_required
+
 from logger.forms import CallsignForm
+from logger.helpers import adiftext
+from logger.models import QSO, Callsign, User, db
 
 callsigns = Blueprint('callsigns', __name__, template_folder='templates')
 
@@ -21,10 +24,11 @@ def call(callsign):
     this callsign.'''
     #swap _ for /
     callsign = callsign.replace('_', '/')
+    callsignid = Callsign.query.filter_by(name=callsign).first().id
     page = request.args.get('page', 1, type=int)
     callqsos = QSO.query.filter_by(station_callsign = callsign).order_by(QSO.qso_date.desc(), QSO.time_on.desc()).paginate(page=page, per_page=ROWS_PER_PAGE)
     allqsos = QSO.query.filter_by(station_callsign = callsign).all()
-    return render_template('callsign.html', qsos=callqsos, station_callsign=callsign, allqsos=allqsos)
+    return render_template('callsign.html', qsos=callqsos, station_callsign=callsign, callsignid=callsignid, allqsos=allqsos)
 
 
 @callsigns.route("/create", methods=['GET','POST'])
@@ -52,4 +56,19 @@ def callsigndelete(id):
         return redirect(url_for('users.profile', user=current_user.name))
     else:
         abort(403)
-    
+
+
+@callsigns.route("/export/<int:id>")
+@login_required
+def callsignexport(id):
+    '''Export all QSOs associated with a callsign'''
+    callsign = Callsign.query.filter_by(id=id).first()
+    if int(callsign.user_id) == int(current_user.get_id()):
+        qsos = QSO.query.filter_by(station_callsign=callsign.name).all()
+        response = make_response(adiftext(qsos), 200)
+        response.mimetype = "text/plain"
+        cdtext = 'attachment; filename=' + callsign.name + '.adi'
+        response.headers = {'Content-disposition': cdtext}
+        return response
+    else:
+        abort(403)
