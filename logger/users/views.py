@@ -101,6 +101,8 @@ def home():
     callsigns = Callsign.query.filter_by(user_id=current_user.get_id()).all()
     calls = []
     countries = {}
+    bands = {}
+    modes = {}
     for callname in callsigns:
         calls.append(callname.name)
     for qso in QSO.query.filter(QSO.station_callsign.in_(calls)).all():
@@ -109,9 +111,22 @@ def home():
             countries[dxcc] = countries[dxcc] + 1
         else:
             countries[dxcc] = 1
+        if qso.band in bands.keys():
+            bands[qso.band] = bands[qso.band] + 1
+        else:
+            bands[qso.band] = 1
+        if qso.submode:
+            if (qso.mode + ' - ' + qso.submode) in modes.keys():
+                modes[(qso.mode + ' - ' + qso.submode)] = modes[(qso.mode + ' - ' + qso.submode)] + 1
+            else: 
+                modes[(qso.mode + ' - ' + qso.submode)] = 1
+        else:
+            if qso.mode in modes.keys():
+                modes[qso.mode] = modes[qso.mode] + 1
+            else:
+                modes[qso.mode] = 1
     sortedcountries = dict(sorted(countries.items(), key=operator.itemgetter(1), reverse=True))
-    print(len(countries))
     #dxcccounts = QSO.query.filter(QSO.station_callsign.in_(calls)).with_entities(QSO.dxcc, func.count(QSO.dxcc)).group_by(QSO.dxcc).order_by(desc(func.count(QSO.dxcc))).limit(10).all()
     totalqsos = QSO.query.filter(QSO.station_callsign.in_(calls)).count()
     #totaldxcc = QSO.query.filter(QSO.station_callsign.in_(calls)).with_entities(QSO.dxcc).distinct().count()
-    return render_template('home.html', totalqsos=totalqsos, dxcccounts=sortedcountries)
+    return render_template('home.html', totalqsos=totalqsos, dxcccounts=sortedcountries, bands=bands, modes=modes)

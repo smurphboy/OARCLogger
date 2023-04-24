@@ -98,13 +98,13 @@ def uploadqsos(user):
             user_file = (current_user.get_id() + '.adi')
             file_path = Path(current_app.root_path)
             file_path = file_path / "static/adi" / user_file
-            print(file_path)
+            #print(file_path)
             uploaded_file.save(file_path) #we store the file in static/adi/<user.id>
             #we have a valid adi file saved as the <user id>.adi. Next to load and parse it.
             qsos_raw, adif_header = adif_io.read_from_file(file_path)
-            print('QSOs: ', len(qsos_raw))
+            #print('QSOs: ', len(qsos_raw))
             for qso in qsos_raw:
-                print('qso')
+                #print('qso')
                 newqso = QSO()
                 newqso.create(update_dictionary=qso)
                 for qsoevent in QSOEvent.query.filter_by(id = newqso.id).all():

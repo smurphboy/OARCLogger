@@ -103,7 +103,7 @@
                     <tr>
                         <td>{{ callsign.id }}</td>
                         <td><a href="{{ url_for ('callsigns.call', callsign=callsign['name'] | replace('/','_'))  }}">{{ callsign.name }}</a></td>
-                        <td>{{ dxcclookup(callsign.name) }}</td>
+                        <td>{{ countrylookup(callsign.name) }}</td>
                         <td>{{ qsocount(callsign.name) }}</td>
                         <td>{% if latestqso(callsign.name) != 'N/A' %}{{ latestqso(callsign.name) }}{% endif %}</td>
                         <td><a class="button is-link" href="{{ url_for('qsos.postnewqso', station_callsign=callsign.name | replace('/','_')) }}">+</a></td>
