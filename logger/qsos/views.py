@@ -55,11 +55,21 @@ def postnewqso(station_callsign):
         my_pota_ref = request.form.get('my_pota_ref', '').upper() or None
         sat_name = request.form.get('sat_name', '') or None
         sat_mode = request.form.get('sat_mode', '') or None
+        dxcc = request.form.get('dxcc', '') or None
+        my_dxcc = request.form.get('my_dxcc', '') or None
+        cqz = request.form.get('cqz', '') or None
+        my_cq_zone = request.form.get('my_cq_zone', '') or None
+        ituz = request.form.get('ituz', '') or None
+        my_itu_zone = request.form.get('my_itu_zone', '') or None
+        country = request.form.get('country', '') or None
+        my_country = request.form.get('my_country', '') or None
+
         newqso = QSO(qso_date=qso_date, time_on=time_on, qso_date_off=qso_date_off, time_off=time_off, call=call, mode=mode,
                     band=band, band_rx=band_rx, gridsquare=gridsquare, my_gridsquare=my_gridsquare, station_callsign=station_callsign.replace('_', '/'),
                     operator = operator, owner_callsign = owner_callsign, contacted_op = contacted_op, eq_call = eq_call,
                     submode = submode, freq=freq, freq_rx=freq_rx, sat_name=sat_name, sat_mode=sat_mode, lat=lat, lon=lon, my_lat=my_lat,
-                    my_lon=my_lon, sota_ref=sota_ref, my_sota_ref=my_sota_ref, pota_ref=pota_ref, my_pota_ref=my_pota_ref)
+                    my_lon=my_lon, sota_ref=sota_ref, my_sota_ref=my_sota_ref, pota_ref=pota_ref, my_pota_ref=my_pota_ref, dxcc=dxcc, my_dxcc=my_dxcc,
+                    cqz=cqz, my_cq_zone=my_cq_zone, ituz=ituz, my_itu_zone=my_itu_zone, country=country, my_country=my_country)
         db.session.add(newqso)
         db.session.commit()
         for qsoevent in QSOEvent.query.filter_by(id = newqso.id).all():
@@ -140,11 +150,11 @@ def viewqso(call, date, time):
 @qsos.route('/_dxcc')
 def lookupdxcc():
             callsign = request.args.get('callsign', 0, type=str)
-            dxcc = current_app.cic.get_country_name(callsign)
+            country = current_app.cic.get_country_name(callsign)
+            get_adif_id = current_app.cic.get_adif_id(callsign)
             ituz = current_app.cic.get_ituz(callsign)
             cqz = current_app.cic.get_cqz(callsign)
-            print(dxcc, ituz, cqz)
-            return jsonify(dxcc = dxcc, ituz = ituz, cqz = cqz)
+            return jsonify(country = country, get_adif_id=get_adif_id, ituz = ituz, cqz = cqz)
 
 
 @qsos.route('delete/<int:id>/<callsign>')

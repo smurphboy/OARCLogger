@@ -29,7 +29,13 @@
                 </div>
                 <div class="tile is-child box">
                     <p class="title">DXCC</p>
-                    <p class="subtitle">You have made contact with x DXCC across all callsigns</p>
+                    <p class="subtitle">You have made contact with {{ dxcccounts|length }} unique DXCC across all callsigns</p>
+                    <p class="subtitle">Top Ten DXCC are:</p>
+                    {% for dxcc, count in dxcccounts.items() %}
+                    <ul>
+                        {%- if loop.index > 10 %}{% break %}{% endif %}<li>{{ dxcc }} {{ count }}</li>
+                    </ul>
+                    {% endfor %}
                 </div>
             </div>
             <div class="tile is-parent">

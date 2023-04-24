@@ -7,7 +7,7 @@
                     {% block title %} QSOs for {{ station_callsign }} {% endblock %}
                 </h1>
                 <div class="subtitle is-4 algolia-lvl1">
-                    <p>DXCC is {{ dxcclookup(station_callsign) }}, ITU Zone is {{ dxccituz(station_callsign) }}, CQ Zone is {{ dxcccqz(station_callsign) }}, {{ allqsos|length }} QSOs for this callsign.</p>     
+                    <p>DXCC is {{ get_adif_id(station_callsign) }}: {{ countrylookup(station_callsign) }}, ITU Zone is {{ dxccituz(station_callsign) }}, CQ Zone is {{ dxcccqz(station_callsign) }}, {{ allqsos|length }} QSOs for this callsign.</p>     
                 </div>
             </div>
         </div>

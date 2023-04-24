@@ -17,6 +17,7 @@ class QSOForm(FlaskForm):
                                             Length(max=50)])
     station_callsign = StringField('Station Callsign')
     operator = StringField('Operator')
+    country = StringField('Country')
     owner_callsign = StringField('Owner Callsign')
     contacted_op = StringField('Contacted Operator')
     eq_call = StringField('EQ Callsign')

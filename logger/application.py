@@ -17,6 +17,7 @@ def create_app():
     app = Flask(__name__)
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config.from_object(Config)
+    app.jinja_env.add_extension('jinja2.ext.loopcontrols')
     db.init_app(app)
     migrate = Migrate(app, db, render_as_batch=True)
 
@@ -70,10 +71,17 @@ def create_app():
                 latest_qso = QSO.query.filter_by(station_callsign=logbook).order_by(QSO.qso_date.desc(), QSO.time_on.desc()).first()
                 return (latest_qso.qso_date.strftime("%d %b %Y") + ' at ' + latest_qso.time_on.strftime("%X") + ' with ' + latest_qso.call)
             else: return ('N/A')
-        def dxcclookup(logbook):
-            '''returns the DXCC of the callsign'''
+        def countrylookup(logbook):
+            '''returns the country of the callsign'''
             try:
                 ret = current_app.cic.get_country_name(logbook)
+            except KeyError:
+                ret = "N/A"
+            return ret
+        def get_adif_id(logbook):
+            '''returns the DXCC of the callsign'''
+            try:
+                ret = current_app.cic.get_adif_id(logbook)
             except KeyError:
                 ret = "N/A"
             return ret
@@ -100,6 +108,6 @@ def create_app():
             except KeyError:
                 ret = 'N/A'
             return ret
-        return dict(qsocount=qsocount, latestqso=latestqso, dxcclookup=dxcclookup, dxccituz=dxccituz, dxcccqz=dxcccqz, homecallsign=homecallsign)
+        return dict(qsocount=qsocount, latestqso=latestqso, countrylookup=countrylookup, get_adif_id=get_adif_id, dxccituz=dxccituz, dxcccqz=dxcccqz, homecallsign=homecallsign)
 
     return app

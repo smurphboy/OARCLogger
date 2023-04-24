@@ -1,10 +1,14 @@
+import operator
 from datetime import datetime
-from flask import Blueprint, flash, render_template, redirect, request, url_for
-from flask_login import login_user, login_required, logout_user, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
-from logger.models import QSO, User, db, Callsign
+
+from flask import (Blueprint, current_app, flash, redirect, render_template,
+                   request, url_for)
+from flask_login import current_user, login_required, login_user, logout_user
+from sqlalchemy import desc, func
+from werkzeug.security import check_password_hash, generate_password_hash
+
 from logger.forms import CallsignForm
-from sqlalchemy import desc
+from logger.models import QSO, Callsign, User, db
 
 users = Blueprint('users', __name__, template_folder='templates')
 
@@ -96,8 +100,18 @@ def logout():
 def home():
     callsigns = Callsign.query.filter_by(user_id=current_user.get_id()).all()
     calls = []
+    countries = {}
     for callname in callsigns:
         calls.append(callname.name)
+    for qso in QSO.query.filter(QSO.station_callsign.in_(calls)).all():
+        dxcc = current_app.cic.get_all(qso.call)['country'] + " (" + str(current_app.cic.get_all(qso.call)['adif']) + "):"
+        if dxcc in countries.keys():
+            countries[dxcc] = countries[dxcc] + 1
+        else:
+            countries[dxcc] = 1
+    sortedcountries = dict(sorted(countries.items(), key=operator.itemgetter(1), reverse=True))
+    print(len(countries))
+    #dxcccounts = QSO.query.filter(QSO.station_callsign.in_(calls)).with_entities(QSO.dxcc, func.count(QSO.dxcc)).group_by(QSO.dxcc).order_by(desc(func.count(QSO.dxcc))).limit(10).all()
     totalqsos = QSO.query.filter(QSO.station_callsign.in_(calls)).count()
-    allqsos = QSO.query.filter(QSO.station_callsign.in_(calls)).all()
-    return render_template('home.html', totalqsos=totalqsos, allqsos=allqsos)
+    #totaldxcc = QSO.query.filter(QSO.station_callsign.in_(calls)).with_entities(QSO.dxcc).distinct().count()
+    return render_template('home.html', totalqsos=totalqsos, dxcccounts=sortedcountries)
