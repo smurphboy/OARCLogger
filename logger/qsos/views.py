@@ -162,7 +162,9 @@ def lookupdxcc():
 def qsodelete(id, callsign):
     '''deleted selected qso'''
     qso = QSO.query.filter_by(id=id).first()
+    qsoevents = QSOEvent.query.filter_by(qso=id).all()
     db.session.delete(qso)
+    db.session.delete(qsoevents)
     db.session.commit()
     return redirect(url_for('callsigns.call', callsign=callsign.replace('/', '_')))
 

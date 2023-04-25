@@ -1,22 +1,37 @@
-from flask import Flask, render_template, current_app
+import flask_login as login
+from flask import Flask, current_app, redirect, render_template, url_for
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 from flask_login import LoginManager
-from logger.users.views import users
-from logger.callsigns.views import callsigns
-from logger.qsos.views import qsos
-from logger.events.views import events
-from logger.configurations.views import configurations
-from logger.antennas.views import antennas
-from logger.rigs.views import rigs
-from logger.config import Config
-from logger.models import db, QSO
 from flask_migrate import Migrate
-from pyhamtools import LookupLib, Callinfo
+from pyhamtools import Callinfo, LookupLib
+
+from logger import models
+from logger.antennas.views import antennas
+from logger.callsigns.views import callsigns
+from logger.config import Config
+from logger.configurations.views import configurations
+from logger.events.views import events
+from logger.models import QSO, Callsign, Event, QSOEvent, User, db
+from logger.qsos.views import qsos
+from logger.rigs.views import rigs
+from logger.users.views import users
+
+
+class LoggerModelView(ModelView):
+
+    def is_accessible(self):
+        return login.current_user.is_authenticated
+    
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('users.login'))
 
 
 def create_app():
     app = Flask(__name__)
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config.from_object(Config)
+    app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
     app.jinja_env.add_extension('jinja2.ext.loopcontrols')
     db.init_app(app)
     migrate = Migrate(app, db, render_as_batch=True)
@@ -24,6 +39,14 @@ def create_app():
     login_manager = LoginManager()
     login_manager.login_view = 'users.login'
     login_manager.init_app(app)
+
+    admin = Admin(app, name='Logger', template_mode='bootstrap3')
+
+    admin.add_view(LoggerModelView(QSO, db.session))
+    admin.add_view(LoggerModelView(Callsign, db.session))
+    admin.add_view(LoggerModelView(Event, db.session))
+    admin.add_view(LoggerModelView(QSOEvent, db.session))
+    admin.add_view(LoggerModelView(models.User, db.session))
 
     from logger.models import User
 
