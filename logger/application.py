@@ -62,7 +62,7 @@ def create_app():
     admin.add_view(LoggerModelView(QSO, db.session))
     admin.add_view(LoggerModelView(Callsign, db.session))
     admin.add_view(LoggerModelView(Event, db.session))
-    admin.add_view(QSOEventModelView(QSOEvent, db.session))
+    admin.add_view(LoggerModelView(QSOEvent, db.session))
     admin.add_view(LoggerModelView(User, db.session))
 
 
