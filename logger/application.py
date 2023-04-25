@@ -27,6 +27,7 @@ class LoggerModelView(ModelView):
     
     column_hide_backrefs = False
     column_display_pk = True
+    column_auto_select_related = True
 
 
 def create_app():
