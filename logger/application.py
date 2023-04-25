@@ -25,6 +25,8 @@ class LoggerModelView(ModelView):
     
     def inaccessible_callback(self, name, **kwargs):
         return redirect(url_for('users.login'))
+    
+    column_hide_backrefs = False
 
 
 def create_app():
