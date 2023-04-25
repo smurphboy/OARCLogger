@@ -2,11 +2,10 @@ import flask_login as login
 from flask import Flask, current_app, redirect, render_template, url_for
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from flask_migrate import Migrate
 from pyhamtools import Callinfo, LookupLib
 
-from logger import models
 from logger.antennas.views import antennas
 from logger.callsigns.views import callsigns
 from logger.config import Config
@@ -21,12 +20,13 @@ from logger.users.views import users
 class LoggerModelView(ModelView):
 
     def is_accessible(self):
-        return login.current_user.is_authenticated
+        return current_user.is_authenticated
     
     def inaccessible_callback(self, name, **kwargs):
         return redirect(url_for('users.login'))
     
     column_hide_backrefs = False
+    column_display_pk = True
 
 
 def create_app():
@@ -48,9 +48,8 @@ def create_app():
     admin.add_view(LoggerModelView(Callsign, db.session))
     admin.add_view(LoggerModelView(Event, db.session))
     admin.add_view(LoggerModelView(QSOEvent, db.session))
-    admin.add_view(LoggerModelView(models.User, db.session))
+    admin.add_view(LoggerModelView(User, db.session))
 
-    from logger.models import User
 
     with app.app_context():
         current_app.my_lookuplib = LookupLib(lookuptype='countryfile')

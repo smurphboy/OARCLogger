@@ -33,11 +33,17 @@ class User(UserMixin, db.Model):
     antennas = db.relationship('Antenna', backref='owner', lazy=True)
     selected = db.relationship('Selected', backref='owner', lazy=True)
 
+    def __repr__(self):
+        return self.name
+    
 class Callsign(db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
     name = db.Column(db.String(1000), unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     primary = db.Column(db.Boolean, default=False)
+
+    def __repr__(self):
+        return self.name
 
 
 event_config = db.Table('event_config',
@@ -65,11 +71,17 @@ class Event(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     selected = db.relationship('Selected', backref='selevent', lazy=True)
 
+    def __repr__(self):
+        return self.name
+
 
 class Selected(db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
     event = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
     user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def __repr__(self):
+        return ('' + str(self.event) + ' - ' + str(self.user))
   
 
 class QSO(db.Model):
@@ -236,6 +248,9 @@ class QSOEvent(db.Model):
     event = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=True)
     qso = db.Column(db.Integer, db.ForeignKey('qso.id'), nullable=True)
 
+    def __repr__(self):
+        return ('Event: ' + str(self.event) + ' - QSO: ' + str(self.qso))
+
 
 rig_band = db.Table('rig_band',
                     db.Column('id', db.Integer, primary_key=True),
@@ -261,6 +276,9 @@ class Rig(db.Model):
     configurations = db.relationship('Configuration', backref='rig', lazy=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
 
+    def __repr__(self):
+        return self.name
+
 
 class Antenna(db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
@@ -269,6 +287,9 @@ class Antenna(db.Model):
     comment = db.Column(db.String(255))
     configurations = db.relationship('Configuration', backref='antenna', lazy=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+
+    def __repr__(self):
+        return self.name
 
 class Configuration(db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
@@ -279,3 +300,6 @@ class Configuration(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     qsos = db.relationship('QSO', backref='configuration', lazy=True)
     events = db.relationship('Event', secondary=event_config, back_populates='configs')
+
+    def __repr__(self):
+        return self.name
