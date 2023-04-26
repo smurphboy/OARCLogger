@@ -97,8 +97,13 @@ def eventcreate():
 @login_required
 def eventdelete(id):
     event = Event.query.filter_by(id=id).first()
+    eventqso = QSOEvent.query.filter_by(event=id).all()
+    sel = Selected.query.filter_by(event=id).first()
     if int(event.user_id) == int(current_user.get_id()):
         event1 = event.query.get_or_404(id)
+        db.session.delete(sel)
+        for ev in eventqso:
+            db.session.delete(ev)
         db.session.delete(event1)
         db.session.commit()
         return redirect(url_for('events.eventlist', username=current_user.name))
