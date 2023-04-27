@@ -27,10 +27,9 @@ class LoggerModelView(ModelView):
     
     column_hide_backrefs = False
     column_display_pk = True
-    column_auto_select_related = True
 
 
-class QSOEventModelView(ModelView):
+class EventModelView(ModelView):
 
     def is_accessible(self):
         return current_user.is_authenticated
@@ -40,8 +39,8 @@ class QSOEventModelView(ModelView):
     
     column_hide_backrefs = False
     column_display_pk = True
-    column_auto_select_related = True
-    column_list = ['qso', 'event']
+    column_list = ['name', 'type', 'start_date', 'end_date', 'comment', 'sota_ref', 'pota_ref', 'wwff_ref',
+                   'iota_ref', 'sat_name', 'square', 'configs', 'qsos', 'selected']
 
 
 def create_app():
@@ -61,7 +60,7 @@ def create_app():
 
     admin.add_view(LoggerModelView(QSO, db.session))
     admin.add_view(LoggerModelView(Callsign, db.session))
-    admin.add_view(LoggerModelView(Event, db.session))
+    admin.add_view(EventModelView(Event, db.session))
     admin.add_view(LoggerModelView(QSOEvent, db.session))
     admin.add_view(LoggerModelView(User, db.session))
 

@@ -26,7 +26,7 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(100))
     created_on = db.Column(db.DateTime())
     last_login = db.Column(db.DateTime())
-    callsigns = db.relationship('Callsign', backref='user', lazy=True)
+    callsigns = db.relationship('Callsign', backref='owner', lazy=True)
     events = db.relationship('Event', backref='owner', lazy=True)
     rigs = db.relationship('Rig', backref='owner', lazy=True)
     configurations = db.relationship('Configuration', backref='owner', lazy=True)
