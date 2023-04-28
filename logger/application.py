@@ -11,7 +11,7 @@ from logger.callsigns.views import callsigns
 from logger.config import Config
 from logger.configurations.views import configurations
 from logger.events.views import events
-from logger.models import QSO, Callsign, Event, QSOEvent, User, db
+from logger.models import QSO, Callsign, Event, User, db
 from logger.qsos.views import qsos
 from logger.rigs.views import rigs
 from logger.users.views import users
@@ -27,20 +27,6 @@ class LoggerModelView(ModelView):
     
     column_hide_backrefs = False
     column_display_pk = True
-
-
-class EventModelView(ModelView):
-
-    def is_accessible(self):
-        return current_user.is_authenticated
-    
-    def inaccessible_callback(self, name, **kwargs):
-        return redirect(url_for('users.login'))
-    
-    column_hide_backrefs = False
-    column_display_pk = True
-    column_list = ['name', 'type', 'start_date', 'end_date', 'comment', 'sota_ref', 'pota_ref', 'wwff_ref',
-                   'iota_ref', 'sat_name', 'square', 'configs', 'qsos', 'selected']
 
 
 def create_app():
@@ -60,8 +46,7 @@ def create_app():
 
     admin.add_view(LoggerModelView(QSO, db.session))
     admin.add_view(LoggerModelView(Callsign, db.session))
-    admin.add_view(EventModelView(Event, db.session))
-    admin.add_view(LoggerModelView(QSOEvent, db.session))
+    admin.add_view(LoggerModelView(Event, db.session))
     admin.add_view(LoggerModelView(User, db.session))
 
 

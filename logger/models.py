@@ -31,7 +31,7 @@ class User(UserMixin, db.Model):
     rigs = db.relationship('Rig', backref='owner', lazy=True)
     configurations = db.relationship('Configuration', backref='owner', lazy=True)
     antennas = db.relationship('Antenna', backref='owner', lazy=True)
-    selected = db.relationship('Selected', backref='owner', lazy=True)
+    selected_events = db.relationship('Event', secondary='selected', back_populates='selected_by')
 
     def __repr__(self):
         return self.name
@@ -47,10 +47,9 @@ class Callsign(db.Model):
 
 
 event_config = db.Table('event_config',
-                    db.Column('id', db.Integer, primary_key=True),
-                    db.Column('event_id', db.Integer, db.ForeignKey('event.id')),
-                    db.Column('config_id', db.Integer, db.ForeignKey('configuration.id')),
-                    )
+                        db.Column('event_id', db.Integer, db.ForeignKey('event.id'), primary_key=True),
+                        db.Column('config_id', db.Integer, db.ForeignKey('configuration.id'), primary_key=True),
+                        )
 
 
 class Event(db.Model):
@@ -67,21 +66,19 @@ class Event(db.Model):
     sat_name = db.Column(db.String(255))
     square = db.Column(db.String(4))
     configs = db.relationship('Configuration', secondary='event_config', back_populates="events")
-    qsos = db.relationship('QSOEvent', backref='event_qso', lazy=True)
+    qsos = db.relationship('QSO', secondary='qsoevent', back_populates='events')
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    selected = db.relationship('Selected', backref='selevent', lazy=True)
+    selected_by = db.relationship('User', secondary='selected', back_populates='selected_events')
 
     def __repr__(self):
         return self.name
 
 
-class Selected(db.Model):
-    id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
-    event = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
-    user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+selected = db.Table('selected',
+                    db.Column('event_id', db.Integer, db.ForeignKey('event.id'), primary_key=True),
+                    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True)
+                    )
 
-    def __repr__(self):
-        return ('' + str(self.event) + ' - ' + str(self.user))
   
 
 class QSO(db.Model):
@@ -189,7 +186,7 @@ class QSO(db.Model):
     import_source = db.Column(db.String(255))
     import_date = db.Column(db.Date())
     import_comments = db.Column(db.String(2000))
-    events = db.relationship('QSOEvent', backref='qso_event', lazy=True)
+    events = db.relationship('Event', secondary='qsoevent', back_populates='qsos')
     config_id = db.Column(db.Integer, db.ForeignKey('configuration.id'), nullable=True)
     precedence = db.Column(db.String(1))
     check = db.Column(db.Integer)
@@ -242,18 +239,13 @@ class QSO(db.Model):
         print('created')
 
 
-class QSOEvent(db.Model):
-    __tablename__ = 'qsoevent'
-    id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
-    event = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=True)
-    qso = db.Column(db.Integer, db.ForeignKey('qso.id'), nullable=True)
-
-    def __repr__(self):
-        return ('Event: ' + str(self.event) + ' - QSO: ' + str(self.qso))
+qsoevent = db.Table('qsoevent', 
+                    db.Column('event_id', db.Integer, db.ForeignKey('event.id'), primary_key=True),
+                    db.Column('qso_id',db.Integer, db.ForeignKey('qso.id'), primary_key=True)
+                    )
 
 
 rig_band = db.Table('rig_band',
-                    db.Column('id', db.Integer, primary_key=True),
                     db.Column('rig_id', db.Integer, db.ForeignKey('rig.id')),
                     db.Column('band_id', db.Integer, db.ForeignKey('band.id'))
                     )
@@ -262,7 +254,7 @@ rig_band = db.Table('rig_band',
 class Band(db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
     name = db.Column(db.String(1000), unique=True)
-    rigs = db.relationship('Rig', secondary=rig_band, backref='bands')
+    rigs = db.relationship('Rig', secondary='rig_band', back_populates='bands')
 
     def __repr__(self):
         return f'<Band "{self.name}">' 
@@ -275,6 +267,7 @@ class Rig(db.Model):
     comment = db.Column(db.String(255))
     configurations = db.relationship('Configuration', backref='rig', lazy=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    bands = db.relationship('Band', secondary='rig_band', back_populates='rigs')
 
     def __repr__(self):
         return self.name
@@ -299,7 +292,7 @@ class Configuration(db.Model):
     rig_id = db.Column(db.Integer, db.ForeignKey('rig.id'), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     qsos = db.relationship('QSO', backref='configuration', lazy=True)
-    events = db.relationship('Event', secondary=event_config, back_populates='configs')
+    events = db.relationship('Event', secondary='event_config', back_populates='configs')
 
     def __repr__(self):
         return self.name

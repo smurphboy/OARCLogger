@@ -6,7 +6,7 @@ from flask_login import current_user, login_required
 
 from logger.forms import EventForm, SelectedEventForm
 from logger.helpers import adiftext
-from logger.models import QSO, Callsign, Event, QSOEvent, Selected, User, db
+from logger.models import QSO, Callsign, Event, User, db
 
 events = Blueprint('events', __name__, template_folder='templates')
 
@@ -96,15 +96,13 @@ def eventcreate():
 @events.route("/delete/<int:id>")
 @login_required
 def eventdelete(id):
-    event = Event.query.filter_by(id=id).first()
-    eventqso = QSOEvent.query.filter_by(event=id).all()
-    sel = Selected.query.filter_by(event=id).first()
     if int(event.user_id) == int(current_user.get_id()):
-        event1 = event.query.get_or_404(id)
-        db.session.delete(sel)
-        for ev in eventqso:
-            db.session.delete(ev)
-        db.session.delete(event1)
+        event = Event.query.filter_by(id=id).first()
+        event.selected_by[:] = []
+        event.qsos[:] = []
+        event.configs[:] = []
+        db.session.commit()
+        db.session.delete(event)
         db.session.commit()
         return redirect(url_for('events.eventlist', username=current_user.name))
     else:
@@ -139,27 +137,24 @@ def page_not_found(e):
 def selectevents(username):
     form = SelectedEventForm()
     if request.method == 'POST' and form.validate():
-        for ev in Selected.query.filter_by(user = current_user.id).all():
-            db.session.delete(ev)
-        for event in request.form.getlist('Search'): #we need to make sure we get an id from Search
-            print (current_user.id, event)
-            sel = Selected()
-            sel.user = current_user.id
-            sel.event = event
-            db.session.add(sel)
-        db.session.commit()
+        user = User.query.filter_by(name=username).first()
         print (request.form.getlist('Search'))
+        user.selected_events[:] = Event.query.filter(Event.id.in_(request.form.getlist('Search')))
+        db.session.commit()
         return redirect(url_for('users.profile', user=current_user.name))
-    userid = User.query.filter_by(name = username).first()
     allevents = Event.query.filter_by(user_id=current_user.get_id()).all()
     alleventsjson = []
     for e in allevents:
         alleventsjson.append({'val': e.name, 'id' : e.id})
     page = request.args.get('page', 1, type=int)
     eventpage = Event.query.filter_by(user_id=current_user.get_id()).order_by(Event.start_date.desc()).paginate(page=page, per_page=ROWS_PER_PAGE)
-    selectedevents = Selected.query.filter_by(user = userid.id).all()
-    seleventsjson = []
-    for e in selectedevents:
-        seleventsjson.append(Event.query.filter_by(id=e.event).first().id)
+    user = User.query.filter_by(name=username).first()
+    selectedevents=[]
+    for event in user.selected_events:
+        selectedevents.append(event.id)    
+    print (selectedevents)
+    # seleventsjson = []
+    # for e in selectedevents:
+    #     seleventsjson.append(Event.query.filter_by(id=e.event).first().id)
     return render_template('selectedeventsform.html', username=current_user.name, eventpage=eventpage, selectedevents=selectedevents,
-                           allevents=allevents, alleventsjson=alleventsjson, form=form, seleventsjson=seleventsjson)
+                           allevents=allevents, alleventsjson=alleventsjson, form=form, seleventsjson=selectedevents)

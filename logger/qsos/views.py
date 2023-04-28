@@ -3,7 +3,7 @@ import os
 import adif_io
 from flask import Blueprint, flash, render_template, redirect, request, url_for, abort, current_app, jsonify
 from flask_login import login_required, current_user
-from logger.models import User, db, Callsign, QSO, Selected, QSOEvent
+from logger.models import User, db, Callsign, QSO
 from logger.forms import QSOForm, QSOUploadForm
 import maidenhead as mh
 from pathlib import Path
@@ -103,17 +103,13 @@ def uploadqsos(user):
             #we have a valid adi file saved as the <user id>.adi. Next to load and parse it.
             qsos_raw, adif_header = adif_io.read_from_file(file_path)
             #print('QSOs: ', len(qsos_raw))
+            selev = User.query.filter_by(id=current_user.get_id()).selected_events.all()
             for qso in qsos_raw:
                 #print('qso')
                 newqso = QSO()
-                newqso.create(update_dictionary=qso)
-                for qsoevent in QSOEvent.query.filter_by(id = newqso.id).all():
-                    db.session.delete(qsoevent)
-                for event in Selected.query.filter_by(user = current_user.id).all():
-                    qsoevent = QSOEvent()
-                    qsoevent.qso = newqso.id
-                    qsoevent.event = event.event
-                    db.session.add(qsoevent)
+                for ev in selev:
+                    newqso.events.append(ev)
+                db.session.add(newqso)
                 db.session.commit()
 
         return redirect(url_for('users.profile',user=current_user.name))

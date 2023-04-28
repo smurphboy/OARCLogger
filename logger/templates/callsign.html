@@ -21,8 +21,8 @@
                         <div class="level-item">
                             <nav class="breadcrumb" aria-label="breadcrumbs">
                                 <ul>
-                                {% for event in current_user.selected %}
-                                    <li><a href="{{ url_for ('events.eventview', id=event.selevent.id) }}">{{ event.selevent.name }}</a></li>
+                                {% for event in current_user.selected_events %}
+                                    <li><a href="{{ url_for ('events.eventview', id=event.id) }}">{{ event.name }}</a></li>
                                 {% endfor %}
                                 </ul>
                             </nav>
