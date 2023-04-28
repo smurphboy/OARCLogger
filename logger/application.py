@@ -28,6 +28,20 @@ class LoggerModelView(ModelView):
     column_hide_backrefs = False
     column_display_pk = True
 
+class LoggerEventModelView(ModelView):
+
+    def is_accessible(self):
+        return current_user.is_authenticated
+    
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('users.login'))
+    
+    column_hide_backrefs = False
+    column_display_pk = True
+    form_columns = ('name', 'type', 'start_date', 'end_date', 'comment', 'sota_ref',
+                   'pota_ref', 'wwff_ref', 'iota_ref', 'sat_name', 'square', 'configs',
+                   'qsos', 'selected_by')
+
 
 def create_app():
     app = Flask(__name__)
@@ -46,7 +60,7 @@ def create_app():
 
     admin.add_view(LoggerModelView(QSO, db.session))
     admin.add_view(LoggerModelView(Callsign, db.session))
-    admin.add_view(LoggerModelView(Event, db.session))
+    admin.add_view(LoggerEventModelView(Event, db.session))
     admin.add_view(LoggerModelView(User, db.session))
 
 
