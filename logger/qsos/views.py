@@ -3,7 +3,7 @@ import os
 import adif_io
 from flask import Blueprint, flash, render_template, redirect, request, url_for, abort, current_app, jsonify
 from flask_login import login_required, current_user
-from logger.models import User, db, Callsign, QSO
+from logger.models import User, db, Callsign, QSO, Event
 from logger.forms import QSOForm, QSOUploadForm
 import maidenhead as mh
 from pathlib import Path
@@ -70,15 +70,9 @@ def postnewqso(station_callsign):
                     submode = submode, freq=freq, freq_rx=freq_rx, sat_name=sat_name, sat_mode=sat_mode, lat=lat, lon=lon, my_lat=my_lat,
                     my_lon=my_lon, sota_ref=sota_ref, my_sota_ref=my_sota_ref, pota_ref=pota_ref, my_pota_ref=my_pota_ref, dxcc=dxcc, my_dxcc=my_dxcc,
                     cqz=cqz, my_cq_zone=my_cq_zone, ituz=ituz, my_itu_zone=my_itu_zone, country=country, my_country=my_country)
+        selevents = Event.query.filter_by(selected_by=current_user.get_user_id()).all()
+        newqso.events[:] = Event.query.filter(Event.id.in_(selevents))
         db.session.add(newqso)
-        db.session.commit()
-        for qsoevent in QSOEvent.query.filter_by(id = newqso.id).all():
-            db.session.delete(qsoevent)
-        for event in Selected.query.filter_by(user = current_user.id).all():
-            qsoevent = QSOEvent()
-            qsoevent.qso = newqso.id
-            qsoevent.event = event.event
-            db.session.add(qsoevent)
         db.session.commit()
         return redirect(url_for('callsigns.call',callsign=station_callsign.replace('/', '_')))
     return render_template('qsoform.html', form=form, station_callsign=station_callsign.replace('_', '/'))
@@ -103,13 +97,14 @@ def uploadqsos(user):
             #we have a valid adi file saved as the <user id>.adi. Next to load and parse it.
             qsos_raw, adif_header = adif_io.read_from_file(file_path)
             #print('QSOs: ', len(qsos_raw))
-            selev = User.query.filter_by(id=current_user.get_id()).selected_events.all()
+            user = User.query.filter_by(id=current_user.get_id()).first()
+            selev = user.selected_events
             for qso in qsos_raw:
                 #print('qso')
                 newqso = QSO()
+                newqso.create(update_dictionary=qso)
                 for ev in selev:
                     newqso.events.append(ev)
-                db.session.add(newqso)
                 db.session.commit()
 
         return redirect(url_for('users.profile',user=current_user.name))
@@ -122,7 +117,8 @@ def viewqso(call, date, time):
     qso = QSO.query.filter_by(call=call, qso_date=date, time_on=time).first()
     for key in qso.__dict__.keys():
         if qso.__dict__[key]:
-            print(key, qso.__dict__[key])
+            pass
+            # print(key, qso.__dict__[key])
     locations = []
     if qso.gridsquare:
         locations.append([mh.to_location(qso.gridsquare, center=True)[0], mh.to_location(qso.gridsquare, center=True)[1], 'star', 'red', 'Gridsquare: ' + qso.gridsquare])
@@ -158,9 +154,8 @@ def lookupdxcc():
 def qsodelete(id, callsign):
     '''deleted selected qso'''
     qso = QSO.query.filter_by(id=id).first()
-    qsoevents = QSOEvent.query.filter_by(qso=id).all()
-    for ev in qsoevents:
-        db.session.delete(ev)
+    qso.events[:] = []
+    db.session.commit()
     db.session.delete(qso)
     db.session.commit()
     return redirect(url_for('callsigns.call', callsign=callsign.replace('/', '_')))

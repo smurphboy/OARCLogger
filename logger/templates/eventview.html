@@ -94,15 +94,16 @@
                 <tbody>
                     {% for qso in event.qsos %}
                     <tr>
-                        <td>{{ qso.qso_event.qso_date }}</td>
-                        <td>{{ qso.qso_event.time_on }}</td>
-                        <td>{{ qso.qso_event.station_callsign }}</td>
-                        <td><a href="/qsos/view/{{ qso.qso_event.call| replace("/","_") }}/{{ qso.qso_event.qso_date}}/{{ qso.qso_event.time_on.strftime('%H:%M:%S.%f') }}" title="{{ qso.qso_event.call }}">{{ qso.qso_event.call }}</a></td>
-                        <td>{{ qso.qso_event.band }}</td>
-                        <td>{{ qso.qso_event.mode }}</td>
-                        <td>{{ qso.qso_event.gridsquare }}</td>
-                        <td>{{ qso.qso_event.my_gridsquare }}</td>
-                        <td><a class="button is-danger is-small" href="{{ url_for ('qsos.qsodelete', id=qso.qso_event.id, callsign=station_callsign | replace('/','_')) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a></td>                        </tr>
+                        <td>{{ qso.qso_date }}</td>
+                        <td>{{ qso.time_on }}</td>
+                        <td>{{ qso.station_callsign }}</td>
+                        <td><a href="/qsos/view/{{ qso.call| replace("/","_") }}/{{ qso.qso_date}}/{{ qso.time_on.strftime('%H:%M:%S.%f') }}" title="{{ qso.call }}">{{ qso.call }}</a></td>
+                        <td>{{ qso.band }}</td>
+                        <td>{{ qso.mode }}</td>
+                        <td>{{ qso.gridsquare }}</td>
+                        <td>{{ qso.my_gridsquare }}</td>
+                        <td><a class="button is-danger is-small" href="{{ url_for ('qsos.qsodelete', id=qso.id, callsign=station_callsign | replace('/','_')) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a></td>
+                    </tr>
                     {% else %}
                     No QSOs
                     {% endfor %}
