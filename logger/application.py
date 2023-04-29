@@ -1,46 +1,25 @@
 import flask_login as login
-from flask import Flask, current_app, redirect, render_template, url_for
+from flask import Flask, current_app, render_template
 from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
-from flask_login import LoginManager, current_user
+from flask_login import LoginManager
 from flask_migrate import Migrate
 from pyhamtools import Callinfo, LookupLib
 
+from logger.admin import (LoggerAntennaModelView, LoggerBandModelView,
+                          LoggerCallsignModelView,
+                          LoggerConfigurationModelView, LoggerEventModelView,
+                          LoggerModelView, LoggerRigModelView,
+                          LoggerUserModelView)
 from logger.antennas.views import antennas
 from logger.callsigns.views import callsigns
 from logger.config import Config
 from logger.configurations.views import configurations
 from logger.events.views import events
-from logger.models import QSO, Callsign, Event, User, db
+from logger.models import (QSO, Antenna, Band, Callsign, Configuration, Event,
+                           Rig, User, db)
 from logger.qsos.views import qsos
 from logger.rigs.views import rigs
 from logger.users.views import users
-
-
-class LoggerModelView(ModelView):
-
-    def is_accessible(self):
-        return current_user.is_authenticated
-    
-    def inaccessible_callback(self, name, **kwargs):
-        return redirect(url_for('users.login'))
-    
-    column_hide_backrefs = False
-    column_display_pk = True
-
-class LoggerEventModelView(ModelView):
-
-    def is_accessible(self):
-        return current_user.is_authenticated
-    
-    def inaccessible_callback(self, name, **kwargs):
-        return redirect(url_for('users.login'))
-    
-    column_hide_backrefs = False
-    column_display_pk = True
-    form_columns = ('name', 'type', 'start_date', 'end_date', 'comment', 'sota_ref',
-                   'pota_ref', 'wwff_ref', 'iota_ref', 'sat_name', 'square', 'configs',
-                   'qsos', 'selected_by')
 
 
 def create_app():
@@ -59,9 +38,13 @@ def create_app():
     admin = Admin(app, name='Logger', template_mode='bootstrap3')
 
     admin.add_view(LoggerModelView(QSO, db.session))
-    admin.add_view(LoggerModelView(Callsign, db.session))
+    admin.add_view(LoggerCallsignModelView(Callsign, db.session))
     admin.add_view(LoggerEventModelView(Event, db.session))
-    admin.add_view(LoggerModelView(User, db.session))
+    admin.add_view(LoggerUserModelView(User, db.session))
+    admin.add_view(LoggerBandModelView(Band, db.session))
+    admin.add_view(LoggerRigModelView(Rig, db.session))
+    admin.add_view(LoggerAntennaModelView(Antenna, db.session))
+    admin.add_view(LoggerConfigurationModelView(Configuration, db.session))
 
 
     with app.app_context():
