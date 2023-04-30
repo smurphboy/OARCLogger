@@ -1,9 +1,13 @@
 import datetime
+
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, IntegerField, BooleanField,\
-                    RadioField, DateField, TimeField, SelectField, FileField, SubmitField, DateTimeField, SelectMultipleField
+from wtforms import (BooleanField, DateField, DateTimeField, FileField,
+                     IntegerField, RadioField, SelectField,
+                     SelectMultipleField, StringField, SubmitField,
+                     TextAreaField, TimeField)
 from wtforms.validators import InputRequired, Length, Optional
 from wtforms.widgets import DateTimeInput
+
 
 class QSOForm(FlaskForm):
     qso_date = DateField('QSO Date', validators=[InputRequired()], default=datetime.datetime.utcnow().date())

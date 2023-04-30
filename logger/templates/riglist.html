@@ -63,6 +63,8 @@
     <section>
         <div class="container">
             <div class="box">
+                <h1 class="title">Rigs</h1>
+                {% if rigpage.items %}
                 <table class="table is-striped is-hoverable">
                     <thead>
                         <tr>
@@ -86,11 +88,12 @@
                             <td>{% if rig.comment %}{{ rig.comment|truncate (20) }}{% endif %}</td>
                             <td><a class="button is-danger is-small" href="{{ url_for ('rigs.rigdelete', id=rig.id) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a></td>
                         </tr>
-                        {% else %}
-                        No Rigs yet
                         {% endfor %}
                     </tbody>
                 </table>
+                {% else %}
+                <p class="subtitle">No Rigs defined yet.</p>
+                {% endif %}
                 <nav class="pagination" role="navigation" aria-label="pagination">
                     <a class="pagination-previous" {% if rigpage.has_prev %} href="{{ url_for('rigs.riglist', username=current_user.name, page=riglist.prev_num) }}"{% else %}disabled {% endif %} title="This is the first page">Previous</a>
                     <a class="pagination-next" {% if rigpage.has_next %}href="{{ url_for('rigs.riglist', username=current_user.name, page=riglist.next_num) }}"{% else %}disabled {% endif %}>Next page</a>

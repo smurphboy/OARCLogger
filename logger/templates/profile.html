@@ -85,6 +85,7 @@
         </div>
         <div class="box">
             <h1 class="title">Callsigns</h1>
+            {% if current_user.callsigns %}
             <table class="table">
                 <thead>
                     <tr>
@@ -114,19 +115,12 @@
                             </form>
                         </td>
                     </tr>
-                </tbody>
-                {% else %}
-                <div class="level">
-                    <div class="level-left">
-                        <p class="level-item">You have no callsigns defined, please add one.</p>
-                    </div>
-                    <div class="level-right">
-                        <p class="level-item">Add a new callsign</p>
-                        <a type="button" class="js-modal-trigger button is-link" data-target="modal-add-callsign"">Add a callsign</a>
-                    </div>
-                </div>
                 {% endfor %}
+                </tbody>
             </table>
+            {% else %}
+            <p class="subtitle">You have no callsigns defined.</p>
+            {% endif %}
         </div>
         <div class="box">
             <div class="level">
