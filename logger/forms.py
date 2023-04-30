@@ -54,6 +54,7 @@ class QSOForm(FlaskForm):
     submode = SelectField('Sub Mode')
     gridsquare = StringField('Gridsquare', validators=[Length(max=10)])
     my_gridsquare = StringField('My Gridsquare', validators=[Length(max=10)])
+    comment = StringField('Comment', validators=[Length(max=255)])
 
 class QSOUploadForm(FlaskForm):
     file = FileField('File')
@@ -95,3 +96,80 @@ class CallsignForm(FlaskForm):
 
 class SelectedEventForm(FlaskForm):
     selectedevents = SelectMultipleField('Search', choices=())
+
+
+class SOTAQSOForm(FlaskForm):
+    qso_date = DateField('QSO Date', validators=[InputRequired()], default=datetime.datetime.utcnow().date())
+    time_on = TimeField('QSO On Time', validators=[InputRequired()], default=datetime.datetime.utcnow())
+    qso_date_off = DateField('QSO Date Off')
+    time_off = TimeField('QSO Off Time')
+    call = StringField('Call', validators=[InputRequired(),
+                                            Length(max=50)])
+    station_callsign = StringField('Station Callsign')
+    operator = StringField('Operator')
+    freq = StringField('Freq')
+    sota_ref = StringField('SOTA Reference')
+    my_sota_ref = StringField('My SOTA Reference')
+    band = SelectField('Band',
+                       choices=['', '2190m', '630m', '560m', '160m', '80m', '60m', '40m', '30m', '20m', '17m', '15m',
+                                '12m', '10m', '8m', '6m', '5m', '4m', '2m', '1.25m', '70cm', '33cm', '23cm', '13cm',
+                                '9cm', '6cm', '3cm', '1.25cm', '6mm', '4mm', '2.5mm', '2mm', '1mm', 'submm']) # convert this to look at the config selected and bands on the rig
+    mode = SelectField('Mode',
+                       choices=['AM', 'ATV', 'CW', 'DIGITALVOICE', 'FM', 'FT8', 'HELL', 'MFSK', 'OLIVIA', 'PKT', 'PSK', 'RTTY',
+                                'RTTYM', 'SSB', 'SSTV', 'ARDOP', 'CHIP', 'CLO', 'CONTESTI', 'DOMINO', 'DYNAMIC', 'FAX', 'FSK441',
+                                'ISCAT', 'JT4', 'JT6M', 'JT9', 'JT44', 'JT65', 'MSK144', 'MT63', 'OPERA', 'PAC', 'PAX', 'PSK2K',
+                                'Q15', 'QRA64', 'ROS', 'T10', 'THOR', 'THRB', 'TOR', 'V4', 'VOI', 'WINMOR', 'WSPR']) # convert this to look at the config selected and the modes available
+    submode = SelectField('Sub Mode')
+    comment = StringField('Comment', validators=[Length(max=255)])
+
+
+class POTAQSOForm(FlaskForm):
+    qso_date = DateField('QSO Date', validators=[InputRequired()], default=datetime.datetime.utcnow().date())
+    time_on = TimeField('QSO On Time', validators=[InputRequired()], default=datetime.datetime.utcnow())
+    qso_date_off = DateField('QSO Date Off')
+    time_off = TimeField('QSO Off Time')
+    call = StringField('Call', validators=[InputRequired(),
+                                            Length(max=50)])
+    station_callsign = StringField('Station Callsign')
+    operator = StringField('Operator')
+    freq = StringField('Freq')
+    pota_ref = StringField('POTA Reference')
+    my_pota_ref = StringField('My POTA Reference')
+    band = SelectField('Band',
+                       choices=['', '2190m', '630m', '560m', '160m', '80m', '60m', '40m', '30m', '20m', '17m', '15m',
+                                '12m', '10m', '8m', '6m', '5m', '4m', '2m', '1.25m', '70cm', '33cm', '23cm', '13cm',
+                                '9cm', '6cm', '3cm', '1.25cm', '6mm', '4mm', '2.5mm', '2mm', '1mm', 'submm']) # convert this to look at the config selected and bands on the rig
+    mode = SelectField('Mode',
+                       choices=['AM', 'ATV', 'CW', 'DIGITALVOICE', 'FM', 'FT8', 'HELL', 'MFSK', 'OLIVIA', 'PKT', 'PSK', 'RTTY',
+                                'RTTYM', 'SSB', 'SSTV', 'ARDOP', 'CHIP', 'CLO', 'CONTESTI', 'DOMINO', 'DYNAMIC', 'FAX', 'FSK441',
+                                'ISCAT', 'JT4', 'JT6M', 'JT9', 'JT44', 'JT65', 'MSK144', 'MT63', 'OPERA', 'PAC', 'PAX', 'PSK2K',
+                                'Q15', 'QRA64', 'ROS', 'T10', 'THOR', 'THRB', 'TOR', 'V4', 'VOI', 'WINMOR', 'WSPR']) # convert this to look at the config selected and the modes available
+    submode = SelectField('Sub Mode')
+    comment = StringField('Comment', validators=[Length(max=255)])
+
+
+class SOTAPOTAQSOForm(FlaskForm):
+    qso_date = DateField('QSO Date', validators=[InputRequired()], default=datetime.datetime.utcnow().date())
+    time_on = TimeField('QSO On Time', validators=[InputRequired()], default=datetime.datetime.utcnow())
+    qso_date_off = DateField('QSO Date Off')
+    time_off = TimeField('QSO Off Time')
+    call = StringField('Call', validators=[InputRequired(),
+                                            Length(max=50)])
+    station_callsign = StringField('Station Callsign')
+    operator = StringField('Operator')
+    freq = StringField('Freq')
+    sota_ref = StringField('SOTA Reference')
+    my_sota_ref = StringField('My SOTA Reference')
+    pota_ref = StringField('POTA Reference')
+    my_pota_ref = StringField('My POTA Reference')
+    band = SelectField('Band',
+                       choices=['', '2190m', '630m', '560m', '160m', '80m', '60m', '40m', '30m', '20m', '17m', '15m',
+                                '12m', '10m', '8m', '6m', '5m', '4m', '2m', '1.25m', '70cm', '33cm', '23cm', '13cm',
+                                '9cm', '6cm', '3cm', '1.25cm', '6mm', '4mm', '2.5mm', '2mm', '1mm', 'submm']) # convert this to look at the config selected and bands on the rig
+    mode = SelectField('Mode',
+                       choices=['AM', 'ATV', 'CW', 'DIGITALVOICE', 'FM', 'FT8', 'HELL', 'MFSK', 'OLIVIA', 'PKT', 'PSK', 'RTTY',
+                                'RTTYM', 'SSB', 'SSTV', 'ARDOP', 'CHIP', 'CLO', 'CONTESTI', 'DOMINO', 'DYNAMIC', 'FAX', 'FSK441',
+                                'ISCAT', 'JT4', 'JT6M', 'JT9', 'JT44', 'JT65', 'MSK144', 'MT63', 'OPERA', 'PAC', 'PAX', 'PSK2K',
+                                'Q15', 'QRA64', 'ROS', 'T10', 'THOR', 'THRB', 'TOR', 'V4', 'VOI', 'WINMOR', 'WSPR']) # convert this to look at the config selected and the modes available
+    submode = SelectField('Sub Mode')
+    comment = StringField('Comment', validators=[Length(max=255)])
