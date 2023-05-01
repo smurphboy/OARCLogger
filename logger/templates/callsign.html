@@ -55,7 +55,7 @@
                         <tr>
                             <td>{{ qso.qso_date }}</td>
                             <td>{{ qso.time_on }}</td>
-                            <td><a href="/qsos/view/{{ qso.call| replace("/","_") }}/{{ qso.qso_date}}/{{ qso.time_on.strftime('%H:%M:%S.%f') }}" title="{{ qso.call }}">{{ qso.call }}</a></td>
+                            <td><a href="{{url_for('qsos.viewqso', id=qso.id)}}">{{ qso.call }}</a></td>
                             <td>{{ qso.band }}</td>
                             <td>{{ qso.mode }}</td>
                             <td>{{ qso.gridsquare }}</td>

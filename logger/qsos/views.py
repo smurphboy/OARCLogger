@@ -110,11 +110,10 @@ def uploadqsos(user):
         return redirect(url_for('users.profile',user=current_user.name))
     return render_template('qsoupload.html')
 
-@qsos.route('/view/<call>/<date>/<time>')
+@qsos.route('/view/<id>')
 @login_required
-def viewqso(call, date, time):
-    call = call.replace('_', '/')
-    qso = QSO.query.filter_by(call=call, qso_date=date, time_on=time).first()
+def viewqso(id):
+    qso = QSO.query.filter_by(id=id).first()
     for key in qso.__dict__.keys():
         if qso.__dict__[key]:
             pass
