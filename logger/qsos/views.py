@@ -4,7 +4,7 @@ import adif_io
 from flask import Blueprint, flash, render_template, redirect, request, url_for, abort, current_app, jsonify
 from flask_login import login_required, current_user
 from logger.models import User, db, Callsign, QSO, Event
-from logger.forms import QSOForm, QSOUploadForm
+from logger.forms import QSOForm, QSOUploadForm, SOTAQSOForm
 import maidenhead as mh
 from pathlib import Path
 import requests
@@ -164,4 +164,11 @@ def qsodelete(id, callsign):
 def page_not_found(e):
     # note that we set the 400 status explicitly
     return render_template('400.html'), 400
+
+
+@qsos.route('sota/new', methods=['GET', 'POST'])
+@login_required
+def sota():
+    form = SOTAQSOForm()
+    return render_template('sotaqsoform.html', form=form)
 

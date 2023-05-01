@@ -77,6 +77,7 @@
         </div>
         <div class="box">
             <h1 class="title">{{ event.qsos|length }} QSOs for this Event</h1>
+            {% if event.qsos %}
             <table class="table is-striped is-hoverable">
                 <thead>
                     <tr>
@@ -104,15 +105,22 @@
                         <td>{{ qso.my_gridsquare }}</td>
                         <td><a class="button is-danger is-small" href="{{ url_for ('qsos.qsodelete', id=qso.id, callsign=station_callsign | replace('/','_')) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a></td>
                     </tr>
-                    {% else %}
-                    No QSOs
                     {% endfor %}
                 </tbody>
             </table>
+            {% else %}
+            <p class="subtitle">No QSOs for this Event yet.</p>
+            {% endif %}
         </div>
         <div class="box">
             <nav class="level">
+                {% if event.type == 'SOTA Activation' %}
                 <div class="level-left">
+                    <p class="level-item">Add a SOTA QSO to this event</p>
+                    <a class="button is-link level-item" href="{{ url_for ('qsos.sota' )  }}"><span class="icon"><i class="fa-solid fa-mountain"></i></span></a>
+                </div>
+                {% endif %}
+                <div class="level-right">
                     <p class="level-item">Export QSOs for this event</p>
                     <a class="button is-link level-item" href="{{ url_for ('events.export', id=event.id )  }}"><span class="icon"><i class="fa-solid fa-file-arrow-down"></i></span></a>
                 </div>
