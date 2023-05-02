@@ -63,15 +63,19 @@ def postnewqso(station_callsign):
         my_itu_zone = request.form.get('my_itu_zone', '') or None
         country = request.form.get('country', '') or None
         my_country = request.form.get('my_country', '') or None
+        stat_callsign = request.form.get('station_callsign', '') or station_callsign
 
         newqso = QSO(qso_date=qso_date, time_on=time_on, qso_date_off=qso_date_off, time_off=time_off, call=call, mode=mode,
-                    band=band, band_rx=band_rx, gridsquare=gridsquare, my_gridsquare=my_gridsquare, station_callsign=station_callsign.replace('_', '/'),
+                    band=band, band_rx=band_rx, gridsquare=gridsquare, my_gridsquare=my_gridsquare, station_callsign=stat_callsign.replace('_', '/'),
                     operator = operator, owner_callsign = owner_callsign, contacted_op = contacted_op, eq_call = eq_call,
                     submode = submode, freq=freq, freq_rx=freq_rx, sat_name=sat_name, sat_mode=sat_mode, lat=lat, lon=lon, my_lat=my_lat,
                     my_lon=my_lon, sota_ref=sota_ref, my_sota_ref=my_sota_ref, pota_ref=pota_ref, my_pota_ref=my_pota_ref, dxcc=dxcc, my_dxcc=my_dxcc,
                     cqz=cqz, my_cq_zone=my_cq_zone, ituz=ituz, my_itu_zone=my_itu_zone, country=country, my_country=my_country)
-        selevents = Event.query.filter_by(selected_by=current_user.get_user_id()).all()
-        newqso.events[:] = Event.query.filter(Event.id.in_(selevents))
+        user = User.query.filter_by(id=current_user.get_id()).first()
+        selectedevents=[]
+        for event in user.selected_events:
+            selectedevents.append(event.id)
+        newqso.events[:] = Event.query.filter(Event.id.in_(selectedevents))
         db.session.add(newqso)
         db.session.commit()
         return redirect(url_for('callsigns.call',callsign=station_callsign.replace('/', '_')))
@@ -114,29 +118,32 @@ def uploadqsos(user):
 @login_required
 def viewqso(id):
     qso = QSO.query.filter_by(id=id).first()
-    for key in qso.__dict__.keys():
-        if qso.__dict__[key]:
-            pass
-            # print(key, qso.__dict__[key])
-    locations = []
-    if qso.gridsquare:
-        locations.append([mh.to_location(qso.gridsquare, center=True)[0], mh.to_location(qso.gridsquare, center=True)[1], 'star', 'red', 'Gridsquare: ' + qso.gridsquare])
-    if qso.my_gridsquare:
-        locations.append([mh.to_location(qso.my_gridsquare, center=True)[0],mh.to_location(qso.my_gridsquare, center=True)[1], 'home', 'green', 'My Gridsquare: ' + qso.my_gridsquare])
-    if qso.my_sota_ref:
-        url = ("https://api2.sota.org.uk/api/summits/" + qso.my_sota_ref)
-        sotasummit = requests.request("GET", url)
-        if sotasummit.status_code == 200:
-            summit = sotasummit.json()
-            locations.append([summit['latitude'], summit['longitude'], 'mountain', 'green', 'My SOTA Reference: ' + summit['summitCode'] + ' - ' + summit['name']])
-    if qso.sota_ref:
-        url = ("https://api2.sota.org.uk/api/summits/" + qso.sota_ref)
-        sotasummit = requests.request("GET", url)
-        if sotasummit.status_code == 200:
-            summit = sotasummit.json()
-            locations.append([summit['latitude'], summit['longitude'], 'mountain', 'red', 'SOTA Reference: ' + summit['summitCode'] + ' - ' + summit['name']])
-
-    return render_template('viewqso.html', qso=qso, locations=locations)
+    print(qso.station_callsign)
+    if Callsign.query.filter(Callsign.name==qso.station_callsign, Callsign.user_id==current_user.get_id()).count(): # is the callsign ours?
+        for key in qso.__dict__.keys():
+            if qso.__dict__[key]:
+                pass
+                # print(key, qso.__dict__[key])
+        locations = []
+        if qso.gridsquare:
+            locations.append([mh.to_location(qso.gridsquare, center=True)[0], mh.to_location(qso.gridsquare, center=True)[1], 'star', 'red', 'Gridsquare: ' + qso.gridsquare])
+        if qso.my_gridsquare:
+            locations.append([mh.to_location(qso.my_gridsquare, center=True)[0],mh.to_location(qso.my_gridsquare, center=True)[1], 'home', 'green', 'My Gridsquare: ' + qso.my_gridsquare])
+        if qso.my_sota_ref:
+            url = ("https://api2.sota.org.uk/api/summits/" + qso.my_sota_ref)
+            sotasummit = requests.request("GET", url)
+            if sotasummit.status_code == 200:
+                summit = sotasummit.json()
+                locations.append([summit['latitude'], summit['longitude'], 'mountain', 'green', 'My SOTA Reference: ' + summit['summitCode'] + ' - ' + summit['name']])
+        if qso.sota_ref:
+            url = ("https://api2.sota.org.uk/api/summits/" + qso.sota_ref)
+            sotasummit = requests.request("GET", url)
+            if sotasummit.status_code == 200:
+                summit = sotasummit.json()
+                locations.append([summit['latitude'], summit['longitude'], 'mountain', 'red', 'SOTA Reference: ' + summit['summitCode'] + ' - ' + summit['name']])
+        return render_template('viewqso.html', qso=qso, locations=locations)
+    else:
+        abort(403)
 
 @qsos.route('/_dxcc')
 def lookupdxcc():

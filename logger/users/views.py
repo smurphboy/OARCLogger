@@ -1,8 +1,8 @@
 import operator
 from datetime import datetime
 
-from flask import (Blueprint, current_app, flash, redirect, render_template,
-                   request, url_for)
+from flask import (Blueprint, abort, current_app, flash, redirect,
+                   render_template, request, url_for)
 from flask_login import current_user, login_required, login_user, logout_user
 from sqlalchemy import desc, func
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -24,14 +24,17 @@ def index():
 def profile(user):
     '''This page shows all the users callsigns and let them manage them,
     add new calls, edit calls and add information about the callsign'''
-    form = CallsignForm()
-    if request.method == 'POST':
-        name = request.form.get('name','').upper() or None
-        newcallsign = Callsign(name=name, user_id=current_user.get_id())
-        db.session.add(newcallsign)
-        db.session.commit()
-        return redirect(url_for('users.profile', user=current_user.name))
-    return render_template('profile.html', user=current_user.name, form=form)
+    if current_user.name == user:
+        form = CallsignForm()
+        if request.method == 'POST':
+            name = request.form.get('name','').upper() or None
+            newcallsign = Callsign(name=name, user_id=current_user.get_id())
+            db.session.add(newcallsign)
+            db.session.commit()
+            return redirect(url_for('users.profile', user=current_user.name))
+        return render_template('profile.html', user=current_user.name, form=form)
+    else:
+        abort(403)
 
 @users.route('/<user>/<call>')
 def call_homepage(user, call):
@@ -130,3 +133,9 @@ def home():
     totalqsos = QSO.query.filter(QSO.station_callsign.in_(calls)).count()
     #totaldxcc = QSO.query.filter(QSO.station_callsign.in_(calls)).with_entities(QSO.dxcc).distinct().count()
     return render_template('home.html', totalqsos=totalqsos, dxcccounts=sortedcountries, bands=bands, modes=modes, calls=calls)
+
+
+@users.errorhandler(403)
+def page_not_found(e):
+    # note that we set the 403 status explicitly
+    return render_template('403.html'), 403
