@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{% endblock %}
+{% block hero %}is-primary{% endblock %}
+{% block content %}
+    <div class="bd-hero-heading">
+        <h1 class="title is-size-1">
+            {% block title %} <p>Add a New SOTA QSO for {% for event in selectedevents %}{{ event.name }}{% if not loop.last %} & {% endif %}{% endfor %}</p> {% endblock %}
+        </h1>
+        <div class="subtitle is-4 algolia-lvl1">
+            <p>Enter QSO details below and press Add:</p>     
+        </div>
+    </div>
+</section>
+{% endblock %}

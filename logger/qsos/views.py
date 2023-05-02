@@ -177,5 +177,7 @@ def page_not_found(e):
 @login_required
 def sota():
     form = SOTAQSOForm()
-    return render_template('sotaqsoform.html', form=form)
+    user = User.query.filter_by(id=current_user.get_id()).first()
+    selev = user.selected_events
+    return render_template('sotaqsoform.html', form=form, selectedevents=selev)
 
