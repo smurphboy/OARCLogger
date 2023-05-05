@@ -179,5 +179,7 @@ def sota():
     form = SOTAQSOForm()
     user = User.query.filter_by(id=current_user.get_id()).first()
     selev = user.selected_events
-    return render_template('sotaqsoform.html', form=form, selectedevents=selev)
+    callsigns = Callsign.query.filter_by(user_id=current_user.get_id()).all()
+    form.station_callsign.choices = [callsign.name for callsign in Callsign.query.filter_by(user_id=current_user.get_id()).all()]
+    return render_template('sotaqsoform.html', form=form, selectedevents=selev, callsigns=callsigns)
 

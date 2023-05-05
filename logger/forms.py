@@ -105,11 +105,15 @@ class SOTAQSOForm(FlaskForm):
     time_off = TimeField('QSO Off Time')
     call = StringField('Call', validators=[InputRequired(),
                                             Length(max=50)])
-    station_callsign = StringField('Station Callsign')
+    station_callsign = RadioField('Station Callsign')
     operator = StringField('Operator')
     freq = StringField('Freq')
     sota_ref = StringField('SOTA Reference')
     my_sota_ref = StringField('My SOTA Reference')
+    dxcc = StringField('DXCC')
+    cqz = StringField('CQ Zone')
+    ituz = StringField('ITU Zone')
+    country = StringField('Country')
     band = SelectField('Band',
                        choices=['', '2190m', '630m', '560m', '160m', '80m', '60m', '40m', '30m', '20m', '17m', '15m',
                                 '12m', '10m', '8m', '6m', '5m', '4m', '2m', '1.25m', '70cm', '33cm', '23cm', '13cm',

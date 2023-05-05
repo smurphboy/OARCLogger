@@ -13,4 +13,289 @@
         </div>
     </div>
 </section>
+<section class="section">
+    <div class="container">
+        <div class="box">
+            <h1 class="title">Choose Callsign</h1>
+            <p class="subtitle">Pick the Station Callsign for this QSO from your existing Callsigns</p>
+            <div class="field is-horizontal">
+                <div class="field-label">
+                {{ form.station_callsign.label(class_='radio label')}}
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            {% for subfield in form.station_callsign %}
+                            <label class="radio field-label">
+                                {{ subfield }} {{ subfield.label }}
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if form.station_callsign.errors %}
+            <ul class="errors">
+                {% for error in form.station_callsign.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        <form method="POST" id="sotaqsoform">
+            {{ form.csrf_token }}
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title">Date & Time</p>
+                    <a class="card-header-icon" id="datetime" aria-label="more options">
+                        <span class="icon">
+                            <i class="fa-solid fa-clock"></i>
+                        </span>
+                    </a>
+                </header>
+                <div class="card-content" id="datetime-content">
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.qso_date.label(class_="label") }}
+                                    <p class="control is-expanded">
+                                    {{ form.qso_date(class_="input") }}
+                                    </p>
+                                </div>
+                                {% if form.qso_date.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.qso_date.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.time_on.label(class_="label") }}
+                                    <p class="control is-expanded">
+                                    {{ form.time_on(class_="input") }}
+                                    </p>
+                                </div>
+                                {% if form.time_on.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.time_on.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="level-right">
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.qso_date_off.label(class_="label") }}
+                                    <p class="control is-expanded">
+                                    {{ form.qso_date_off(class_="input") }}
+                                    </p>
+                                </div>
+                                {% if form.qso_date_off.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.qso_date_off.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.time_off.label(class_="label") }}
+                                    <p class="control is-expanded">
+                                    {{ form.time_off(class_="input") }}
+                                    </p>
+                                </div>
+                                {% if form.time_off.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.time_off.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+                <footer class="card-footer" id="datetime-footer">
+                    <a class="card-footer-item" id="qsoon">Set QSO On</a>
+                    <a class="card-footer-item" id="qsooff">Set QSO Off</a>
+                </footer>
+            </div>
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title">Callsigns</p>
+                </header>
+                <div class="card-content" id="callsigns-content">
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.call.label(class_='label') }}
+                                    <div class="control">
+                                        {{ form.call(class_="input", placeholder_="Called station") }}
+                                    </div>
+                                </div>
+                                {% if form.call.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.call.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.dxcc.label(class_='label') }}
+                                    <div class="control">
+                                        {{ form.dxcc(class_="input", placeholder_="DXCC of the called station") }}
+                                    </div>
+                                </div>
+                                {% if form.dxcc.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.dxcc.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.country.label(class_='label') }}
+                                    <div class="control">
+                                        {{ form.country(class_="input", placeholder_="Country of the called station") }}
+                                    </div>
+                                </div>
+                                {% if form.country.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.country.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.cqz.label(class_='label') }}
+                                    <div class="control">
+                                        {{ form.cqz(class_="input", placeholder_="CQ Zone of the called station") }}
+                                    </div>
+                                </div>
+                                {% if form.cqz.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.cqz.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.ituz.label(class_='label') }}
+                                    <div class="control">
+                                        {{ form.ituz(class_="input", placeholder_="ITU Zone of the called station") }}
+                                    </div>
+                                </div>
+                                {% if form.ituz.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.ituz.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>    
+                        </div>
+                    </nav>
+                </div>
+                <footer class="card-footer" id="callsigns-footer">
+                    <button class="button card-footer-item" id="lookupbutton">Lookup Callsign</button>
+                </footer>
+            </div>
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title">Modes and Bands</p>
+                    <a class="card-header-icon" id="modes_bands" aria-label="more options">
+                        <span class="icon">
+                            <i class="fa-solid fa-wave-square"></i>
+                        </span>
+                    </a>
+                </header>
+                <div class="card-content" id="modes_bands-content">
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.mode.label(class_="label") }}
+                                    <div class="select">
+                                    {{ form.mode() }}
+                                    </div>
+                                </div>
+                                {% if form.mode.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.mode.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.submode.label(class_='label') }}
+                                    <div class="select">
+                                        {{ form.submode() }}
+                                    </div>
+                                </div>
+                                {% if form.submode.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.submode.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </nav>
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.band.label(class_='label') }}
+                                    <div class="select">
+                                        {{ form.band() }}
+                                    </div>
+                                </div>
+                                {% if form.band.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.band.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.freq.label(class_='label') }}
+                                    <div class="control">
+                                        {{ form.freq(class_="input", placeholder_="QSO frequency in Megahertz") }}
+                                    </div>
+                                </div>
+                                {% if form.freq.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.freq.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div> 
+                        </div>
+                    </nav>
+                </div>
+                <footer class="card-footer" id="modes_bands-footer">
+                    <button class="button card-footer-item" id="modes_bandsbutton">Lookup Band from Freq</button>
+                </footer>
+            </div>
 {% endblock %}
