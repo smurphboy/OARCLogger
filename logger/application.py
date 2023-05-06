@@ -134,11 +134,7 @@ def create_app():
             '''returns the band and mode from the frequency'''
             try:
                 print(freq)
-                ret = utils.freq_to_band(freq)
-                if ret > 1:
-                    ret = str(ret[band]) + 'm'
-                else:
-                    ret = str(ret[band]) + 'cm'                    
+                ret = utils.freq_to_band(freq*1000.0)                  
             except KeyError:
                 ret = 'N/A'
             print(ret)
