@@ -770,7 +770,7 @@ $(document).ready(function() {
         $.getJSON($SCRIPT_ROOT + '/qsos/_freq', {
             freq: $('input[name="freq"]').val()
         }, function(data) {
-            $("#band").val(data);
+            $("#band").val(data.bandmode);
         });
         return false;
         });
