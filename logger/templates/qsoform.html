@@ -766,6 +766,17 @@ $(document).ready(function() {
     });
 
     $(function() {
+        $('#modes_bandsbutton').click(function() {
+        $.getJSON($SCRIPT_ROOT + '/qsos/_freq', {
+            freq: $('input[name="freq"]').val()
+        }, function(data) {
+            $("#freq_rx").val(data.bandmode.band);
+        });
+        return false;
+        });
+    });
+
+    $(function() {
         $('#my_sota').click(function() {
             var $sotaapi = 'https://api2.sota.org.uk/api/summits/'+ $('input[name="my_sota_ref"]').val().split("/")[0]+ '/'+
             $('input[name="my_sota_ref"]').val().split("/")[1];

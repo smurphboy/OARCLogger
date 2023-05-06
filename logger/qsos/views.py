@@ -1,15 +1,17 @@
 import datetime
 import os
-import adif_io
-from flask import Blueprint, flash, render_template, redirect, request, url_for, abort, current_app, jsonify
-from flask_login import login_required, current_user
-from logger.models import User, db, Callsign, QSO, Event
-from logger.forms import QSOForm, QSOUploadForm, SOTAQSOForm
-import maidenhead as mh
 from pathlib import Path
+
+import adif_io
+import maidenhead as mh
 import requests
+from flask import (Blueprint, abort, current_app, flash, jsonify, redirect,
+                   render_template, request, url_for)
+from flask_login import current_user, login_required
 from werkzeug.utils import secure_filename
 
+from logger.forms import QSOForm, QSOUploadForm, SOTAQSOForm
+from logger.models import QSO, Callsign, Event, User, db
 
 qsos = Blueprint('qsos', __name__, template_folder='templates')
 
@@ -147,12 +149,19 @@ def viewqso(id):
 
 @qsos.route('/_dxcc')
 def lookupdxcc():
-            callsign = request.args.get('callsign', 0, type=str)
-            country = current_app.cic.get_country_name(callsign)
-            get_adif_id = current_app.cic.get_adif_id(callsign)
-            ituz = current_app.cic.get_ituz(callsign)
-            cqz = current_app.cic.get_cqz(callsign)
-            return jsonify(country = country, get_adif_id=get_adif_id, ituz = ituz, cqz = cqz)
+    callsign = request.args.get('callsign', 0, type=str)
+    country = current_app.cic.get_country_name(callsign)
+    get_adif_id = current_app.cic.get_adif_id(callsign)
+    ituz = current_app.cic.get_ituz(callsign)
+    cqz = current_app.cic.get_cqz(callsign)
+    return jsonify(country = country, get_adif_id=get_adif_id, ituz = ituz, cqz = cqz)
+
+@qsos.route('/_freq')
+def lookupband():
+    freq = request.args.get('freq', type=float)
+    bandmode = current_app.bandmode.freq_to_band(freq*1000.0)
+    print(bandmode)
+    return jsonify(bandmode=bandmode)
 
 
 @qsos.route('delete/<int:id>/<callsign>')

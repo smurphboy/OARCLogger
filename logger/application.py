@@ -3,7 +3,7 @@ from flask import Flask, current_app, render_template
 from flask_admin import Admin
 from flask_login import LoginManager
 from flask_migrate import Migrate
-from pyhamtools import Callinfo, LookupLib
+from pyhamtools import Callinfo, LookupLib, utils
 
 from logger.admin import (LoggerAntennaModelView, LoggerBandModelView,
                           LoggerCallsignModelView,
@@ -50,6 +50,7 @@ def create_app():
     with app.app_context():
         current_app.my_lookuplib = LookupLib(lookuptype='countryfile')
         current_app.cic = Callinfo(current_app.my_lookuplib)
+        current_app.bandmode = utils
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -128,6 +129,23 @@ def create_app():
             except KeyError:
                 ret = 'N/A'
             return ret
-        return dict(qsocount=qsocount, latestqso=latestqso, countrylookup=countrylookup, get_adif_id=get_adif_id, dxccituz=dxccituz, dxcccqz=dxcccqz, homecallsign=homecallsign)
+        
+        def bandfromfreq(freq):
+            '''returns the band and mode from the frequency'''
+            try:
+                print(freq)
+                ret = utils.freq_to_band(freq)
+                if ret > 1:
+                    ret = str(ret[band]) + 'm'
+                else:
+                    ret = str(ret[band]) + 'cm'                    
+            except KeyError:
+                ret = 'N/A'
+            print(ret)
+            return ret
+        
+        return dict(qsocount=qsocount, latestqso=latestqso, countrylookup=countrylookup,
+                    get_adif_id=get_adif_id, dxccituz=dxccituz, dxcccqz=dxcccqz,
+                    homecallsign=homecallsign, bandfromfreq=bandfromfreq)
 
     return app
