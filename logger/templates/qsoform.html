@@ -771,7 +771,13 @@ $(document).ready(function() {
             freq: $('input[name="freq"]').val()
         }, function(data) {
             $("#band").val(data.bandmode);
-        });
+        }).then(
+            $.getJSON($SCRIPT_ROOT + '/qsos/_freq', {
+            freq: $('input[name="freq_rx"]').val()
+        }, function(data) {
+            $("#band_rx").val(data.bandmode);
+        })
+        );
         return false;
         });
     });

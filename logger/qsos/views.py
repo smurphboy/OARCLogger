@@ -160,8 +160,14 @@ def lookupdxcc():
 def lookupband():
     freq = request.args.get('freq', type=float)
     bandmode = current_app.bandmode.freq_to_band(freq*1000.0)
-    print(str(bandmode['band']) + 'm')
-    return jsonify(bandmode=str(bandmode['band']) + 'm')
+    if bandmode['band'] > 1:
+        bandmode['band'] = str(bandmode['band']) + 'm'
+    elif (bandmode['band'] < 1) and (bandmode['band'] > 0.01):
+        bandmode['band'] = str(int(bandmode['band']*100.0)) + 'cm'
+    elif (bandmode['band'] < 0.01) and (bandmode['band'] > 0.0062):
+        bandmode['band'] = str(bandmode['band']) + 'mm'
+    print(str(bandmode['band']))
+    return jsonify(bandmode=str(bandmode['band']))
 
 
 @qsos.route('delete/<int:id>/<callsign>')
