@@ -194,6 +194,7 @@ def sota(event):
     sotaevent = Event.query.filter_by(id=event).first()
     print(sotaevent.name)
     form = SOTAQSOForm()
+    form.my_sota_ref.data = sotaevent.sota_ref
     user = User.query.filter_by(id=current_user.get_id()).first()
     selev = user.selected_events
     selectedevents = []

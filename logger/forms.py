@@ -65,6 +65,11 @@ class EventForm(FlaskForm):
     type = SelectField('Type',
                         choices=['SOTA Activation', 'POTA Activation', 'WWFF Activation', 'Contest', 'Portable Day',
                         'Net', 'Other'])
+    sota_ref = StringField('SOTA Reference', validators=[Optional(), Length(max=25)])
+    pota_ref = StringField('POTA References', validators=[Optional(), Length(max=255)])
+    wwff_ref = StringField('WWFF Reference', validators=[Optional(), Length(max=255)])
+    iota_ref = StringField('IOTA Reference', validators=[Optional(), Length(max=255)])
+    sat_name = StringField('Satellite Name', validators=[Optional(), Length(max=255)])
     start_date = DateField('Start Date', validators=[InputRequired()], default=datetime.date.today)
     start_time = TimeField('Start Time', validators=[InputRequired()], default=datetime.datetime.now)
     end_date  = DateField('End Date', validators=[Optional()], default=datetime.date.today)

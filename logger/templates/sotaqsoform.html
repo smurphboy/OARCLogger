@@ -117,6 +117,40 @@
                         <div class="level-left">
                             <div class="level-item">
                                 <div class="field">
+                                    {{ form.my_sota_ref.label(class_='label') }}
+                                    <div class="control">
+                                        {{ form.my_sota_ref(class_="input", placeholder_="SOTA Activated") }}
+                                    </div>
+                                </div>
+                                {% if form.my_sota_ref.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.my_sota_ref.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.sota_ref.label(class_='label') }}
+                                    <div class="control">
+                                        {{ form.sota_ref(class_="input", placeholder_="Called SOTA (S2S)") }}
+                                    </div>
+                                </div>
+                                {% if form.sota_ref.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.sota_ref.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </nav>
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <div class="field">
                                     {{ form.mode.label(class_="label") }}
                                     <div class="select">
                                     {{ form.mode() }}
@@ -188,6 +222,14 @@
                         </div>
                     </nav>
                 </div>
+            </div>
+            <div class="box">
+                <nav class="level">
+                    <div class="level-left">
+                        <p class="level-item">Add a QSO to this SOTA Event</p>
+                        <a class="button is-link level-item" name="add_qso" type="submit" form="qsoform">Add QSO</a>
+                    </div>
+                </nav>
             </div>
         </form>
     </div>
