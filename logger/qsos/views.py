@@ -188,13 +188,19 @@ def page_not_found(e):
     return render_template('400.html'), 400
 
 
-@qsos.route('sota/new', methods=['GET', 'POST'])
+@qsos.route('sota/<int:event>/new', methods=['GET', 'POST'])
 @login_required
-def sota():
+def sota(event):
+    sotaevent = Event.query.filter_by(id=event).first()
+    print(sotaevent.name)
     form = SOTAQSOForm()
     user = User.query.filter_by(id=current_user.get_id()).first()
     selev = user.selected_events
+    selectedevents = []
+    for ev in selev:
+        if ev.id != sotaevent.id:
+            selectedevents.append(ev)
     callsigns = Callsign.query.filter_by(user_id=current_user.get_id()).all()
     form.station_callsign.choices = [callsign.name for callsign in Callsign.query.filter_by(user_id=current_user.get_id()).all()]
-    return render_template('sotaqsoform.html', form=form, selectedevents=selev, callsigns=callsigns)
+    return render_template('sotaqsoform.html', form=form, selectedevents=selectedevents, callsigns=callsigns, event=sotaevent)
 
