@@ -73,6 +73,7 @@ def save_changes(event, form, new):
         event.end_date = datetime.datetime.combine(end_date, end_time)
         event.name = request.form['name']
         event.type = request.form['type']
+        event.sota_ref = request.form['sota_ref']
         event.comment = request.form['comment']
         event.user_id=current_user.get_id()
         if new:
