@@ -52,7 +52,7 @@ def export(id):
     '''Export all QSOs associated with an event'''
     event = Event.query.filter_by(id=id).first()
     if int(event.owner.id) == int(current_user.get_id()):
-        qsos = QSO.query.filter(QSO.events.any(event=id)).all()
+        qsos = QSO.query.filter(QSO.events.any(id=id)).all()
         response = make_response(adiftext(qsos), 200)
         response.mimetype = "text/plain"
         exportevent = Event.query.filter_by(id=id).first()
