@@ -16,222 +16,258 @@
 <section class="section">
     <div class="container">
         <div class="box">
-            <h1 class="title">Choose Callsign</h1>
-            <p class="subtitle">Pick the Station Callsign for this QSO from your existing Callsigns</p>
-            <div class="field is-horizontal">
-                <div class="field-label">
-                {{ form.station_callsign.label(class_='radio label')}}
-                </div>
-                <div class="field-body">
-                    <div class="field">
-                        <div class="control">
-                            {% for subfield in form.station_callsign %}
-                            <label class="radio field-label">
-                                {{ subfield }} {{ subfield.label }}
-                            </label>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% if form.station_callsign.errors %}
-            <ul class="errors">
-                {% for error in form.station_callsign.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
+            <h1 class="title">Existing QSOs</h1>
+            <p class="subtitle">{{ event.qsos|length }} QSOs for this Event</p>
+            {% if event.qsos %}
+            <table class="table is-striped is-hoverable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Station Callsign</th>
+                        <th>Call</th>
+                        <th>Band</th>
+                        <th>Mode</th>
+                        <th>Gridsquare</th>
+                        <th>My Gridsquare</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for qso in event.qsos %}
+                    <tr>
+                        <td>{{ qso.qso_date }}</td>
+                        <td>{{ qso.time_on }}</td>
+                        <td>{{ qso.station_callsign }}</td>
+                        <td><a href="{{url_for('qsos.viewqso', id=qso.id)}}">{{ qso.call }}</a></td>
+                        <td>{{ qso.band }}</td>
+                        <td>{{ qso.mode }}</td>
+                        <td>{{ qso.my_sota_ref }}</td>
+                        <td>{{ qso.my_gridsquare }}</td>
+                        <td><a class="button is-danger is-small" href="{{ url_for ('qsos.qsodelete', id=qso.id, callsign=station_callsign | replace('/','_')) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
             {% endif %}
         </div>
-        <form method="POST" id="sotaqsoform">
-            {{ form.csrf_token }}
-            <div class="card">
-                <header class="card-header">
-                    <p class="card-header-title">Key SOTA Fields</p>
-                    <a class="card-header-icon" id="SOTAFields" aria-label="more options">
-                        <span class="icon">
-                            <i class="fa-solid fa-mountain"></i>
-                        </span>
-                    </a>
-                </header>
-                <div class="card-content" id="datetime-content">
-                    <nav class="level">
-                        <div class="level-left">
-                            <div class="level-item">
-                                <div class="field">
-                                    {{ form.qso_date.label(class_="label") }}
-                                    <p class="control is-expanded">
-                                    {{ form.qso_date(class_="input") }}
-                                    </p>
-                                </div>
-                                {% if form.qso_date.errors %}
-                                    <ul class="errors">
-                                        {% for error in form.qso_date.errors %}
-                                            <li>{{ error }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                {% endif %}
-                            </div>
-                            <div class="level-item">
-                                <div class="field">
-                                    {{ form.time_on.label(class_="label") }}
-                                    <p class="control is-expanded">
-                                    {{ form.time_on(class_="input") }}
-                                    </p>
-                                </div>
-                                {% if form.time_on.errors %}
-                                    <ul class="errors">
-                                        {% for error in form.time_on.errors %}
-                                            <li>{{ error }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                {% endif %}
-                            </div>
-                            <div class="level-item">
-                                <div class="field">
-                                    <label class="label" for="time_on">Set to Now</label>
-                                    <a class="button is-link" id="qsoon">Set QSO On</a>
-                                </div>
+        <div class="box">
+            <form method="POST" id="sotaqsoform">
+                {{ form.csrf_token }}
+                <h1 class="title">Choose Callsign</h1>
+                <p class="subtitle">Pick the Station Callsign for this QSO from your existing Callsigns</p>
+                <div class="field is-horizontal">
+                    <div class="field-label">
+                    {{ form.station_callsign.label(class_='radio label')}}
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                {% for subfield in form.station_callsign %}
+                                <label class="radio field-label">
+                                    {{ subfield }} {{ subfield.label }}
+                                </label>
+                                {% endfor %}
                             </div>
                         </div>
-                    </nav>
+                    </div>
+                </div>
+                {% if form.station_callsign.errors %}
+                <ul class="errors">
+                    {% for error in form.station_callsign.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <div class="card">
+                    <header class="card-header">
+                        <p class="card-header-title">Key SOTA Fields</p>
+                        <a class="card-header-icon" id="SOTAFields" aria-label="more options">
+                            <span class="icon">
+                                <i class="fa-solid fa-mountain"></i>
+                            </span>
+                        </a>
+                    </header>
+                    <div class="card-content" id="datetime-content">
+                        <nav class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    <div class="field">
+                                        {{ form.qso_date.label(class_="label") }}
+                                        <p class="control is-expanded">
+                                        {{ form.qso_date(class_="input") }}
+                                        </p>
+                                    </div>
+                                    {% if form.qso_date.errors %}
+                                        <ul class="errors">
+                                            {% for error in form.qso_date.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="level-item">
+                                    <div class="field">
+                                        {{ form.time_on.label(class_="label") }}
+                                        <p class="control is-expanded">
+                                        {{ form.time_on(class_="input") }}
+                                        </p>
+                                    </div>
+                                    {% if form.time_on.errors %}
+                                        <ul class="errors">
+                                            {% for error in form.time_on.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="level-item">
+                                    <div class="field">
+                                        <label class="label" for="time_on">Set to Now</label>
+                                        <a class="button is-link" id="qsoon">Set QSO On</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </nav>
+                        <nav class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    <div class="field">
+                                        {{ form.call.label(class_='label') }}
+                                        <div class="control">
+                                            {{ form.call(class_="input", placeholder_="Called station") }}
+                                        </div>
+                                    </div>
+                                    {% if form.call.errors %}
+                                        <ul class="errors">
+                                            {% for error in form.call.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </nav>
+                        <nav class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    <div class="field">
+                                        {{ form.my_sota_ref.label(class_='label') }}
+                                        <div class="control">
+                                            {{ form.my_sota_ref(class_="input", placeholder_="SOTA Activated") }}
+                                        </div>
+                                    </div>
+                                    {% if form.my_sota_ref.errors %}
+                                        <ul class="errors">
+                                            {% for error in form.my_sota_ref.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="level-item">
+                                    <div class="field">
+                                        {{ form.sota_ref.label(class_='label') }}
+                                        <div class="control">
+                                            {{ form.sota_ref(class_="input", placeholder_="Called SOTA (S2S)") }}
+                                        </div>
+                                    </div>
+                                    {% if form.sota_ref.errors %}
+                                        <ul class="errors">
+                                            {% for error in form.sota_ref.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </nav>
+                        <nav class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    <div class="field">
+                                        {{ form.mode.label(class_="label") }}
+                                        <div class="select">
+                                        {{ form.mode() }}
+                                        </div>
+                                    </div>
+                                    {% if form.mode.errors %}
+                                        <ul class="errors">
+                                            {% for error in form.mode.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="level-item">
+                                    <div class="field">
+                                        {{ form.submode.label(class_='label') }}
+                                        <div class="select">
+                                            {{ form.submode() }}
+                                        </div>
+                                    </div>
+                                    {% if form.submode.errors %}
+                                        <ul class="errors">
+                                            {% for error in form.submode.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </nav>
+                        <nav class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    <div class="field">
+                                        {{ form.band.label(class_='label') }}
+                                        <div class="select">
+                                            {{ form.band() }}
+                                        </div>
+                                    </div>
+                                    {% if form.band.errors %}
+                                        <ul class="errors">
+                                            {% for error in form.band.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="level-item">
+                                    <div class="field">
+                                        {{ form.freq.label(class_='label') }}
+                                        <div class="control">
+                                            {{ form.freq(class_="input", placeholder_="QSO frequency in Megahertz") }}
+                                        </div>
+                                    </div>
+                                    {% if form.freq.errors %}
+                                        <ul class="errors">
+                                            {% for error in form.freq.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="level-item">
+                                    <div class="field">
+                                        <label class="label" for="time_on">Set Band</label>
+                                        <a class="button is-link" id="modes_bandsbutton">Set Band from Freq</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+                <div class="box">
                     <nav class="level">
                         <div class="level-left">
-                            <div class="level-item">
-                                <div class="field">
-                                    {{ form.call.label(class_='label') }}
-                                    <div class="control">
-                                        {{ form.call(class_="input", placeholder_="Called station") }}
-                                    </div>
-                                </div>
-                                {% if form.call.errors %}
-                                    <ul class="errors">
-                                        {% for error in form.call.errors %}
-                                            <li>{{ error }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </nav>
-                    <nav class="level">
-                        <div class="level-left">
-                            <div class="level-item">
-                                <div class="field">
-                                    {{ form.my_sota_ref.label(class_='label') }}
-                                    <div class="control">
-                                        {{ form.my_sota_ref(class_="input", placeholder_="SOTA Activated") }}
-                                    </div>
-                                </div>
-                                {% if form.my_sota_ref.errors %}
-                                    <ul class="errors">
-                                        {% for error in form.my_sota_ref.errors %}
-                                            <li>{{ error }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                {% endif %}
-                            </div>
-                            <div class="level-item">
-                                <div class="field">
-                                    {{ form.sota_ref.label(class_='label') }}
-                                    <div class="control">
-                                        {{ form.sota_ref(class_="input", placeholder_="Called SOTA (S2S)") }}
-                                    </div>
-                                </div>
-                                {% if form.sota_ref.errors %}
-                                    <ul class="errors">
-                                        {% for error in form.sota_ref.errors %}
-                                            <li>{{ error }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </nav>
-                    <nav class="level">
-                        <div class="level-left">
-                            <div class="level-item">
-                                <div class="field">
-                                    {{ form.mode.label(class_="label") }}
-                                    <div class="select">
-                                    {{ form.mode() }}
-                                    </div>
-                                </div>
-                                {% if form.mode.errors %}
-                                    <ul class="errors">
-                                        {% for error in form.mode.errors %}
-                                            <li>{{ error }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                {% endif %}
-                            </div>
-                            <div class="level-item">
-                                <div class="field">
-                                    {{ form.submode.label(class_='label') }}
-                                    <div class="select">
-                                        {{ form.submode() }}
-                                    </div>
-                                </div>
-                                {% if form.submode.errors %}
-                                    <ul class="errors">
-                                        {% for error in form.submode.errors %}
-                                            <li>{{ error }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </nav>
-                    <nav class="level">
-                        <div class="level-left">
-                            <div class="level-item">
-                                <div class="field">
-                                    {{ form.band.label(class_='label') }}
-                                    <div class="select">
-                                        {{ form.band() }}
-                                    </div>
-                                </div>
-                                {% if form.band.errors %}
-                                    <ul class="errors">
-                                        {% for error in form.band.errors %}
-                                            <li>{{ error }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                {% endif %}
-                            </div>
-                            <div class="level-item">
-                                <div class="field">
-                                    {{ form.freq.label(class_='label') }}
-                                    <div class="control">
-                                        {{ form.freq(class_="input", placeholder_="QSO frequency in Megahertz") }}
-                                    </div>
-                                </div>
-                                {% if form.freq.errors %}
-                                    <ul class="errors">
-                                        {% for error in form.freq.errors %}
-                                            <li>{{ error }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                {% endif %}
-                            </div>
-                            <div class="level-item">
-                                <div class="field">
-                                    <label class="label" for="time_on">Set Band</label>
-                                    <a class="button is-link" id="modes_bandsbutton">Set Band from Freq</a>
-                                </div>
-                            </div>
+                            <p class="level-item">Add a QSO to this SOTA Event</p>
+                            <input class="button is-link level-item" name="add_qso" type="submit" form="sotaqsoform"></input>
                         </div>
                     </nav>
                 </div>
-            </div>
-            <div class="box">
-                <nav class="level">
-                    <div class="level-left">
-                        <p class="level-item">Add a QSO to this SOTA Event</p>
-                        <a class="button is-link level-item" name="add_qso" type="submit" form="qsoform">Add QSO</a>
-                    </div>
-                </nav>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </section>
 

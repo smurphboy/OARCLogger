@@ -191,6 +191,28 @@ def page_not_found(e):
 @qsos.route('sota/<int:event>/new', methods=['GET', 'POST'])
 @login_required
 def sota(event):
+    if request.method == 'POST':
+        qso_date = datetime.datetime.strptime(request.form['qso_date'], '%Y-%m-%d').date()
+        time_on = datetime.datetime.strptime(request.form['time_on'], '%H:%M').time()
+        call = request.form.get('call', '').upper() or None
+        station_callsign = request.form.get('station_callsign', '').upper() or None
+        band = request.form.get('band', '') or None
+        freq = request.form.get('freq', '') or None
+        sota_ref = request.form.get('sota_ref', '').upper() or None
+        my_sota_ref = request.form.get('my_sota_ref', '').upper() or None
+        mode = request.form.get('mode', '') or None
+        submode = request.form.get('submode', '') or None
+        newqso = QSO(qso_date=qso_date, time_on=time_on, call=call, station_callsign=station_callsign,
+                     band=band, freq=freq, sota_ref=sota_ref, my_sota_ref=my_sota_ref, mode=mode,
+                     submode=submode)
+        user = User.query.filter_by(id=current_user.get_id()).first()
+        selectedevents=[]
+        for ev in user.selected_events:
+            selectedevents.append(ev.id)
+        newqso.events[:] = Event.query.filter(Event.id.in_(selectedevents))
+        db.session.add(newqso)
+        db.session.commit()
+        return redirect(url_for('qsos.sota', event=event))
     sotaevent = Event.query.filter_by(id=event).first()
     print(sotaevent.name)
     form = SOTAQSOForm()
@@ -202,6 +224,7 @@ def sota(event):
         if ev.id != sotaevent.id:
             selectedevents.append(ev)
     callsigns = Callsign.query.filter_by(user_id=current_user.get_id()).all()
+    form.station_callsign.data = callsigns[0].name
     form.station_callsign.choices = [callsign.name for callsign in Callsign.query.filter_by(user_id=current_user.get_id()).all()]
     return render_template('sotaqsoform.html', form=form, selectedevents=selectedevents, callsigns=callsigns, event=sotaevent)
 
