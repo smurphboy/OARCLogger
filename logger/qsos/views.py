@@ -205,6 +205,26 @@ def sota(event):
         newqso = QSO(qso_date=qso_date, time_on=time_on, call=call, station_callsign=station_callsign,
                      band=band, freq=freq, sota_ref=sota_ref, my_sota_ref=my_sota_ref, mode=mode,
                      submode=submode)
+        if sota_ref:
+            url = ("https://api2.sota.org.uk/api/summits/" + sota_ref)
+            sotasummit = requests.request("GET", url)
+            if sotasummit.status_code == 200:
+                summit = sotasummit.json()
+                newqso.lat = summit['latitude']
+                newqso.lon = summit['longitude']
+                newqso.gridsquare = summit['locator']
+                newqso.country = summit['associationName']
+                db.session.commit()
+        if my_sota_ref:
+            url = ("https://api2.sota.org.uk/api/summits/" + my_sota_ref)
+            sotasummit = requests.request("GET", url)
+            if sotasummit.status_code == 200:
+                summit = sotasummit.json()
+                newqso.my_lat = summit['latitude']
+                newqso.my_lon = summit['longitude']
+                newqso.my_gridsquare = summit['locator']
+                newqso.my_country = summit['associationName']
+                db.session.commit()
         user = User.query.filter_by(id=current_user.get_id()).first()
         selectedevents=[]
         for ev in user.selected_events:

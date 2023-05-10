@@ -28,8 +28,10 @@
                         <th>Call</th>
                         <th>Band</th>
                         <th>Mode</th>
-                        <th>Gridsquare</th>
+                        <th>My SOTA Ref</th>
                         <th>My Gridsquare</th>
+                        <th>SOTA Ref</th>
+                        <th>Gridsquare</th>
                         <th>Delete</th>
                     </tr>
                 </thead>
@@ -44,6 +46,8 @@
                         <td>{{ qso.mode }}</td>
                         <td>{{ qso.my_sota_ref }}</td>
                         <td>{{ qso.my_gridsquare }}</td>
+                        <td>{{ qso.sota_ref }}</td>
+                        <td>{{ qso.gridsquare }}</td>
                         <td><a class="button is-danger is-small" href="{{ url_for ('qsos.qsodelete', id=qso.id, callsign=station_callsign | replace('/','_')) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a></td>
                     </tr>
                     {% endfor %}
