@@ -114,9 +114,9 @@
         </div>
         <div class="box">
             <nav class="level">
-                {% if event.type == 'SOTA Activation' %}
+                {% if event.type in eventtypes %}
                 <div class="level-left">
-                    <p class="level-item">Add a SOTA QSO to this event</p>
+                    <p class="level-item">Add a SOTA / POTA QSO to this event</p>
                     <a class="button is-link level-item" href="{{ url_for ('qsos.sota', event=event.id )  }}"><span class="icon"><i class="fa-solid fa-mountain"></i></span></a>
                 </div>
                 {% endif %}

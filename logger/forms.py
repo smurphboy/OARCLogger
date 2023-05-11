@@ -63,7 +63,7 @@ class QSOUploadForm(FlaskForm):
 class EventForm(FlaskForm):
     name = StringField('Name', validators=[InputRequired(), Length(max=50)])
     type = SelectField('Type',
-                        choices=['SOTA Activation', 'POTA Activation', 'WWFF Activation', 'Contest', 'Portable Day',
+                        choices=['SOTA', 'POTA', 'SOTA-POTA', 'WWFF', 'Contest', 'Portable Day',
                         'Net', 'Other'])
     sota_ref = StringField('SOTA Reference', validators=[Optional(), Length(max=25)])
     pota_ref = StringField('POTA References', validators=[Optional(), Length(max=255)])
@@ -115,6 +115,8 @@ class SOTAQSOForm(FlaskForm):
     freq = StringField('Freq')
     sota_ref = StringField('SOTA Reference')
     my_sota_ref = StringField('My SOTA Reference')
+    pota_ref = StringField('POTA Reference')
+    my_pota_ref = StringField('My POTA Reference')
     dxcc = StringField('DXCC')
     cqz = StringField('CQ Zone')
     ituz = StringField('ITU Zone')

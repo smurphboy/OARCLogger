@@ -200,11 +200,13 @@ def sota(event):
         freq = request.form.get('freq', '') or None
         sota_ref = request.form.get('sota_ref', '').upper() or None
         my_sota_ref = request.form.get('my_sota_ref', '').upper() or None
+        pota_ref = request.form.get('pota_ref', '').upper() or None
+        my_pota_ref = request.form.get('my_pota_ref', '').upper() or None
         mode = request.form.get('mode', '') or None
         submode = request.form.get('submode', '') or None
         newqso = QSO(qso_date=qso_date, time_on=time_on, call=call, station_callsign=station_callsign,
                      band=band, freq=freq, sota_ref=sota_ref, my_sota_ref=my_sota_ref, mode=mode,
-                     submode=submode)
+                     submode=submode, pota_ref=pota_ref, my_pota_ref=my_pota_ref)
         if sota_ref:
             url = ("https://api2.sota.org.uk/api/summits/" + sota_ref)
             sotasummit = requests.request("GET", url)
@@ -236,7 +238,10 @@ def sota(event):
     sotaevent = Event.query.filter_by(id=event).first()
     print(sotaevent.name)
     form = SOTAQSOForm()
-    form.my_sota_ref.data = sotaevent.sota_ref
+    if (sotaevent.type == "SOTA") or (sotaevent.type == "SOTA-POTA"):
+        form.my_sota_ref.data = sotaevent.sota_ref
+    if (sotaevent.type == "POTA") or (sotaevent.type == "SOTA-POTA"):
+        form.my_pota_ref.data = sotaevent.pota_ref
     user = User.query.filter_by(id=current_user.get_id()).first()
     selev = user.selected_events
     selectedevents = []

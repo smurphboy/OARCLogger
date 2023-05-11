@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{% endblock %}
 {% block hero %}is-primary is-info{% endblock %}
 {% block content %}
             <div class="bd-hero-heading">
@@ -114,7 +117,7 @@
                                     </ul>
                                     {% endif %}
                                 </div>
-                                <div class="level-item">
+                                <div class="level-item SOTA Activation SOTA-POTA">
                                     <div class="field">
                                         {{ form.sota_ref.label(class_="label") }}
                                         <div class="control">
@@ -124,6 +127,21 @@
                                     {% if form.sota_ref.errors %}
                                     <ul class="errors">
                                     {% for error in form.sota_ref.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                    </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="level-item POTA Activation SOTA-POTA">
+                                    <div class="field">
+                                        {{ form.pota_ref.label(class_="label") }}
+                                        <div class="control">
+                                        {{ form.pota_ref(class_="input", placeholder_="POTA Refs for Event") }}
+                                        </div>
+                                    </div>
+                                    {% if form.pota_ref.errors %}
+                                    <ul class="errors">
+                                    {% for error in form.pota_ref.errors %}
                                         <li>{{ error }}</li>
                                     {% endfor %}
                                     </ul>
@@ -157,4 +175,23 @@
             </form>
         </div>
     </section>
+
+<script>
+
+$(document).ready(function() {
+
+    $("#type").change(function(){
+        $(this).find("option:selected").each(function(){
+            var optionValue = $(this).attr("value");
+            if(optionValue){
+                $(".Activation").not("." + optionValue).hide();
+                $("." + optionValue).show();
+            } else{
+                $(".Activation").hide();
+            }
+        });
+    }).change();
+});
+
+</script>
 {% endblock %}
