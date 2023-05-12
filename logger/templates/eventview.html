@@ -115,7 +115,7 @@
                         <td>{{ qso.mode }}</td>
                         <td>{{ qso.gridsquare }}</td>
                         <td>{{ qso.my_gridsquare }}</td>
-                        <td><a class="button is-danger is-small" href="{{ url_for ('qsos.qsodelete', id=qso.id, callsign=station_callsign | replace('/','_')) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a></td>
+                        <td><a class="button is-danger is-small" href="{{ url_for ('qsos.qsodelete', id=qso.id, callsign=qso.station_callsign | replace('/','_')) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
