@@ -32,7 +32,12 @@ def profile(user):
             db.session.add(newcallsign)
             db.session.commit()
             return redirect(url_for('users.profile', user=current_user.name))
-        return render_template('profile.html', user=current_user.name, form=form)
+        calls = Callsign.query.filter_by(user_id=current_user.get_id()).all()
+        callsigns = []
+        for call in calls:
+            callsigns.append(str(call))
+        virtualcall = QSO.query.filter(QSO.call.in_(callsigns)).all()
+        return render_template('profile.html', user=current_user.name, form=form, callsigns=callsigns, virtualcall=virtualcall)
     else:
         abort(403)
 

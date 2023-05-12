@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         // Functions to open and close a modal
@@ -63,6 +64,17 @@
 <section class="section">
     <div class="container">
         <div class="box">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="notification is-info">
+                    {% for message in messages%}
+                    {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% endwith %}
+        </div>
+        <div class="box">
             <h1 class="title"><a href="{{ url_for('events.eventlist', username=current_user.name) }}">Selected Events</a></h1>
             <nav class="level">
                 <div class="level-left">
@@ -122,6 +134,32 @@
             <p class="subtitle">You have no callsigns defined.</p>
             {% endif %}
         </div>
+        {% if callsigns %}
+        <div class="box">
+            <h1 class="title">Virtual Logbooks</h1>
+            <p class="submit">QSOs on the system where you appear as the Called party.</p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Callsign</th>
+                        <th>DXCC</th>
+                        <th>QSOs</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                {% for callsign, calls in virtualcall|groupby('call') %}
+                    <tr>
+                        <th>{{ callsign }}</th>
+                        <th>{{ countrylookup(callsign) }}</th>
+                        <th>{{ calls|length }}</th>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+    <div class="container">
         <div class="box">
             <div class="level">
                 <div class="level-left">
