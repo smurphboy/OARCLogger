@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{% endblock %}
 {% block hero %}is-primary is-info{% endblock %}
 {% block content %}
 		<div class="bd-hero-heading">
@@ -9,6 +12,15 @@
 </section>
 <section>
     <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="notification is-info">
+            {% for message in messages%}
+            {{ message }}
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
         <div class="columns">
             <div class="column">
                 <div class="box">
@@ -128,4 +140,13 @@
         </div>
     </div>
 </section>
+<script>
+
+$(document).ready(function() {
+    setTimeout(function(){
+        $(".notification").fadeOut("slow");
+    }, 5000);
+
+});
+</script>
 {% endblock %}

@@ -234,6 +234,7 @@ def sota(event):
         newqso.events[:] = Event.query.filter(Event.id.in_(selectedevents))
         db.session.add(newqso)
         db.session.commit()
+        flash('New QSO added to the event', 'info')
         return redirect(url_for('qsos.sota', event=event))
     sotaevent = Event.query.filter_by(id=event).first()
     print(sotaevent.name)
