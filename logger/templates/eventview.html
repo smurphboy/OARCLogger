@@ -14,10 +14,12 @@
     <div class="container">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
-        <div class="notification is-info">
-            {% for message in messages%}
-            {{ message }}
-            {% endfor %}
+        <div class="box">
+            <div class="notification is-info">
+                {% for message in messages%}
+                {{ message }}
+                {% endfor %}
+            </div>
         </div>
         {% endif %}
         {% endwith %}

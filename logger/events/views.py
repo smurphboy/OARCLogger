@@ -99,15 +99,16 @@ def eventcreate():
 @events.route("/delete/<int:id>")
 @login_required
 def eventdelete(id):
-    if int(event.user_id) == int(current_user.get_id()):
-        event = Event.query.filter_by(id=id).first()
+    event = Event.query.filter_by(id=id).first()
+    if event.user_id == int(current_user.get_id()):
         event.selected_by[:] = []
         event.qsos[:] = []
         event.configs[:] = []
         db.session.commit()
         db.session.delete(event)
         db.session.commit()
-        return redirect(url_for('events.eventlist', username=current_user.name))
+        flash('Event deleted successfully', 'info')
+        return redirect(request.referrer)
     else:
         abort(403)
 
@@ -138,13 +139,15 @@ def page_not_found(e):
 @events.route("/select/<username>", methods=['GET', 'POST'])
 @login_required
 def selectevents(username):
+    back = request.referrer
     form = SelectedEventForm()
     if request.method == 'POST' and form.validate():
         user = User.query.filter_by(name=username).first()
         print (request.form.getlist('Search'))
         user.selected_events[:] = Event.query.filter(Event.id.in_(request.form.getlist('Search')))
         db.session.commit()
-        return redirect(url_for('users.profile', user=current_user.name))
+        flash('Selected Events updated', 'info')
+        return redirect(back)
     allevents = Event.query.filter_by(user_id=current_user.get_id()).all()
     alleventsjson = []
     for e in allevents:

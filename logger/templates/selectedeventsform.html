@@ -29,11 +29,22 @@
     </section>
     <section>
         <div class="container">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="box notification">
+                <div class="notification is-info">
+                    {% for message in messages%}
+                    {{ message }}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            {% endwith %}
             <div class="box">
                 <form method="POST">
                     {{ form.csrf_token }}
                     <h1 class="title">Select Events</h1>
-                    <div class='exampleSearch'>
+                    <div class="exampleSearch block">
                         <label class="label">Selected Events</label>
                         <p class="control">
                             <select name="Search" id="Search" multiple class="demo-default">
@@ -127,5 +138,13 @@ $(document).ready(function()
     items: selsafe
     });
 });
+
+$(document).ready(function() {
+    setTimeout(function(){
+        $(".notification").fadeOut("slow");
+    }, 5000);
+
+});
+
 </script>
 {% endblock %}
