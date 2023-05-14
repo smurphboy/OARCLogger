@@ -18,6 +18,7 @@ qsos = Blueprint('qsos', __name__, template_folder='templates')
 @qsos.route("/<station_callsign>/new", methods=['GET','POST'])
 @login_required
 def postnewqso(station_callsign):
+    station_callsign = station_callsign.replace('_', '/')
     form = QSOForm()
     if request.method == 'POST':
         qso_date = datetime.datetime.strptime(request.form['qso_date'], '%Y-%m-%d').date()

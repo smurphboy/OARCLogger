@@ -4,7 +4,7 @@
 {% block content %}
             <div class="bd-hero-heading">
                 <h1 class="title is-size-1">
-                    {% block title %}Virtual QSOs for {{ call }} {% endblock %}
+                    {% block title %}All logged QSOs with {{ call }}{% endblock %}
                 </h1>
                 <div class="subtitle is-4 algolia-lvl1">
                     <p>DXCC is {{ get_adif_id(call) }}: {{ countrylookup(call) }}, ITU Zone is {{ dxccituz(call) }}, CQ Zone is {{ dxcccqz(call) }}, {{ qsos|length }} QSOs for this callsign.</p>     
@@ -15,7 +15,7 @@
     <section>
         <div class="container">
             <div class="box">
-                <h1 class="title">Virtual QSOs</h1>
+                <h1 class="title">Logged QSOs</h1>
                 <table class="table is-striped is-hoverable">
                     <thead>
                         <tr>
@@ -34,7 +34,7 @@
                         <tr>
                             <td>{{ qso.qso_date }}</td>
                             <td>{{ qso.time_on }}</td>
-                            <td><a href="{{ url_for('callsigns.search', call=qso.station_callsign | replace('/','_') )}}">{{ qso.station_callsign }}</a></td>
+                            <td>{{ qso.station_callsign }}</td>
                             <td>{{ qso.call }}</td>
                             <td>{{ qso.band }}</td>
                             <td>{{ qso.mode }}</td>

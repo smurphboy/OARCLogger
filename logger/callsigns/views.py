@@ -77,6 +77,7 @@ def callsignexport(id):
 @login_required
 def virtual(call):
     '''list all qsos where the callsign appears as the <call> not the station_callsign'''
+    call = call.replace('_', '/')
     calls = Callsign.query.filter_by(user_id=current_user.get_id()).all()
     callsigns = []
     for vircall in calls:
@@ -84,3 +85,15 @@ def virtual(call):
     virtualcall = QSO.query.filter(QSO.call.in_(callsigns)).all()
     callsign = Callsign.query.filter_by(name=call).first()
     return render_template('virtualcallsign.html', call=call, qsos=virtualcall, callsign=callsign)
+
+
+@callsigns.route("/<call>/search")
+@login_required
+def search(call):
+    call = call.replace('_', '/')
+    calls = Callsign.query.filter_by(user_id=current_user.get_id()).all()
+    callsigns = []
+    for mycall in calls:
+        callsigns.append(str(mycall))
+    qsos = QSO.query.filter(QSO.station_callsign.in_(callsigns), QSO.call == call).all()
+    return render_template('callsignsearch.html', call=call, qsos=qsos, callsigns=callsigns)
