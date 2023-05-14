@@ -149,7 +149,7 @@
                 <tbody> 
                 {% for callsign, calls in virtualcall|groupby('call') %}
                     <tr>
-                        <th>{{ callsign }}</th>
+                        <th><a href="{{ url_for('callsigns.virtual', call=callsign | replace('/','_') ) }}">{{ callsign }}</a></th>
                         <th>{{ countrylookup(callsign) }}</th>
                         <th>{{ calls|length }}</th>
                     </tr>
