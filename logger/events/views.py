@@ -107,7 +107,8 @@ def eventdelete(id):
         db.session.commit()
         db.session.delete(event)
         db.session.commit()
-        flash('Event deleted successfully', 'info')
+        message = '"' + event.name + '" successfully deleted'
+        flash(message, 'info')
         return redirect(request.referrer)
     else:
         abort(403)
