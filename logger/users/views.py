@@ -137,7 +137,8 @@ def home():
     #dxcccounts = QSO.query.filter(QSO.station_callsign.in_(calls)).with_entities(QSO.dxcc, func.count(QSO.dxcc)).group_by(QSO.dxcc).order_by(desc(func.count(QSO.dxcc))).limit(10).all()
     totalqsos = QSO.query.filter(QSO.station_callsign.in_(calls)).count()
     #totaldxcc = QSO.query.filter(QSO.station_callsign.in_(calls)).with_entities(QSO.dxcc).distinct().count()
-    return render_template('home.html', totalqsos=totalqsos, dxcccounts=sortedcountries, bands=bands, modes=modes, calls=calls)
+    qsopartycounts = db.session.query(QSO.station_callsign, QSO.call, db.func.count("QSO.id")).filter(QSO.station_callsign.in_(calls)).group_by(QSO.station_callsign, QSO.call).having(db.func.count("QSO.id")>2).order_by(db.func.count("QSO.id").desc()).limit(10).all()
+    return render_template('home.html', totalqsos=totalqsos, dxcccounts=sortedcountries, bands=bands, modes=modes, calls=calls, qsopartycounts=qsopartycounts)
 
 
 @users.errorhandler(403)
