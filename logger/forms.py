@@ -70,6 +70,7 @@ class EventForm(FlaskForm):
     wwff_ref = StringField('WWFF Reference', validators=[Optional(), Length(max=255)])
     iota_ref = StringField('IOTA Reference', validators=[Optional(), Length(max=255)])
     sat_name = StringField('Satellite Name', validators=[Optional(), Length(max=255)])
+    sat_mode = StringField('Satelitte Mode', validators=[Optional(), Length(max=255)])
     start_date = DateField('Start Date', validators=[InputRequired()], default=datetime.date.today)
     start_time = TimeField('Start Time', validators=[InputRequired()], default=datetime.datetime.now)
     end_date  = DateField('End Date', validators=[Optional()], default=datetime.date.today)

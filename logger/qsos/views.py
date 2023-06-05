@@ -255,3 +255,7 @@ def sota(event):
     form.station_callsign.choices = [callsign.name for callsign in Callsign.query.filter_by(user_id=current_user.get_id()).all()]
     return render_template('sotaqsoform.html', form=form, selectedevents=selectedevents, callsigns=callsigns, event=sotaevent)
 
+@qsos.route('sat/<int:event>/new', methods=['GET', 'POST'])
+@login_required
+def sat(event):
+    pass

@@ -10,7 +10,7 @@
 		</div>
 	</div>
 </section>
-<section>
+<section class="section">
     <div class="container">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -23,122 +23,204 @@
         </div>
         {% endif %}
         {% endwith %}
-        <div class="columns">
-            <div class="column">
-                <div class="box">
-                    <nav class="level">
-                        <div class="level-left">
-                            <div class="level-item">
-                                <div class="icon-text">
-                                    <span class="icon">
-                                        <i class="fa-regular fa-square-caret-right"></i>
-                                    </span>
-                                    <span><abbr class="has-text-weight-semibold" title="Name your event, for example [Activation of G/SC-010 August 2022]">Name:</abbr> {{ event.name }}</span>
-                                </div>
+        <div class="box">
+            <div class="columns">
+                <div class="column">
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title">Event Details</p>
+                            <a class="card-header-icon" id="dateandtime" aria-label="more options">
+                                <span class="icon">
+                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </a>
+                        </header>
+                        <div class="card-content" id="eventdetails-content">
+                            <div class="content">
+                                <nav class="level">
+                                    <div class="level-left">
+                                        <div class="level-item">
+                                            <div class="icon-text">
+                                                <span class="icon">
+                                                    <i class="fa-regular fa-square-caret-right"></i>
+                                                </span>
+                                                <span><abbr class="has-text-weight-semibold" title="Name your event, for example [Activation of G/SC-010 August 2022]">Name:</abbr> {{ event.name }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="level-right">
+                                        <div class="level-item">
+                                            <div class="icon-text">
+                                                <span class="icon">
+                                                    <i class="fa-regular fa-square-caret-down"></i>
+                                                </span>
+                                                <span><abbr class="has-text-weight-semibold" title="Type of event, SOTA / POTA, etc">Type:</abbr> {{ event.type }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </nav>
+                                <nav class="level">
+                                    <div class="level-left">
+                                        <div class="level-item">
+                                            <div class="icon-text">
+                                                <span class="icon">
+                                                    <i class="fa-regular fa-calendar-plus"></i>
+                                                </span>
+                                                <span><abbr class="has-text-weight-semibold" title="Start date / time of your event">Start Date:</abbr> {{ event.start_date.strftime('%Y-%m-%d %H:%M') }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="level-right">
+                                        <div class="level-item">
+                                            <div class="icon-text">
+                                                <span class="icon">
+                                                    <i class="fa-regular fa-calendar-minus"></i>
+                                                </span>
+                                                <span><abbr class="has-text-weight-semibold" title="End date / time of your event">End Date:</abbr> {{ event.end_date.strftime('%Y-%m-%d %H:%M') }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </nav>
                             </div>
                         </div>
-                        <div class="level-right">
-                            <div class="level-item">
-                                <div class="icon-text">
-                                    <span class="icon">
-                                        <i class="fa-regular fa-square-caret-down"></i>
-                                    </span>
-                                    <span><abbr class="has-text-weight-semibold" title="Type of event, SOTA / POTA, etc">Type:</abbr> {{ event.type }}</span>
-                                </div>
+                    </div>
+                    {% if event.type in (['SOTA', 'POTA', 'SOTA-POTA', 'Satellite']) %}
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title">Event Specifics</p>
+                            <a class="card-header-icon" id="eventspecifics" aria-label="more options">
+                                <span class="icon">
+                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </a>
+                        </header>
+                        <div class="card-content" id="eventdetails-content">
+                            <div class="content">
+                                <nav class="level">
+                                    <div class="level-left">
+                                        <div class="level-item">
+                                            <div class="icon-text">
+                                                <span class="icon">
+                                                {% if event.sota_ref %}
+                                                    <i class="fas fa-mountain"></i>
+                                                {% elif event.pota_ref %}
+                                                    <i class="fa-solid fa-tree"></i>
+                                                {% elif event.sat_name %}
+                                                    <i class="fa-solid fa-satellite"></i>
+                                                {% endif %}
+                                                </span>
+                                                {% if event.sota_ref and event.pota_ref %}
+                                                <p>SOTA Reference: {{ event.sota_ref }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="level-right">
+                                        <div class="level-item">
+                                            <div class="icon-text">
+                                                <span class="icon">
+                                                    <i class="fa-solid fa-tree"></i>
+                                                </span>
+                                                <p>POTA Reference: {{ event.pota_ref }}</p>
+                                                {% elif event.pota_ref %}
+                                                <p>POTA Reference: {{ event.pota_ref }}</p>
+                                                {% elif event.sota_ref %}
+                                                <p>SOTA Reference: {{ event.sota_ref }}</p>
+                                                {% elif event.sat_name %}
+                                                <p>Sat Name: {{ event.sat_name }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="level-right">
+                                        <div class="level-item">
+                                            <div class="icon-text">
+                                                <span class="icon">
+                                                    <i class="fa-solid fa-satellite-dish"></i>
+                                                </span>
+                                                <p>Sat Mode: {{ event.sat_mode }}</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </nav>
                             </div>
                         </div>
-                    </nav>
-                    <nav class="level">
-                        <div class="level-left">
-                            <div class="level-item">
-                                <div class="icon-text">
-                                    <span class="icon">
-                                        <i class="fa-regular fa-calendar-plus"></i>
-                                    </span>
-                                    <span><abbr class="has-text-weight-semibold" title="Start date / time of your event">Start Date:</abbr> {{ event.start_date.strftime('%Y-%m-%d %H:%M') }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="column">
+                    <div class="box">
+                        <nav class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    <div class="icon-text">
+                                        <span class="icon">
+                                            <i class="fa-regular fa-comments"></i>
+                                        </span>
+                                        <span><abbr class="has-text-weight-semibold" title="">Comment:</abbr> {{ event.comment }}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="level-right">
-                            <div class="level-item">
-                                <div class="icon-text">
-                                    <span class="icon">
-                                        <i class="fa-regular fa-calendar-minus"></i>
-                                    </span>
-                                    <span><abbr class="has-text-weight-semibold" title="End date / time of your event">End Date:</abbr> {{ event.end_date.strftime('%Y-%m-%d %H:%M') }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </nav>
+                        </nav>
+                    </div>
                 </div>
             </div>
-            <div class="column">
-                <div class="box">
-                    <nav class="level">
-                        <div class="level-left">
-                            <div class="level-item">
-                                <div class="icon-text">
-                                    <span class="icon">
-                                        <i class="fa-regular fa-comments"></i>
-                                    </span>
-                                    <span><abbr class="has-text-weight-semibold" title="">Comment:</abbr> {{ event.comment }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </nav>
-                </div>
-            </div>
-        </div>
-        <div class="box">
-            <h1 class="title">{{ event.qsos|length }} QSOs for this Event</h1>
-            {% if event.qsos %}
-            <table class="table is-striped is-hoverable">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Station Callsign</th>
-                        <th>Call</th>
-                        <th>Band</th>
-                        <th>Mode</th>
-                        <th>Gridsquare</th>
-                        <th>My Gridsquare</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for qso in event.qsos %}
-                    <tr>
-                        <td>{{ qso.qso_date }}</td>
-                        <td>{{ qso.time_on }}</td>
-                        <td>{{ qso.station_callsign }}</td>
-                        <td><a href="{{url_for('qsos.viewqso', id=qso.id)}}">{{ qso.call }}</a></td>
-                        <td>{{ qso.band }}</td>
-                        <td>{{ qso.mode }}</td>
-                        <td>{{ qso.gridsquare }}</td>
-                        <td>{{ qso.my_gridsquare }}</td>
-                        <td><a class="button is-danger is-small" href="{{ url_for ('qsos.qsodelete', id=qso.id, callsign=qso.station_callsign | replace('/','_')) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a></td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            {% else %}
-            <p class="subtitle">No QSOs for this Event yet.</p>
-            {% endif %}
-        </div>
-        <div class="box">
-            <nav class="level">
-                {% if event.type in eventtypes %}
-                <div class="level-left">
-                    <p class="level-item">Add a SOTA / POTA QSO to this event</p>
-                    <a class="button is-link level-item" href="{{ url_for ('qsos.sota', event=event.id )  }}"><span class="icon"><i class="fa-solid fa-mountain"></i></span></a>
-                </div>
+            <div class="box">
+                <h1 class="title">{{ event.qsos|length }} QSOs for this Event</h1>
+                {% if event.qsos %}
+                <table class="table is-striped is-hoverable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Station Callsign</th>
+                            <th>Call</th>
+                            <th>Band</th>
+                            <th>Mode</th>
+                            <th>Gridsquare</th>
+                            <th>My Gridsquare</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for qso in event.qsos %}
+                        <tr>
+                            <td>{{ qso.qso_date }}</td>
+                            <td>{{ qso.time_on }}</td>
+                            <td>{{ qso.station_callsign }}</td>
+                            <td><a href="{{url_for('qsos.viewqso', id=qso.id)}}">{{ qso.call }}</a></td>
+                            <td>{{ qso.band }}</td>
+                            <td>{{ qso.mode }}</td>
+                            <td>{{ qso.gridsquare }}</td>
+                            <td>{{ qso.my_gridsquare }}</td>
+                            <td><a class="button is-danger is-small" href="{{ url_for ('qsos.qsodelete', id=qso.id, callsign=qso.station_callsign | replace('/','_')) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="subtitle">No QSOs for this Event yet.</p>
                 {% endif %}
-                <div class="level-right">
-                    <p class="level-item">Export QSOs for this event</p>
-                    <a class="button is-link level-item" href="{{ url_for ('events.export', id=event.id )  }}"><span class="icon"><i class="fa-solid fa-file-arrow-down"></i></span></a>
-                </div>
-            </nav>    
+            </div>
+            <div class="box">
+                <nav class="level">
+                    {% if event.type in eventtypes %}
+                    <div class="level-left">
+                        <p class="level-item">Add a SOTA / POTA QSO to this event</p>
+                        <a class="button is-link level-item" href="{{ url_for ('qsos.sota', event=event.id )  }}"><span class="icon"><i class="fa-solid fa-mountain"></i></span></a>
+                    </div>
+                    {% endif %}
+                    {% if event.type == "Satellite" %}
+                    <div class="level-left">
+                        <p class="level-item">Add a Satellite QSO to this event</p>
+                        <a class="button is-link level-item" href="{{ url_for ('qsos.sat', event=event.id )  }}"><span class="icon"><i class="fa-solid fa-satellite"></i></span></a>
+                    </div>
+                    {% endif %}
+                    <div class="level-right">
+                        <p class="level-item">Export QSOs for this event</p>
+                        <a class="button is-link level-item" href="{{ url_for ('events.export', id=event.id )  }}"><span class="icon"><i class="fa-solid fa-file-arrow-down"></i></span></a>
+                    </div>
+                </nav>    
+            </div>
         </div>
     </div>
 </section>

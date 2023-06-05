@@ -41,7 +41,6 @@
                 {% for event in qso.events %}
                     <li><a href="{{ url_for ('events.eventview', id=event.id) }}">{{ event.name }}</a></li>
                 {% endfor %}
-                    <li>{{ qso.id }}</li>
                 </ul>
             </nav>
         </div>
