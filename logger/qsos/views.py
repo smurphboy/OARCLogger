@@ -10,7 +10,7 @@ from flask import (Blueprint, abort, current_app, flash, jsonify, redirect,
 from flask_login import current_user, login_required
 from werkzeug.utils import secure_filename
 
-from logger.forms import QSOForm, QSOUploadForm, SOTAQSOForm
+from logger.forms import QSOForm, QSOUploadForm, SOTAQSOForm, SATQSOForm
 from logger.models import QSO, Callsign, Event, User, db
 
 qsos = Blueprint('qsos', __name__, template_folder='templates')
@@ -258,4 +258,42 @@ def sota(event):
 @qsos.route('sat/<int:event>/new', methods=['GET', 'POST'])
 @login_required
 def sat(event):
-    pass
+    if request.method == 'POST':
+        qso_date = datetime.datetime.strptime(request.form['qso_date'], '%Y-%m-%d').date()
+        time_on = datetime.datetime.strptime(request.form['time_on'], '%H:%M').time()
+        call = request.form.get('call', '').upper() or None
+        station_callsign = request.form.get('station_callsign', '').upper() or None
+        band = request.form.get('band', '') or None
+        freq = request.form.get('freq', '') or None
+        sat_name = request.form.get('sat_namef', '').upper() or None
+        sat_mode = request.form.get('sat_mode', '').upper() or None
+        mode = request.form.get('mode', '') or None
+        submode = request.form.get('submode', '') or None
+        newqso = QSO(qso_date=qso_date, time_on=time_on, call=call, station_callsign=station_callsign,
+                     band=band, freq=freq, sat_name=sat_name, sat_mode=sat_mode, mode=mode,
+                     submode=submode)
+        user = User.query.filter_by(id=current_user.get_id()).first()
+        selectedevents=[]
+        for ev in user.selected_events:
+            selectedevents.append(ev.id)
+        newqso.events[:] = Event.query.filter(Event.id.in_(selectedevents))
+        db.session.add(newqso)
+        db.session.commit()
+        flash('New QSO added to the event', 'info')
+        return redirect(url_for('qsos.sat', event=event))
+    satevent = Event.query.filter_by(id=event).first()
+    print(satevent.name)
+    form = SATQSOForm()
+    form.sat_name.data = satevent.sat_name
+    form.sat_mode.data = satevent.sat_mode
+    user = User.query.filter_by(id=current_user.get_id()).first()
+    selev = user.selected_events
+    selectedevents = []
+    for ev in selev:
+        if ev.id != satevent.id:
+            selectedevents.append(ev)
+    callsigns = Callsign.query.filter_by(user_id=current_user.get_id()).all()
+    form.station_callsign.data = callsigns[0].name
+    form.station_callsign.choices = [callsign.name for callsign in Callsign.query.filter_by(user_id=current_user.get_id()).all()]
+    print(form.station_callsign.choices)
+    return render_template('satqsoform.html', form=form, selectedevents=selectedevents, callsigns=callsigns, event=satevent)
