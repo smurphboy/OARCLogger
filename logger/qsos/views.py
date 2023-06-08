@@ -180,7 +180,7 @@ def qsodelete(id, callsign):
     db.session.commit()
     db.session.delete(qso)
     db.session.commit()
-    return redirect(url_for('callsigns.call', callsign=callsign.replace('/', '_')))
+    return redirect(request.referrer)
 
 
 @qsos.errorhandler(400)
@@ -265,13 +265,19 @@ def sat(event):
         station_callsign = request.form.get('station_callsign', '').upper() or None
         band = request.form.get('band', '') or None
         freq = request.form.get('freq', '') or None
-        sat_name = request.form.get('sat_namef', '').upper() or None
+        sat_name = request.form.get('sat_name', '').upper() or None
         sat_mode = request.form.get('sat_mode', '').upper() or None
+        gridsquare = request.form.get('gridsquare', '') or None
+        if gridsquare:
+            gridsquare = gridsquare[:2].upper() + gridsquare[2:4] + gridsquare[4:].lower()
+        my_gridsquare = request.form.get('my_gridsquare', '') or None
+        if my_gridsquare:
+            my_gridsquare = my_gridsquare[:2].upper() + my_gridsquare[2:4] + my_gridsquare[4:].lower()
         mode = request.form.get('mode', '') or None
         submode = request.form.get('submode', '') or None
         newqso = QSO(qso_date=qso_date, time_on=time_on, call=call, station_callsign=station_callsign,
                      band=band, freq=freq, sat_name=sat_name, sat_mode=sat_mode, mode=mode,
-                     submode=submode)
+                     submode=submode, gridsquare=gridsquare, my_gridsquare=my_gridsquare)
         user = User.query.filter_by(id=current_user.get_id()).first()
         selectedevents=[]
         for ev in user.selected_events:
