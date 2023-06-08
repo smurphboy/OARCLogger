@@ -295,5 +295,6 @@ def sat(event):
     callsigns = Callsign.query.filter_by(user_id=current_user.get_id()).all()
     form.station_callsign.data = callsigns[0].name
     form.station_callsign.choices = [callsign.name for callsign in Callsign.query.filter_by(user_id=current_user.get_id()).all()]
+    form.my_gridsquare.data = satevent.my_gridsquare
     print(form.station_callsign.choices)
     return render_template('satqsoform.html', form=form, selectedevents=selectedevents, callsigns=callsigns, event=satevent)

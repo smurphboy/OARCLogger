@@ -104,6 +104,25 @@
                             <div class="level-left">
                                 <div class="level-item">
                                     <div class="field">
+                                        {{ form.my_gridsquare.label(class_="label") }}
+                                        <div class="control">
+                                        {{ form.my_gridsquare(class_="input", placeholder_="My Gridsquare") }}
+                                        </div>
+                                    </div>
+                                    {% if form.my_gridsquare.errors %}
+                                    <ul class="errors">
+                                    {% for error in form.my_gridsquare.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                    </ul>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </nav>
+                        <nav class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    <div class="field">
                                         {{ form.type.label(class_="label") }}
                                         <div class="select">
                                         {{ form.type() }}

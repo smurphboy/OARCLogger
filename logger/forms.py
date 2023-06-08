@@ -70,7 +70,8 @@ class EventForm(FlaskForm):
     wwff_ref = StringField('WWFF Reference', validators=[Optional(), Length(max=255)])
     iota_ref = StringField('IOTA Reference', validators=[Optional(), Length(max=255)])
     sat_name = StringField('Satellite Name', validators=[Optional(), Length(max=255)])
-    sat_mode = StringField('Satelitte Mode', validators=[Optional(), Length(max=255)])
+    sat_mode = StringField('Satellite Mode', validators=[Optional(), Length(max=255)])
+    my_gridsquare = StringField('My Gridsquare', validators=[Length(max=10)])
     start_date = DateField('Start Date', validators=[InputRequired()], default=datetime.date.today)
     start_time = TimeField('Start Time', validators=[InputRequired()], default=datetime.datetime.now)
     end_date  = DateField('End Date', validators=[Optional()], default=datetime.date.today)
@@ -118,6 +119,8 @@ class SOTAQSOForm(FlaskForm):
     my_sota_ref = StringField('My SOTA Reference')
     pota_ref = StringField('POTA Reference')
     my_pota_ref = StringField('My POTA Reference')
+    gridsquare = StringField('Gridsquare', validators=[Length(max=10)])
+    my_gridsquare = StringField('My Gridsquare', validators=[Length(max=10)])
     dxcc = StringField('DXCC')
     cqz = StringField('CQ Zone')
     ituz = StringField('ITU Zone')
@@ -147,6 +150,8 @@ class POTAQSOForm(FlaskForm):
     freq = StringField('Freq')
     pota_ref = StringField('POTA Reference')
     my_pota_ref = StringField('My POTA Reference')
+    gridsquare = StringField('Gridsquare', validators=[Length(max=10)])
+    my_gridsquare = StringField('My Gridsquare', validators=[Length(max=10)])
     band = SelectField('Band',
                        choices=['', '2190m', '630m', '560m', '160m', '80m', '60m', '40m', '30m', '20m', '17m', '15m',
                                 '12m', '10m', '8m', '6m', '5m', '4m', '2m', '1.25m', '70cm', '33cm', '23cm', '13cm',
@@ -174,6 +179,8 @@ class SOTAPOTAQSOForm(FlaskForm):
     my_sota_ref = StringField('My SOTA Reference')
     pota_ref = StringField('POTA Reference')
     my_pota_ref = StringField('My POTA Reference')
+    gridsquare = StringField('Gridsquare', validators=[Length(max=10)])
+    my_gridsquare = StringField('My Gridsquare', validators=[Length(max=10)])
     band = SelectField('Band',
                        choices=['', '2190m', '630m', '560m', '160m', '80m', '60m', '40m', '30m', '20m', '17m', '15m',
                                 '12m', '10m', '8m', '6m', '5m', '4m', '2m', '1.25m', '70cm', '33cm', '23cm', '13cm',
@@ -199,6 +206,8 @@ class SATQSOForm(FlaskForm):
     freq = StringField('Freq')
     sat_name = StringField('Satellite Name')
     sat_mode = StringField('Satellite Mode')
+    gridsquare = StringField('Gridsquare', validators=[Length(max=10)])
+    my_gridsquare = StringField('My Gridsquare', validators=[Length(max=10)])
     band = SelectField('Band',
                        choices=['', '2190m', '630m', '560m', '160m', '80m', '60m', '40m', '30m', '20m', '17m', '15m',
                                 '12m', '10m', '8m', '6m', '5m', '4m', '2m', '1.25m', '70cm', '33cm', '23cm', '13cm',
