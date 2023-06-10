@@ -25,10 +25,8 @@ def call(callsign):
     #swap _ for /
     callsign = callsign.replace('_', '/')
     callsignid = Callsign.query.filter_by(name=callsign).first().id
-    page = request.args.get('page', 1, type=int)
-    callqsos = QSO.query.filter_by(station_callsign = callsign).order_by(QSO.qso_date.desc(), QSO.time_on.desc()).paginate(page=page, per_page=ROWS_PER_PAGE)
-    allqsos = QSO.query.filter_by(station_callsign = callsign).all()
-    return render_template('callsign.html', qsos=callqsos, station_callsign=callsign, callsignid=callsignid, allqsos=allqsos)
+    allqsos = QSO.query.filter_by(station_callsign = callsign).order_by(QSO.qso_date.desc(), QSO.time_on.desc()).all()
+    return render_template('callsign.html', qsos=allqsos, station_callsign=callsign, callsignid=callsignid)
 
 
 @callsigns.route("/create", methods=['GET','POST'])

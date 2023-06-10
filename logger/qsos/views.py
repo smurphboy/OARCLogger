@@ -232,6 +232,8 @@ def sota(event):
         selectedevents=[]
         for ev in user.selected_events:
             selectedevents.append(ev.id)
+        if event not in selectedevents:
+            selectedevents.append(event)
         newqso.events[:] = Event.query.filter(Event.id.in_(selectedevents))
         db.session.add(newqso)
         db.session.commit()
@@ -282,6 +284,8 @@ def sat(event):
         selectedevents=[]
         for ev in user.selected_events:
             selectedevents.append(ev.id)
+        if event not in selectedevents:
+            selectedevents.append(event)
         newqso.events[:] = Event.query.filter(Event.id.in_(selectedevents))
         db.session.add(newqso)
         db.session.commit()
