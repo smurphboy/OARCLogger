@@ -199,6 +199,8 @@ def sota(event):
         station_callsign = request.form.get('station_callsign', '').upper() or None
         band = request.form.get('band', '') or None
         freq = request.form.get('freq', '') or None
+        rst_rcvd = request.form.get('rst_rcvd', '') or None
+        rst_sent = request.form.get('rst_sent', '') or None
         sota_ref = request.form.get('sota_ref', '').upper() or None
         my_sota_ref = request.form.get('my_sota_ref', '').upper() or None
         pota_ref = request.form.get('pota_ref', '').upper() or None
@@ -207,7 +209,8 @@ def sota(event):
         submode = request.form.get('submode', '') or None
         newqso = QSO(qso_date=qso_date, time_on=time_on, call=call, station_callsign=station_callsign,
                      band=band, freq=freq, sota_ref=sota_ref, my_sota_ref=my_sota_ref, mode=mode,
-                     submode=submode, pota_ref=pota_ref, my_pota_ref=my_pota_ref)
+                     submode=submode, pota_ref=pota_ref, my_pota_ref=my_pota_ref, rst_sent=rst_sent,
+                     rst_rcvd=rst_rcvd)
         if sota_ref:
             url = ("https://api2.sota.org.uk/api/summits/" + sota_ref)
             sotasummit = requests.request("GET", url)

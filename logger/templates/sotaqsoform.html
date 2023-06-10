@@ -161,6 +161,36 @@
                                         </ul>
                                     {% endif %}
                                 </div>
+                                <div class="level-item">
+                                    <div class="field">
+                                        {{ form.rst_sent.label(class_='label') }}
+                                        <div class="control">
+                                            {{ form.rst_sent(class_="input", placeholder_="RST sent to Called station") }}
+                                        </div>
+                                    </div>
+                                    {% if form.rst_sent.errors %}
+                                        <ul class="errors">
+                                            {% for error in form.rst_sent.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <div class="level-item">
+                                    <div class="field">
+                                        {{ form.rst_rcvd.label(class_='label') }}
+                                        <div class="control">
+                                            {{ form.rst_rcvd(class_="input", placeholder_="RST Received from Called station") }}
+                                        </div>
+                                    </div>
+                                    {% if form.rst_rcvd.errors %}
+                                        <ul class="errors">
+                                            {% for error in form.rst_rcvd.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
                             </div>
                         </nav>
                         <nav class="level">
