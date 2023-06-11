@@ -27,7 +27,7 @@ class LoggerEventModelView(ModelView):
     column_hide_backrefs = False
     column_display_pk = True
     form_columns = ('name', 'type', 'start_date', 'end_date', 'comment', 'sota_ref',
-                   'pota_ref', 'wwff_ref', 'iota_ref', 'sat_name', 'sat_mode', 'my_gridsquare' 'square', 'configs',
+                   'pota_ref', 'wwff_ref', 'iota_ref', 'sat_name', 'sat_mode', 'my_gridsquare', 'square', 'configs',
                    'qsos', 'selected_by')
     
 
