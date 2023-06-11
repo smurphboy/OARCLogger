@@ -37,6 +37,7 @@ def create_app():
 
     admin = Admin(app, name='Logger', template_mode='bootstrap3')
 
+    admin._menu = admin._menu[1:]
     admin.add_view(LoggerModelView(QSO, db.session))
     admin.add_view(LoggerCallsignModelView(Callsign, db.session))
     admin.add_view(LoggerEventModelView(Event, db.session))

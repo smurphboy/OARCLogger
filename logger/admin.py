@@ -4,25 +4,22 @@ from flask_login import current_user
 
 admins = ['Simon']
 
-class LoggerModelView(ModelView):
+class MyAdminModelView(ModelView):
 
     def is_accessible(self):
-        return current_user.is_authenticated
+        return current_user.is_authenticated and current_user.admin
 
     def inaccessible_callback(self, name, **kwargs):
         return redirect(url_for('users.login'))
+
+
+class LoggerModelView(MyAdminModelView):
 
     column_hide_backrefs = False
     column_display_pk = True
 
 
-class LoggerEventModelView(ModelView):
-
-    def is_accessible(self):
-        return current_user.is_authenticated
-
-    def inaccessible_callback(self, name, **kwargs):
-        return redirect(url_for('users.login'))
+class LoggerEventModelView(MyAdminModelView):
 
     column_hide_backrefs = False
     column_display_pk = True
@@ -31,52 +28,28 @@ class LoggerEventModelView(ModelView):
                    'qsos', 'selected_by')
     
 
-class LoggerUserModelView(ModelView):
-
-    def is_accessible(self):
-        return current_user.is_authenticated
-
-    def inaccessible_callback(self, name, **kwargs):
-        return redirect(url_for('users.login'))
+class LoggerUserModelView(MyAdminModelView):
 
     column_hide_backrefs = False
     column_display_pk = True
-    form_columns = ('name', 'email', 'password', 'created_on', 'last_login', 'callsigns',
+    form_columns = ('name', 'email', 'password', 'admin', 'created_on', 'last_login', 'callsigns',
                     'events', 'rigs', 'configurations', 'antennas', 'selected_events')
     
-class LoggerCallsignModelView(ModelView):
-
-    def is_accessible(self):
-        return current_user.is_authenticated
-
-    def inaccessible_callback(self, name, **kwargs):
-        return redirect(url_for('users.login'))
+class LoggerCallsignModelView(MyAdminModelView):
 
     column_hide_backrefs = False
     column_display_pk = True
     form_columns = ('name', 'primary')
 
 
-class LoggerBandModelView(ModelView):
-
-    def is_accessible(self):
-        return current_user.is_authenticated
-
-    def inaccessible_callback(self, name, **kwargs):
-        return redirect(url_for('users.login'))
+class LoggerBandModelView(MyAdminModelView):
 
     column_hide_backrefs = False
     column_display_pk = True
     form_columns = ('name', 'rigs')
 
 
-class LoggerRigModelView(ModelView):
-
-    def is_accessible(self):
-        return current_user.is_authenticated
-
-    def inaccessible_callback(self, name, **kwargs):
-        return redirect(url_for('users.login'))
+class LoggerRigModelView(MyAdminModelView):
 
     column_hide_backrefs = False
     column_display_pk = True
@@ -84,13 +57,7 @@ class LoggerRigModelView(ModelView):
                     'configurations', 'bands')
     
 
-class LoggerAntennaModelView(ModelView):
-
-    def is_accessible(self):
-        return current_user.is_authenticated
-
-    def inaccessible_callback(self, name, **kwargs):
-        return redirect(url_for('users.login'))
+class LoggerAntennaModelView(MyAdminModelView):
 
     column_hide_backrefs = False
     column_display_pk = True
@@ -98,13 +65,7 @@ class LoggerAntennaModelView(ModelView):
                     'configurations')
 
 
-class LoggerConfigurationModelView(ModelView):
-
-    def is_accessible(self):
-        return current_user.is_authenticated
-
-    def inaccessible_callback(self, name, **kwargs):
-        return redirect(url_for('users.login'))
+class LoggerConfigurationModelView(MyAdminModelView):
 
     column_hide_backrefs = False
     column_display_pk = True

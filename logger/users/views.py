@@ -1,4 +1,5 @@
 import operator
+import os
 from datetime import datetime
 
 from flask import (Blueprint, abort, current_app, flash, redirect,
@@ -81,15 +82,22 @@ def signup_post():
     email = request.form.get('email')
     name = request.form.get('name')
     password = request.form.get('password')
+    signup = request.form.get('signupcode')
 
     user = User.query.filter_by(email=email).first() # if this returns a user, then the email already exists in database
 
     if user: # if a user is found, we want to redirect back to signup page so user can try again
         flash('Email address already registered')
         return redirect(url_for('users.signup'))
-
-    # create a new user with the form data. Hash the password so the plaintext version isn't saved.
-    new_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'), created_on=datetime.now())
+    
+    if signup == os.environ.get('SIGNUPCODE'):
+        # create a new user with the form data. Hash the password so the plaintext version isn't saved.
+        new_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'), created_on=datetime.now())
+    elif signup == os.environ.get('SIGNUPADMINCODE'):
+        new_user = User(email=email, name=name, admin=True, password=generate_password_hash(password, method='sha256'), created_on=datetime.now())
+    else:
+        flash('Sign Up Code Invalid - Please see OARC Discord for the correct code')
+        return redirect(url_for('users.signup'))        
 
     # add the new user to the database
     db.session.add(new_user)

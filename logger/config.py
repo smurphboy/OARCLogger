@@ -22,3 +22,5 @@ class Config:
     UPLOAD_EXTENSIONS = '*.adi'
     POSTGRES_USER = environ.get('POSTGRES_USER')
     POSTGRES_PW = environ.get('POSTGRES_PW')
+    SIGNUPCODE = environ.get('SIGNUPCODE')
+    SIGNUPADMINCODE = environ.get('SIGNUPADMINCODE')

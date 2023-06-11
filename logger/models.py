@@ -31,6 +31,7 @@ class User(UserMixin, db.Model):
     rigs = db.relationship('Rig', backref='owner', lazy=True)
     configurations = db.relationship('Configuration', backref='owner', lazy=True)
     antennas = db.relationship('Antenna', backref='owner', lazy=True)
+    admin = db.Column(db.Boolean, default=False)
     selected_events = db.relationship('Event', secondary='selected', back_populates='selected_by')
 
     def __repr__(self):
