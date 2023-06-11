@@ -1,7 +1,7 @@
 import datetime
 
 from flask import (Blueprint, abort, flash, make_response, redirect,
-                   render_template, request, url_for)
+                   render_template, request, url_for, session)
 from flask_login import current_user, login_required
 
 from logger.forms import EventForm, SelectedEventForm
@@ -141,7 +141,6 @@ def page_not_found(e):
 @events.route("/select/<username>", methods=['GET', 'POST'])
 @login_required
 def selectevents(username):
-    back = request.referrer
     form = SelectedEventForm()
     if request.method == 'POST' and form.validate():
         user = User.query.filter_by(name=username).first()
@@ -149,8 +148,10 @@ def selectevents(username):
         user.selected_events[:] = Event.query.filter(Event.id.in_(request.form.getlist('Search')))
         db.session.commit()
         flash('Selected Events updated', 'info')
-        return redirect(back)
+        return redirect(session['back'])
     allevents = Event.query.filter_by(user_id=current_user.get_id()).all()
+    session['back'] = request.referrer
+    print(session['back'])
     alleventsjson = []
     for e in allevents:
         alleventsjson.append({'val': e.name, 'id' : e.id})
