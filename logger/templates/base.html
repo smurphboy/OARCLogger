@@ -67,6 +67,7 @@
                     </div>
                 </div>
                 {% endif %}
+<!--            
                 {% if current_user.is_authenticated %}
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link" href="{{ url_for('configurations.configlist', username=current_user.name) }}">
@@ -95,6 +96,7 @@
                     </div>
                 </div>
                 {% endif %}
+ -->            
                 {% if current_user.is_authenticated %}
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link" href="{{ url_for('events.eventlist', username=current_user.name) }}">
