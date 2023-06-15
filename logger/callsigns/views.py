@@ -43,7 +43,7 @@ def callsigncreate():
     return render_template('callsigncreateform.html', form=form, username=current_user.name)
 
 
-@callsigns.post("/delete/<int:id>")
+@callsigns.route("/delete/<int:id>")
 @login_required
 def callsigndelete(id):
     callsign = Callsign.query.filter_by(id=id).first()
