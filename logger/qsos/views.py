@@ -280,9 +280,10 @@ def sat(event):
             my_gridsquare = my_gridsquare[:2].upper() + my_gridsquare[2:4] + my_gridsquare[4:].lower()
         mode = request.form.get('mode', '') or None
         submode = request.form.get('submode', '') or None
+        prop_mode = "SAT"
         newqso = QSO(qso_date=qso_date, time_on=time_on, call=call, station_callsign=station_callsign,
                      band=band, freq=freq, sat_name=sat_name, sat_mode=sat_mode, mode=mode,
-                     submode=submode, gridsquare=gridsquare, my_gridsquare=my_gridsquare)
+                     submode=submode, gridsquare=gridsquare, my_gridsquare=my_gridsquare, prop_mode=prop_mode)
         user = User.query.filter_by(id=current_user.get_id()).first()
         selectedevents=[]
         for ev in user.selected_events:
