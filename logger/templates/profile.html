@@ -65,7 +65,7 @@
     <div class="container">
             {% with messages = get_flashed_messages() %}
             {% if messages %}
-            <div class="box">
+            <div class="box notification">
                 <div class="notification is-info">
                     {% for message in messages%}
                     {{ message }}
@@ -79,13 +79,16 @@
             <nav class="level">
                 <div class="level-left">
                     <div class="level-item">
-                        <nav class="breadcrumb" aria-label="breadcrumbs">
-                            <ul>
-                            {% for event in current_user.selected_events %}
-                                <li><a href="{{ url_for ('events.eventview', id=event.id) }}">{{ event.name }}</a></li>
-                            {% endfor %}
-                            </ul>
-                        </nav>
+                        {% for event in current_user.selected_events %}
+                        <div class="level-item">
+                            <div class="control">
+                                <div class="tags has-addons">
+                                    <a class="tag is-primary" href="{{ url_for ('events.eventview', id=event.id) }}" >{{ event.name }}</a>
+                                    <span class="tag is-info is-light">{{ event.type }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
                 <div class="level-right">

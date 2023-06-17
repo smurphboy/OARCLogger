@@ -36,12 +36,21 @@
         </div>
         <div class="box">
             <h1 class="title">QSO Events</h1>
-            <nav class="breadcrumb" aria-label="breadcrumbs">
-                <ul>
-                {% for event in qso.events %}
-                    <li><a href="{{ url_for ('events.eventview', id=event.id) }}">{{ event.name }}</a></li>
-                {% endfor %}
-                </ul>
+            <nav class="level">
+                <div class="level-left">
+                    <div class="level-item">
+                        {% for event in qso.events %}
+                        <div class="level-item">
+                            <div class="control">
+                                <div class="tags has-addons">
+                                    <a class="tag is-primary" href="{{ url_for ('events.eventview', id=event.id) }}" >{{ event.name }}</a>
+                                    <span class="tag is-info is-light">{{ event.type }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </nav>
         </div>
         <div class="box">

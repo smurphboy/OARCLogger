@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block hero %}is-primary{% endblock %}
+{% block content %}
+		<div class="bd-hero-heading">
+			<h1 class="title algolia-lvl0">
+				{% block title %} <p>Welcome, {{ current_user.name }}</p> {% endblock %}
+			</h1>
+			{% if (callsigns is defined) and callsigns %}
+			<div class="subtitle is-4 algolia-lvl1">
+				<p>You have the following callsigns</p>     
+			</div>
+			{% endif %}
+		</div>
+    </div>
+</section>
+<section>
+    <div class="box">
+        <div class="tile is-ancestor">
+            <div class="tile is-4 is-vertical is-parent">
+                <div class="tile is-child box">
+                    <h1 class="title"><i class="fa-solid fa-address-card"></i> <a href="{{ url_for('users.profile', user=current_user.name) }}">Callsigns</a></h1>
+                    <p class="subtitle">You have {{ current_user.callsigns | length }} callsigns with {{ totalqsos }} QSOs in total</p>
+                    {% for callsign in current_user.callsigns %}
+                    <ul>
+                        <li><a class="has-text-weight-semibold" href="{{ url_for ('callsigns.call', callsign=callsign['name'] | replace('/','_'))  }}">{{ callsign.name }}</a> with {{ qsocount(callsign.name) }} QSOs</li>
+                    </ul>
+                    {% endfor %}
+                </div>
+                <div class="tile is-child box">
+                    <h1 class="title"><i class="fas fa-flag-usa" aria-hidden="true"></i> DXCC</h1>
+                    <p class="subtitle">You have made contact with {{ dxcccounts|length }} unique DXCC across all callsigns</p>
+                    <p class="subtitle">Top Ten DXCC are:</p>
+                    {% for dxcc, count in dxcccounts.items() %}
+                    <ul>
+                        {%- if loop.index > 10 %}{% break %}{% endif %}<li><span class="has-text-weight-semibold">{{ dxcc }}</span> {{ count }}</li>
+                    </ul>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="tile is-parent is-vertical">
+                <div class="tile is-child box">
+                    <h1 class="title"><i class="fa-solid fa-tower-broadcast"></i> Bands and Modes</h1>
+                    <p>You have worked {{ bands|length }} Bands and {{ modes|length }} Modes across all your Callsigns</p>
+                </div>
+                <div class="tile is-child box">
+                    <h1 class="title"><i class="fa-regular fa-calendar"></i> Time and Date</h1>
+                    <p class="subtitle">Last QSOs for each callsign</p>
+                    <ul>
+                        {% for call in calls %}
+                        <li><span class="has-text-weight-semibold">{{ call }}</span>: {{ latestqso(call) }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="tile is-parent is-vertical">
+                <div class="tile is-child box">
+                    <h1 class="title"><i class="fa-solid fa-headset"></i> Most Worked</h1>
+                    <p class="subtitle">Most worked callsigns (Top 10 over 2 QSOs)</p>
+                    {% if qsopartycounts %}
+                        {% for entry in qsopartycounts %}
+                        <p><a class="has-text-weight-semibold" href="{{ url_for ('callsigns.call', callsign=entry.0 | replace('/','_')) }}">{{ entry.0 }}</a> worked <a class="has-text-weight-semibold" href="{{ url_for ('callsigns.search', call=entry.1 | replace('/','_')) }}">{{ entry.1 }}</a> {{ entry.2 }} time{% if entry.2 > 1 %}s{% endif %}</p>
+                        {% endfor %}
+                    {% else %}
+                        <p>Not enough QSOs loaded yet</p>
+                    {% endif %}
+                </div>
+                <div class="tile is-child box">
+                    <h1 class="title"><i class="fa-solid fa-map-location-dot"></i> Maps - Coming Soon</h1>
+                    <p class="subtitle">Most Recent QSOs</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
