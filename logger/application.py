@@ -20,6 +20,7 @@ from logger.models import (QSO, Antenna, Band, Callsign, Configuration, Event,
 from logger.qsos.views import qsos
 from logger.rigs.views import rigs
 from logger.users.views import users
+from logger.waoarc.views import waoarc
 
 
 def create_app():
@@ -65,6 +66,7 @@ def create_app():
     app.register_blueprint(configurations, url_prefix='/configs')
     app.register_blueprint(antennas, url_prefix='/antennas')
     app.register_blueprint(rigs, url_prefix='/rigs')
+    app.register_blueprint(waoarc, url_prefix='/waoarc')
 
     @app.route("/")
     def index():

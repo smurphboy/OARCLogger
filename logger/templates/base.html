@@ -139,14 +139,14 @@
                     WAOARC
                     </a>
                     <div class="navbar-dropdown">
-                        <a class="navbar-item" href="/leaderboards">
+                        <a class="navbar-item" href="{{ url_for('waoarc.leaderboards') }}">
                             Leaderboards
                         </a>
                         <hr class="navbar-divider">
-                        <a class="navbar-item" href="/aboutwaoarc">
+                        <a class="navbar-item" href="{{ url_for('waoarc.about') }}">
                             About
                         </a>
-                        <a class="navbar-item" href="/gettingstartedwaoarc">
+                        <a class="navbar-item" href="{{ url_for('waoarc.gettingstarted') }}">
                             Getting Started
                         </a>
                     </div>
