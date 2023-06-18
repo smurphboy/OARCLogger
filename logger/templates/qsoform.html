@@ -173,7 +173,7 @@
                                 <div class="field">
                                     {{ form.country.label(class_='label') }}
                                     <div class="control">
-                                        {{ form.country(class_="input", placeholder_="Country - called station") }}
+                                        {{ form.country(class_="input", placeholder_="Country - called station", autocomplete_="country-name") }}
                                     </div>
                                 </div>
                                 {% if form.country.errors %}
@@ -467,7 +467,7 @@
                     </div>
                     <div class="field is-horizontal">
                         <div class="field-label is-normal">
-                            <label class="label">My Lat / Long</label>
+                            <label class="label" for="my_lat">My Lat / Long</label>
                         </div>
                         <div class="field-body">
                             <div class="field">
@@ -523,7 +523,7 @@
                     </div>
                     <div class="field is-horizontal">
                         <div class="field-label is-normal">
-                            <label class="label">Lat / Long</label>
+                            <label class="label" for="lat">Lat / Long</label>
                         </div>
                         <div class="field-body">
                             <div class="field">
