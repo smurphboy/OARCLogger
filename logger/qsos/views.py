@@ -15,74 +15,91 @@ from logger.models import QSO, Callsign, Event, User, db
 
 qsos = Blueprint('qsos', __name__, template_folder='templates')
 
+def save_changes(qso, form, new):
+    qso.qso_date = datetime.datetime.strptime(request.form['qso_date'], '%Y-%m-%d').date()
+    qso.time_on = datetime.datetime.strptime(request.form['time_on'], '%H:%M').time()
+    if request.form.get('qso_date_off', '') != '':
+        qso.qso_date_off = datetime.datetime.strptime(request.form['qso_date_off'], '%Y-%m-%d').date()
+    else:
+        qso.qso_date_off = None
+    if request.form.get('time_off', '') != '':
+        qso.time_off = datetime.datetime.strptime(request.form['time_off'], '%H:%M').time()
+    else:
+        qso.time_off = None
+    qso.call = request.form.get('call', '').upper() or None
+    qso.mode = request.form.get('mode', '') or None
+    qso.submode = request.form.get('submode', '') or None
+    qso.band = request.form.get('band', '') or None
+    qso.band_rx = request.form.get('band_rx', '') or None
+    qso.gridsquare = request.form.get('gridsquare', '') or None
+    if qso.gridsquare:
+        qso.gridsquare = qso.gridsquare[:2].upper() + qso.gridsquare[2:4] + qso.gridsquare[4:].lower()
+    qso.my_gridsquare = request.form.get('my_gridsquare', '') or None
+    if qso.my_gridsquare:
+        qso.my_gridsquare = qso.my_gridsquare[:2].upper() + qso.my_gridsquare[2:4] + qso.my_gridsquare[4:].lower()
+    qso.operator = request.form.get('operator', '').upper() or None
+    qso.freq = request.form.get('freq', '') or None
+    qso.freq_rx = request.form.get('freq_rx', '') or None
+    qso.owner_callsign = request.form.get('owner_callsign', '').upper() or None
+    qso.contacted_op = request.form.get('contacted_op', '').upper() or None
+    qso.eq_call = request.form.get('eq_call', '').upper() or None
+    qso.lat = request.form.get('lat', '') or None
+    qso.my_lat = request.form.get('my_lat', '') or None
+    qso.lon = request.form.get('lon', '') or None
+    qso.my_lon = request.form.get('my_lon', '') or None
+    qso.sota_ref = request.form.get('sota_ref', '').upper() or None
+    qso.my_sota_ref = request.form.get('my_sota_ref', '').upper() or None
+    qso.pota_ref = request.form.get('pota_ref', '').upper() or None
+    qso.my_pota_ref = request.form.get('my_pota_ref', '').upper() or None
+    qso.sat_name = request.form.get('sat_name', '') or None
+    qso.sat_mode = request.form.get('sat_mode', '') or None
+    qso.dxcc = request.form.get('dxcc', '') or None
+    qso.my_dxcc = request.form.get('my_dxcc', '') or None
+    qso.cqz = request.form.get('cqz', '') or None
+    qso.my_cq_zone = request.form.get('my_cq_zone', '') or None
+    qso.ituz = request.form.get('ituz', '') or None
+    qso.my_itu_zone = request.form.get('my_itu_zone', '') or None
+    qso.country = request.form.get('country', '') or None
+    qso.my_country = request.form.get('my_country', '') or None
+    stat_callsign = request.form.get('station_callsign', '') or qso.station_callsign
+    qso.station_callsign = stat_callsign
+    user = User.query.filter_by(id=current_user.get_id()).first()
+    selectedevents=[]
+    for event in user.selected_events:
+        selectedevents.append(event.id)
+    qso.events[:] = Event.query.filter(Event.id.in_(selectedevents))
+    if new:
+        db.session.add(qso)
+    db.session.commit()
+
 @qsos.route("/<station_callsign>/new", methods=['GET','POST'])
 @login_required
 def postnewqso(station_callsign):
     station_callsign = station_callsign.replace('_', '/')
     form = QSOForm()
+    form.station_callsign.data = station_callsign
     if request.method == 'POST':
-        qso_date = datetime.datetime.strptime(request.form['qso_date'], '%Y-%m-%d').date()
-        time_on = datetime.datetime.strptime(request.form['time_on'], '%H:%M').time()
-        if request.form.get('qso_date_off', '') != '':
-            qso_date_off = datetime.datetime.strptime(request.form['qso_date_off'], '%Y-%m-%d').date()
-        else:
-            qso_date_off = None
-        if request.form.get('time_off', '') != '':
-            time_off = datetime.datetime.strptime(request.form['time_off'], '%H:%M').time()
-        else:
-            time_off = None
-        call = request.form.get('call', '').upper() or None
-        mode = request.form.get('mode', '') or None
-        submode = request.form.get('submode', '') or None
-        band = request.form.get('band', '') or None
-        band_rx = request.form.get('band_rx', '') or None
-        gridsquare = request.form.get('gridsquare', '') or None
-        if gridsquare:
-            gridsquare = gridsquare[:2].upper() + gridsquare[2:4] + gridsquare[4:].lower()
-        my_gridsquare = request.form.get('my_gridsquare', '') or None
-        if my_gridsquare:
-            my_gridsquare = my_gridsquare[:2].upper() + my_gridsquare[2:4] + my_gridsquare[4:].lower()
-        operator = request.form.get('operator', '').upper() or None
-        freq = request.form.get('freq', '') or None
-        freq_rx = request.form.get('freq_rx', '') or None
-        owner_callsign = request.form.get('owner_callsign', '').upper() or None
-        contacted_op = request.form.get('contacted_op', '').upper() or None
-        eq_call = request.form.get('eq_call', '').upper() or None
-        lat = request.form.get('lat', '') or None
-        my_lat = request.form.get('my_lat', '') or None
-        lon = request.form.get('lon', '') or None
-        my_lon = request.form.get('my_lon', '') or None
-        sota_ref = request.form.get('sota_ref', '').upper() or None
-        my_sota_ref = request.form.get('my_sota_ref', '').upper() or None
-        pota_ref = request.form.get('pota_ref', '').upper() or None
-        my_pota_ref = request.form.get('my_pota_ref', '').upper() or None
-        sat_name = request.form.get('sat_name', '') or None
-        sat_mode = request.form.get('sat_mode', '') or None
-        dxcc = request.form.get('dxcc', '') or None
-        my_dxcc = request.form.get('my_dxcc', '') or None
-        cqz = request.form.get('cqz', '') or None
-        my_cq_zone = request.form.get('my_cq_zone', '') or None
-        ituz = request.form.get('ituz', '') or None
-        my_itu_zone = request.form.get('my_itu_zone', '') or None
-        country = request.form.get('country', '') or None
-        my_country = request.form.get('my_country', '') or None
-        stat_callsign = request.form.get('station_callsign', '') or station_callsign
-
-        newqso = QSO(qso_date=qso_date, time_on=time_on, qso_date_off=qso_date_off, time_off=time_off, call=call, mode=mode,
-                    band=band, band_rx=band_rx, gridsquare=gridsquare, my_gridsquare=my_gridsquare, station_callsign=stat_callsign.replace('_', '/'),
-                    operator = operator, owner_callsign = owner_callsign, contacted_op = contacted_op, eq_call = eq_call,
-                    submode = submode, freq=freq, freq_rx=freq_rx, sat_name=sat_name, sat_mode=sat_mode, lat=lat, lon=lon, my_lat=my_lat,
-                    my_lon=my_lon, sota_ref=sota_ref, my_sota_ref=my_sota_ref, pota_ref=pota_ref, my_pota_ref=my_pota_ref, dxcc=dxcc, my_dxcc=my_dxcc,
-                    cqz=cqz, my_cq_zone=my_cq_zone, ituz=ituz, my_itu_zone=my_itu_zone, country=country, my_country=my_country)
-        user = User.query.filter_by(id=current_user.get_id()).first()
-        selectedevents=[]
-        for event in user.selected_events:
-            selectedevents.append(event.id)
-        newqso.events[:] = Event.query.filter(Event.id.in_(selectedevents))
-        db.session.add(newqso)
-        db.session.commit()
+        qso = QSO()
+        save_changes(qso, form, new=True)
+        flash('QSO created successfully!')
         return redirect(url_for('callsigns.call',callsign=station_callsign.replace('/', '_')))
     return render_template('qsoform.html', form=form, station_callsign=station_callsign.replace('_', '/'))
+
+
+@qsos.route("/edit/<id>", methods=['GET','POST'])
+@login_required
+def editqso(id):
+    qso = QSO.query.get_or_404(id)
+    if Callsign.query.filter(Callsign.name==qso.station_callsign, Callsign.user_id==current_user.get_id()).count(): # is the callsign ours?
+        form = QSOForm(formdata=request.form, obj=qso)
+        if request.method == 'POST':
+            save_changes(qso, form, new=False)
+            flash('QSO updated successfully!')
+            return redirect(url_for('callsigns.call',callsign=qso.station_callsign.replace('/', '_')))
+        return render_template('qsoform.html', form=form, station_callsign=qso.station_callsign.replace('_', '/'))
+    else:
+        return 'Error loading qso #{id}'.format(id=id)
+
 
 @qsos.route("/<user>/upload", methods=['GET', 'POST'])
 @login_required

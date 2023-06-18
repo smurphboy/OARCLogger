@@ -18,6 +18,17 @@
     </section>
     <section>
         <div class="container">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="box notification">
+                <div class="notification is-info">
+                    {% for message in messages%}
+                    {{ message }}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            {% endwith %}
             <div class="box">
                 <h1 class="title"><a href="{{ url_for('events.eventlist', username=current_user.name) }}">Selected Events</a></h1>
                 <nav class="level">
@@ -99,6 +110,11 @@ $(document).ready(function () {
             { orderable: false, targets: 7 }
         ]
     });
+
+    setTimeout(function(){
+        $(".notification").fadeOut("slow");
+    }, 5000);
+    
 });
 </script>
 {% endblock %}

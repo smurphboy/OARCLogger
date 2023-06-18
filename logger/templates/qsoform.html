@@ -15,6 +15,17 @@
 </section>
 <section class="section">
     <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="box notification">
+            <div class="notification is-info">
+                {% for message in messages%}
+                {{ message }}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% endwith %}
         <div class="box">
             <h1 class="title"><a href="{{ url_for('events.eventlist', username=current_user.name) }}">Selected Events</a></h1>
             <nav class="level">
@@ -40,7 +51,7 @@
             {{ form.csrf_token }}
             <div class="card">
                 <header class="card-header">
-                    <p class="card-header-title">Date & Time</p>
+                    <p class="card-header-title">Date & Time - all times UTC</p>
                     <a class="card-header-icon" id="datetime" aria-label="more options">
                         <span class="icon">
                             <i class="fa-solid fa-clock"></i>
@@ -146,7 +157,7 @@
                                 <div class="field">
                                     {{ form.dxcc.label(class_='label') }}
                                     <div class="control">
-                                        {{ form.dxcc(class_="input", placeholder_="DXCC of the called station") }}
+                                        {{ form.dxcc(class_="input", placeholder_="DXCC - called station") }}
                                     </div>
                                 </div>
                                 {% if form.dxcc.errors %}
@@ -161,7 +172,7 @@
                                 <div class="field">
                                     {{ form.country.label(class_='label') }}
                                     <div class="control">
-                                        {{ form.country(class_="input", placeholder_="Country of the called station") }}
+                                        {{ form.country(class_="input", placeholder_="Country - called station") }}
                                     </div>
                                 </div>
                                 {% if form.country.errors %}
@@ -176,7 +187,7 @@
                                 <div class="field">
                                     {{ form.cqz.label(class_='label') }}
                                     <div class="control">
-                                        {{ form.cqz(class_="input", placeholder_="CQ Zone of the called station") }}
+                                        {{ form.cqz(class_="input", placeholder_="CQZ - called station") }}
                                     </div>
                                 </div>
                                 {% if form.cqz.errors %}
@@ -191,7 +202,7 @@
                                 <div class="field">
                                     {{ form.ituz.label(class_='label') }}
                                     <div class="control">
-                                        {{ form.ituz(class_="input", placeholder_="ITU Zone of the called station") }}
+                                        {{ form.ituz(class_="input", placeholder_="ITUZ - called station") }}
                                     </div>
                                 </div>
                                 {% if form.ituz.errors %}
@@ -274,7 +285,7 @@
                                 <div class="field">
                                     {{ form.freq.label(class_='label') }}
                                     <div class="control">
-                                        {{ form.freq(class_="input", placeholder_="Freq in MHz e.g. 7.150") }}
+                                        {{ form.freq(class_="input", placeholder_="Freq in MHz (7.150)") }}
                                     </div>
                                 </div>
                                 {% if form.freq.errors %}
@@ -308,7 +319,7 @@
                                 <div class="field">
                                     {{ form.freq_rx.label(class_='label') }}
                                     <div class="control">
-                                        {{ form.freq_rx(class_="input", placeholder_="RX QSO frequency in Megahertz") }}
+                                        {{ form.freq_rx(class_="input", placeholder_="RX Freq in MHz (7.150)") }}
                                     </div>
                                 </div>
                                 {% if form.freq_rx.errors %}
@@ -342,7 +353,7 @@
                                 <div class="field">
                                     {{ form.station_callsign.label(class_='label') }}
                                     <div class="control">
-                                        {{ form.station_callsign(class_="input", placeholder_="The logging station's callsign (the callsign used over the air)") }}
+                                        {{ form.station_callsign(class_="input", placeholder_="Logged call on the air") }}
                                     </div>
                                 </div>
                                 {% if form.station_callsign.errors %}
@@ -357,7 +368,7 @@
                                 <div class="field">
                                     {{ form.operator.label(class_='label') }}
                                     <div class="control">
-                                        {{ form.operator(class_="input", placeholder_="The logging operator's callsign") }}
+                                        {{ form.operator(class_="input", placeholder_="Logging OPs call") }}
                                     </div>
                                 </div>
                                 {% if form.operator.errors %}
@@ -376,7 +387,7 @@
                                 <div class="field">
                                     {{ form.owner_callsign.label(class_='label') }}
                                     <div class="control">
-                                        {{ form.owner_callsign(class_="input", placeholder_="The callsign of the owner of the station used to log the contact (the callsign of the OPERATOR's host)") }}
+                                        {{ form.owner_callsign(class_="input", placeholder_="Call of Station Owner") }}
                                     </div>
                                 </div>
                                 {% if form.owner_callsign.errors %}
@@ -391,7 +402,7 @@
                                 <div class="field">
                                     {{ form.contacted_op.label(class_='label') }}
                                     <div class="control">
-                                        {{ form.contacted_op(class_="input", placeholder_="The callsign of the individual operating the contacted station") }}
+                                        {{ form.contacted_op(class_="input", placeholder_="Call of contacted Op") }}
                                     </div>
                                 </div>
                                 {% if form.contacted_op.errors %}
@@ -406,7 +417,7 @@
                                 <div class="field">
                                     {{ form.eq_call.label(class_='label') }}
                                     <div class="control">
-                                        {{ form.eq_call(class_="input", placeholder_="The contacted station's owner's callsign") }}
+                                        {{ form.eq_call(class_="input", placeholder_="Call of owner of contacted station") }}
                                     </div>
                                 </div>
                                 {% if form.eq_call.errors %}
@@ -438,7 +449,7 @@
                         <div class="field-body">
                             <div class="field has-addons">
                                 <div class="control">
-                                {{ form.my_gridsquare(class_="input", placeholder_="The logging station's 2-character, 4-character, 6-character, or 8-character Maidenhead Grid Square") }}
+                                {{ form.my_gridsquare(class_="input", placeholder_="My Maidenhead Grid Square") }}
                                 </div>
                                 <div class="control">
                                     <a class="button is-info" id="mymaiden2latlon">&gt; Lat/Long</a>
@@ -460,7 +471,7 @@
                         <div class="field-body">
                             <div class="field">
                                 <div class="control">
-                                {{ form.my_lat(class_="input", placeholder_="The logging station's latitude") }}
+                                {{ form.my_lat(class_="input", placeholder_="My latitude") }}
                                 </div>
                             </div>
                             {% if form.my_lat.errors %}
@@ -472,7 +483,7 @@
                             {% endif %}
                             <div class="field has-addons">
                                 <div class="control">
-                                {{ form.my_lon(class_="input", placeholder_="The logging station's longitude") }}
+                                {{ form.my_lon(class_="input", placeholder_="My longitude") }}
                                 </div>
                                 <div class="control">
                                     <a class="button is-info" id="mylatlon2maiden">&lt; Gridsquare</a>
@@ -494,7 +505,7 @@
                         <div class="field-body">
                             <div class="field has-addons">
                                 <div class="control">
-                                {{ form.gridsquare(class_="input", placeholder_="The contacted station's 2-character, 4-character, 6-character, or 8-character Maidenhead Grid Square") }}
+                                {{ form.gridsquare(class_="input", placeholder_="Called Maidenhead Grid Square") }}
                                 </div>
                                 <div class="control">
                                     <a class="button is-info" id="maiden2latlon">&gt; Lat/Long</a>
@@ -516,7 +527,7 @@
                         <div class="field-body">
                             <div class="field">
                                 <div class="control">
-                                {{ form.lat(class_="input", placeholder_="The contacted station's latitude") }}
+                                {{ form.lat(class_="input", placeholder_="Called station latitude") }}
                                 </div>
                             </div>
                             {% if form.lat.errors %}
@@ -528,7 +539,7 @@
                             {% endif %}
                             <div class="field has-addons">
                                 <div class="control">
-                                {{ form.lon(class_="input", placeholder_="The contacted station's longitude") }}
+                                {{ form.lon(class_="input", placeholder_="Called station longitude") }}
                                 </div>
                                 <div class="control">
                                     <a class="button is-info" id="latlon2maiden">&lt; Gridsquare</a>
@@ -844,6 +855,10 @@ $(document).ready(function() {
         return false;
         });
     });
+
+    setTimeout(function(){
+        $(".notification").fadeOut("slow");
+    }, 5000);
 
 });
     var diction = {
