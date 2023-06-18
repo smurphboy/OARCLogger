@@ -30,15 +30,16 @@
             <h1 class="title"><a href="{{ url_for('events.eventlist', username=current_user.name) }}">Selected Events</a></h1>
             <nav class="level">
                 <div class="level-left">
+                    {% for event in current_user.selected_events %}
                     <div class="level-item">
-                        <nav class="breadcrumb" aria-label="breadcrumbs">
-                            <ul>
-                            {% for event in current_user.selected_events %}
-                                <li><a href="{{ url_for ('events.eventview', id=event.id) }}">{{ event.name }}</a></li>
-                            {% endfor %}
-                            </ul>
-                        </nav>
+                        <div class="control">
+                            <div class="tags has-addons">
+                                <a class="tag is-primary" href="{{ url_for ('events.eventview', id=event.id) }}" >{{ event.name }}</a>
+                                <span class="tag is-info is-light">{{ event.type }}</span>
+                            </div>
+                        </div>
                     </div>
+                    {% endfor %}
                 </div>
                 <div class="level-right">
                     <div class="level-item">

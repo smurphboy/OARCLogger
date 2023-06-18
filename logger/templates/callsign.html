@@ -61,6 +61,7 @@
                             <th>Date</th>
                             <th>Time</th>
                             <th>Callsign</th>
+                            <th>Edit</th>
                             <th>Band</th>
                             <th>Mode</th>
                             <th>Gridsquare</th>
@@ -73,7 +74,8 @@
                         <tr>
                             <td>{{ qso.qso_date }}</td>
                             <td>{{ qso.time_on }}</td>
-                            <td><a href="{{url_for('qsos.viewqso', id=qso.id)}}">{{ qso.call }}</a></td>
+                            <td><span class="icon-text"><span><a href="{{url_for('qsos.viewqso', id=qso.id)}}">{{ qso.call }}<span class="icon"><i class="fa-solid fa-magnifying-glass is-info"></i></span></a></span></span></td>
+                            <td><a class="is-link is-small" href="{{ url_for ('qsos.editqso', id=qso.id) }}"><span class="icon is-small"><i class="fa-solid fa-pen-to-square"></i></span><span>Edit</span></a></td>
                             <td>{{ qso.band }}</td>
                             <td>{{ qso.mode }}</td>
                             <td>{{ qso.gridsquare }}</td>
@@ -107,14 +109,14 @@ $(document).ready(function () {
             [10, 25, 50, 'All'],
         ],
         columnDefs: [
-            { orderable: false, targets: 7 }
+            { orderable: false, targets: [4, 8] }
         ]
     });
 
     setTimeout(function(){
         $(".notification").fadeOut("slow");
     }, 5000);
-    
+
 });
 </script>
 {% endblock %}
