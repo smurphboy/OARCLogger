@@ -25,14 +25,26 @@
                 </div>
                 <div class="tile is-child box">
                     <h1 class="title"><i class="fas fa-flag-usa" aria-hidden="true"></i> DXCC</h1>
-                    <p class="subtitle">You have made contact with {{ dxcccounts|length }} unique DXCC across all callsigns</p>
-                    <p class="subtitle">Top Ten DXCC are:</p>
-                    {% if dxcccounts %}
-                    {% for dxcc, count in dxcccounts.items() %}
-                    <ul>
-                        {%- if loop.index > 10 %}{% break %}{% endif %}<li><span class="has-text-weight-semibold">{{ dxcc }}</span> {{ count }}</li>
-                    </ul>
+                    <p class="subtitle">Members have made contact with {{ facts.totaldxcc }} unique DXCC across all callsigns</p>
+                    <p class="subtitle">Top Ten DXCC callsigns are:</p>
+                    {% if facts.dxcctable %}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Callsign</th>
+                                <th>Distinct DXCC</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    {% for dxcc in facts.dxcctable %}
+                    <tr>
+                        {%- if loop.index > 10 %}{% break %}{% endif %}
+                        <td><span class="has-text-weight-semibold">{{ dxcc[0] }}</span></td>
+                        <td>{{ dxcc[1] }}</td>
+                    </tr>
                     {% endfor %}
+                        </tbody>
+                    </table>
                     {% endif %}
                 </div>
             </div>

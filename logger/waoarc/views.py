@@ -25,9 +25,12 @@ def leaderboards():
     facts = {}
     facts['totalusers'] = User.query.count()
     facts['totalcallsigns'] = Callsign.query.count()
-    #calls = QSO.query.filter(QSO.call.in_(Callsign.name)).all()
-    #facts['unclaimedcallsigns'] = 
-    #print ("Calls: ", calls)
+    calls = QSO.query.with_entities(QSO.call).distinct()
+    callsigns = Callsign.query.with_entities(Callsign.name).distinct()
+    unclaimed = list(set(calls).difference(callsigns))
+    facts['unclaimedcallsigns'] = len(unclaimed)
+    facts['dxcctable'] = db.session.query(QSO.station_callsign, db.func.count(db.distinct(QSO.dxcc))).group_by(QSO.station_callsign).order_by(db.func.count(db.distinct(QSO.dxcc)).desc()).limit(10).all()
+    facts['totaldxcc'] = QSO.query.with_entities(QSO.dxcc).distinct().count()
     return render_template('leaderboard.html', facts=facts)
 
 
