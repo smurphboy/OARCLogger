@@ -96,7 +96,9 @@ def editqso(id):
             save_changes(qso, form, new=False)
             flash('QSO updated successfully!')
             return redirect(url_for('callsigns.call',callsign=qso.station_callsign.replace('/', '_')))
-        return render_template('qsoform.html', form=form, station_callsign=qso.station_callsign.replace('_', '/'))
+        form.submode.data = qso.submode
+        form.submode.choices = ['', qso.submode]
+        return render_template('qsoform.html', form=form, station_callsign=qso.station_callsign.replace('_', '/'), submode=qso.submode)
     else:
         return 'Error loading qso #{id}'.format(id=id)
 

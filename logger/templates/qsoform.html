@@ -910,7 +910,7 @@ $(document).ready(function() {
         WINMOR: [],
         WSPR: []	
     }
-    $('#mode').on('change', function() {
+    $('#mode').on('blur', function() {
     $('#submode').html(
         diction[$(this).val()].reduce(function(p, c) {
         return p.concat('<option value="' + c + '">' + c + '</option>');
