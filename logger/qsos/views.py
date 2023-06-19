@@ -15,6 +15,7 @@ from logger.models import QSO, Callsign, Event, User, db
 
 qsos = Blueprint('qsos', __name__, template_folder='templates')
 
+
 def save_changes(qso, form, new):
     qso.qso_date = datetime.datetime.strptime(request.form['qso_date'], '%Y-%m-%d').date()
     qso.time_on = datetime.datetime.strptime(request.form['time_on'], '%H:%M').time()
@@ -63,6 +64,54 @@ def save_changes(qso, form, new):
     qso.my_country = request.form.get('my_country', '') or None
     stat_callsign = request.form.get('station_callsign', '') or qso.station_callsign
     qso.station_callsign = stat_callsign
+    if qso.sota_ref:
+        url = ("https://api2.sota.org.uk/api/summits/" + qso.sota_ref)
+        sotasummit = requests.request("GET", url)
+        if sotasummit.status_code == 200:
+            summit = sotasummit.json()
+            if not qso.lat:
+                qso.lat = summit['latitude']
+            if not qso.lon:
+                qso.lon = summit['longitude']
+            if not qso.gridsquare:
+                qso.gridsquare = summit['locator']
+            if not qso.country:
+                qso.country = summit['associationName']
+            db.session.commit()
+    if qso.my_sota_ref:
+        url = ("https://api2.sota.org.uk/api/summits/" + qso.my_sota_ref)
+        sotasummit = requests.request("GET", url)
+        if sotasummit.status_code == 200:
+            summit = sotasummit.json()
+            if not qso.my_lat:
+                qso.my_lat = summit['latitude']
+            if not qso.my_lon:
+                qso.my_lon = summit['longitude']
+            if not qso.my_gridsquare:
+                qso.my_gridsquare = summit['locator']
+            if not qso.my_country:
+                qso.my_country = summit['associationName']
+            db.session.commit()
+    if qso.station_callsign:
+        info = dxcclookup(qso.station_callsign)
+        if not qso.my_dxcc:
+            qso.my_dxcc = info['dxcc']
+        if not qso.my_country:
+            qso.my_country = info['country']
+        if not qso.my_itu_zone:
+            qso.my_itu_zone = info['ituz']
+        if not qso.my_cq_zone:
+            qso.my_cq_zone = info['cqz']
+    if qso.call:
+        info = dxcclookup(qso.call)
+        if not qso.dxcc:
+            qso.dxcc = info['dxcc']
+        if not qso.country:
+            qso.country = info['country']
+        if not qso.ituz:
+            qso.ituz = info['ituz']
+        if not qso.cqz:
+            qso.cqz = info['cqz']
     user = User.query.filter_by(id=current_user.get_id()).first()
     selectedevents=[]
     for event in user.selected_events:
@@ -71,6 +120,17 @@ def save_changes(qso, form, new):
     if new:
         db.session.add(qso)
     db.session.commit()
+
+
+def dxcclookup(callsign):
+    '''returns the DXCC, Country, CQZ and ITUZ for a callsign'''
+    info = {}
+    info['country'] = current_app.cic.get_country_name(callsign)
+    info['dxcc'] = current_app.cic.get_adif_id(callsign)
+    info['ituz'] = current_app.cic.get_ituz(callsign)
+    info['cqz'] = current_app.cic.get_cqz(callsign)
+    return info
+
 
 @qsos.route("/<station_callsign>/new", methods=['GET','POST'])
 @login_required
@@ -250,6 +310,18 @@ def sota(event):
                 newqso.my_gridsquare = summit['locator']
                 newqso.my_country = summit['associationName']
                 db.session.commit()
+        if station_callsign:
+            info = dxcclookup(station_callsign)
+            newqso.my_dxcc = info['dxcc']
+            newqso.my_country = info['country']
+            newqso.my_itu_zone = info['ituz']
+            newqso.my_cq_zone = info['cqz']
+        if call:
+            info = dxcclookup(call)
+            newqso.dxcc = info['dxcc']
+            newqso.country = info['country']
+            newqso.ituz = info['ituz']
+            newqso.cqz = info['cqz']
         user = User.query.filter_by(id=current_user.get_id()).first()
         selectedevents=[]
         for ev in user.selected_events:
@@ -303,6 +375,18 @@ def sat(event):
         newqso = QSO(qso_date=qso_date, time_on=time_on, call=call, station_callsign=station_callsign,
                      band=band, freq=freq, sat_name=sat_name, sat_mode=sat_mode, mode=mode,
                      submode=submode, gridsquare=gridsquare, my_gridsquare=my_gridsquare, prop_mode=prop_mode)
+        if station_callsign:
+            info = dxcclookup(station_callsign)
+            newqso.my_dxcc = info['dxcc']
+            newqso.my_country = info['country']
+            newqso.my_itu_zone = info['ituz']
+            newqso.my_cq_zone = info['cqz']
+        if call:
+            info = dxcclookup(call)
+            newqso.dxcc = info['dxcc']
+            newqso.country = info['country']
+            newqso.ituz = info['ituz']
+            newqso.cqz = info['cqz']
         user = User.query.filter_by(id=current_user.get_id()).first()
         selectedevents=[]
         for ev in user.selected_events:
