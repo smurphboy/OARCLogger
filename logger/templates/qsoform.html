@@ -910,13 +910,13 @@ $(document).ready(function() {
         WINMOR: [],
         WSPR: []	
     }
-    $('#mode').on('blur', function() {
+    $('#mode').on('change', function() {
     $('#submode').html(
         diction[$(this).val()].reduce(function(p, c) {
         return p.concat('<option value="' + c + '">' + c + '</option>');
         }, '')
     );
-    }).trigger('change');
+    }).trigger('blur');
 
 </script>
 {% endblock %}
