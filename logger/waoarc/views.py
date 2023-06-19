@@ -22,10 +22,21 @@ def about():
 @waoarc.route("/leaderboards")
 def leaderboards():
     '''Worked All OARC Season 2 leaderboards'''
-    return render_template('leaderboard.html')
+    facts = {}
+    facts['totalusers'] = User.query.count()
+    facts['totalcallsigns'] = Callsign.query.count()
+    #calls = QSO.query.filter(QSO.call.in_(Callsign.name)).all()
+    #facts['unclaimedcallsigns'] = 
+    #print ("Calls: ", calls)
+    return render_template('leaderboard.html', facts=facts)
 
 
 @waoarc.route("/gettingstarted")
 def gettingstarted():
     '''Worked All OARC Season 2 getting started page'''
     return render_template('gettingstarted.html')
+
+@waoarc.route("/users")
+def users():
+    '''Detail of Users and Callsigns tile on Leaderboard'''
+    return render_template('users.html')

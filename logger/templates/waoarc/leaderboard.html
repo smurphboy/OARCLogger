@@ -19,13 +19,9 @@
         <div class="tile is-ancestor">
             <div class="tile is-4 is-vertical is-parent">
                 <div class="tile is-child box">
-                    <h1 class="title"><i class="fa-solid fa-address-card"></i> <a href="{{ url_for('users.profile', user=current_user.name) }}">Callsigns</a></h1>
-                    <p class="subtitle">You have {{ current_user.callsigns | length }} callsigns with {{ totalqsos }} QSOs in total</p>
-                    {% for callsign in current_user.callsigns %}
-                    <ul>
-                        <li><a class="has-text-weight-semibold" href="{{ url_for ('callsigns.call', callsign=callsign['name'] | replace('/','_'))  }}">{{ callsign.name }}</a> with {{ qsocount(callsign.name) }} QSOs</li>
-                    </ul>
-                    {% endfor %}
+                    <h1 class="title"><i class="fa-solid fa-address-card"></i> <a href="{{ url_for('waoarc.users') }}">Users & Callsigns</a></h1>
+                    <p class="subtitle">There are currently {{ facts.totalusers }} OARC members registered with {{ facts.totalcallsigns }} callsigns.</p>
+                    <p>There are {{ facts.unclaimedcallsigns }} unclaimed callsigns identified in QSOs.</p>
                 </div>
                 <div class="tile is-child box">
                     <h1 class="title"><i class="fas fa-flag-usa" aria-hidden="true"></i> DXCC</h1>

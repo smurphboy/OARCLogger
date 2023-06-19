@@ -1,9 +1,62 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% block title %}<p class="title">About Worked All OARC Season 2</p>
-    <p class="subtitle">Welcome to OARCs Logging website.</p>
-    <p>This was designed to support the Worked All OARC Season 2 (2023).</p>
-    <p>It allows OARC members to log all their contacts for 'contest' either individually, or by importing an ADI file (restrictions apply).</p>
-    {% endblock %}
+<div class="bd-hero-heading">
+    <h1 class="title is-size-1">
+        {% block title %} <p>About Worked All OARC Season 2</p> {% endblock %}
+    </h1>
+    <div class="subtitle is-4 algolia-lvl1">
+        <p>Welcome to Logging website for WAOARC S2.</p>     
+    </div>
+</div>
+</section>
+<section>
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="box notification">
+            <div class="notification is-info">
+                {% for message in messages%}
+                {{ message }}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% endwith %}
+        <div class="box">
+            <h1 class="title">About WAOARC</h1>
+            <h4 class="title is-4">Goal:</h4>
+            <div class="block">Work members of OARC, using Radio, having fun in the process.</div>
+            <h4 class="title is-4">Timing:</h4>
+            <div class="block">1 July 2023 - 31 August 2023</div>
+            <h4 class="title is-4">Rules:</h4>
+            <div class="block">No rules as this isn't a contest. However, we do have some guidelines:</div>
+            <div class="content">
+                <ul>
+                    <li>Only QSOs between OARC members count</li>
+                    <li>Only QSOs logged on the OARC Logging site will count</li>
+                    <li>Highlight in your QSO (using comments), what makes this QSO new / novel.</li>
+                    <li>Only one QSO between a pair of members will count for the contest per band / mode</li>
+                        <ul>
+                        <li>i.e. you can work a member on multiple bands and modes but it won't score as highly as working many members on the same band / mode.</li>
+                        </ul>
+                    <li>As long as RF is involved somewhere in the QSO, it can be counted as a QSO.</li>
+                        <ul><li>This isn't an RSGB or ARRL contest</li></ul>
+                    <li>All attempts at 'lawyering' will be ruled ineligible unless they are also cool / novel / new.</li>
+                    <li>Trying too hard will result in a diminishing returns effect occurring to your score.</li>
+                    <li>There may be prizes</li>
+                    <ul>
+                        <li>This will be decided by the community.</li>
+                        <li>Trying to win prizes will make you ineligible for prizes.</li>
+                    </ul>
+                    <li>Rulings / questions / queries will be resolved in the #activity-hub channel</li>
+                    <ul>
+                    <li>Simon - M0SMU will try to resolve all issues but may resort to community input.</li>
+                    <li>All decisions are final and binding</li>
+                    </ul>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}
