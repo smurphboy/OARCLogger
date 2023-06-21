@@ -33,6 +33,10 @@ def leaderboards():
     facts['totaldxcc'] = QSO.query.with_entities(QSO.dxcc).distinct().count()
     facts['cqztable'] = db.session.query(QSO.station_callsign, db.func.count(db.distinct(QSO.cqz))).group_by(QSO.station_callsign).order_by(db.func.count(db.distinct(QSO.cqz)).desc()).limit(10).all()
     facts['totalcqz'] = QSO.query.with_entities(QSO.cqz).distinct().count()
+    facts['ituztable'] = db.session.query(QSO.station_callsign, db.func.count(db.distinct(QSO.ituz))).group_by(QSO.station_callsign).order_by(db.func.count(db.distinct(QSO.ituz)).desc()).limit(10).all()
+    facts['totalituz'] = QSO.query.with_entities(QSO.ituz).distinct().count()
+    facts['bandtable'] = db.session.query(QSO.station_callsign, db.func.count(db.distinct(QSO.band))).group_by(QSO.station_callsign).order_by(db.func.count(db.distinct(QSO.band)).desc()).limit(10).all()
+    facts['totalbands'] = QSO.query.with_entities(QSO.band).distinct().count()
     return render_template('leaderboard.html', facts=facts)
 
 

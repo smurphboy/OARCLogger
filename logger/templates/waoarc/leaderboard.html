@@ -25,8 +25,11 @@
                 </div>
                 <div class="tile is-child box">
                     <h1 class="title"><i class="fas fa-flag-usa" aria-hidden="true"></i> DXCC</h1>
-                    <p class="subtitle">Members have made contact with {{ facts.totaldxcc }} unique DXCC across all callsigns</p>
-                    <p class="subtitle">Top Ten DXCC callsigns are:</p>
+                    <p class="subtitle">Members have made contact with:</p>
+                    <div class="block">
+                    <ul><li>{{ facts.totaldxcc }} unique DXCC,</li><li>{{ facts.totalcqz}} unique CQ Zones and</li><li>{{ facts.totalituz }} ITU Zones across all callsigns</li></ul>
+                    </div>
+                    <h4 class="title is-4">Top Ten DXCC callsigns are:</h4>
                     {% if facts.dxcctable %}
                     <table class="table">
                         <thead>
@@ -46,12 +49,73 @@
                         </tbody>
                     </table>
                     {% endif %}
+                    <h4 class="title is-4">Top Ten CQZ callsigns are:</h4>
+                    {% if facts.cqztable %}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Callsign</th>
+                                <th>Distinct CQZ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    {% for cqz in facts.cqztable %}
+                    <tr>
+                        {%- if loop.index > 10 %}{% break %}{% endif %}
+                        <td><span class="has-text-weight-semibold">{{ cqz[0] }}</span></td>
+                        <td>{{ cqz[1] }}</td>
+                    </tr>
+                    {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+                    <h4 class="title is-4">Top Ten ITUZ callsigns are:</h4>
+                    {% if facts.ituztable %}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Callsign</th>
+                                <th>Distinct ITUZ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    {% for ituz in facts.ituztable %}
+                    <tr>
+                        {%- if loop.index > 10 %}{% break %}{% endif %}
+                        <td><span class="has-text-weight-semibold">{{ ituz[0] }}</span></td>
+                        <td>{{ ituz[1] }}</td>
+                    </tr>
+                    {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
                 </div>
             </div>
             <div class="tile is-parent is-vertical">
                 <div class="tile is-child box">
                     <h1 class="title"><i class="fa-solid fa-tower-broadcast"></i> Bands and Modes</h1>
-                    <p>You have worked {{ bands|length }} Bands and {{ modes|length }} Modes across all your Callsigns</p>
+                    <p class="subtitle">Members have worked {{ facts.totalbands }} Bands and {{ facts.totalmodes }} Modes across all Callsigns</p>
+                    <h4 class="title is-4">Top Ten callsigns working bands:</h4>
+                    {% if facts.bandtable %}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Callsign</th>
+                                <th>Distinct Bands</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    {% for band in facts.bandtable %}
+                    <tr>
+                        {%- if loop.index > 10 %}{% break %}{% endif %}
+                        <td><span class="has-text-weight-semibold">{{ band[0] }}</span></td>
+                        <td>{{ band[1] }}</td>
+                    </tr>
+                    {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+
                 </div>
                 <div class="tile is-child box">
                     <h1 class="title"><i class="fa-regular fa-calendar"></i> Time and Date</h1>
