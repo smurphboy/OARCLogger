@@ -340,26 +340,26 @@
             </div>
             <div class="card">
                 <header class="card-header">
-                    <p class="card-header-title">Additional Callsigns</p>
-                    <a class="card-header-icon" id="add_callsigns" aria-label="more options">
+                    <p class="card-header-title">Reports & Serials</p>
+                    <a class="card-header-icon" id="reports" aria-label="more options">
                         <span class="icon">
-                            <i class="fas fa-angle-down" aria-hidden="true"></i>
+                            <i class="fa-solid fa-signal"></i>
                         </span>
                     </a>
                 </header>
-                <div class="card-content is-hidden" id="add_callsigns-content">
+                <div class="card-content" id="reports-content">
                     <nav class="level">
                         <div class="level-left">
                             <div class="level-item">
                                 <div class="field">
-                                    {{ form.station_callsign.label(class_='label') }}
+                                    {{ form.rst_rcvd.label(class_='label') }}
                                     <div class="control">
-                                        {{ form.station_callsign(class_="input", placeholder_="Logged call on the air") }}
+                                        {{ form.rst_rcvd(class_="input", placeholder_="RST Received") }}
                                     </div>
                                 </div>
-                                {% if form.station_callsign.errors %}
+                                {% if form.rst_rcvd.errors %}
                                     <ul class="errors">
-                                        {% for error in form.station_callsign.errors %}
+                                        {% for error in form.rst_rcvd.errors %}
                                             <li>{{ error }}</li>
                                         {% endfor %}
                                     </ul>
@@ -367,14 +367,14 @@
                             </div>
                             <div class="level-item">
                                 <div class="field">
-                                    {{ form.operator.label(class_='label') }}
+                                    {{ form.rst_sent.label(class_='label') }}
                                     <div class="control">
-                                        {{ form.operator(class_="input", placeholder_="Logging OPs call") }}
+                                        {{ form.rst_sent(class_="input", placeholder_="RST Sent") }}
                                     </div>
                                 </div>
-                                {% if form.operator.errors %}
+                                {% if form.rst_sent.errors %}
                                     <ul class="errors">
-                                        {% for error in form.operator.errors %}
+                                        {% for error in form.rst_sent.errors %}
                                             <li>{{ error }}</li>
                                         {% endfor %}
                                     </ul>
@@ -386,14 +386,14 @@
                         <div class="level-left">
                             <div class="level-item">
                                 <div class="field">
-                                    {{ form.owner_callsign.label(class_='label') }}
+                                    {{ form.srx.label(class_='label') }}
                                     <div class="control">
-                                        {{ form.owner_callsign(class_="input", placeholder_="Call of Station Owner") }}
+                                        {{ form.srx(class_="input", placeholder_="Serial Received") }}
                                     </div>
                                 </div>
-                                {% if form.owner_callsign.errors %}
+                                {% if form.srx.errors %}
                                     <ul class="errors">
-                                        {% for error in form.owner_callsign.errors %}
+                                        {% for error in form.srx.errors %}
                                             <li>{{ error }}</li>
                                         {% endfor %}
                                     </ul>
@@ -401,29 +401,48 @@
                             </div>
                             <div class="level-item">
                                 <div class="field">
-                                    {{ form.contacted_op.label(class_='label') }}
+                                    {{ form.stx.label(class_='label') }}
                                     <div class="control">
-                                        {{ form.contacted_op(class_="input", placeholder_="Call of contacted Op") }}
+                                        {{ form.stx(class_="input", placeholder_="Serial Received") }}
                                     </div>
                                 </div>
-                                {% if form.contacted_op.errors %}
+                                {% if form.stx.errors %}
                                     <ul class="errors">
-                                        {% for error in form.contacted_op.errors %}
+                                        {% for error in form.stx.errors %}
                                             <li>{{ error }}</li>
                                         {% endfor %}
                                     </ul>
                                 {% endif %}
                             </div>
+                        </div>
+                    </nav>
+                    <nav class="level">
+                        <div class="level-left">
                             <div class="level-item">
                                 <div class="field">
-                                    {{ form.eq_call.label(class_='label') }}
+                                    {{ form.srx_string.label(class_='label') }}
                                     <div class="control">
-                                        {{ form.eq_call(class_="input", placeholder_="Call of owner of contacted station") }}
+                                        {{ form.srx_string(class_="input", placeholder_="Serial String Received") }}
                                     </div>
                                 </div>
-                                {% if form.eq_call.errors %}
+                                {% if form.srx_string.errors %}
                                     <ul class="errors">
-                                        {% for error in form.eq_call.errors %}
+                                        {% for error in form.srx_string.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div> 
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.stx_string.label(class_='label') }}
+                                    <div class="control">
+                                        {{ form.stx_string(class_="input", placeholder_="Serial String Sent") }}
+                                    </div>
+                                </div>
+                                {% if form.stx_string.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.stx_string.errors %}
                                             <li>{{ error }}</li>
                                         {% endfor %}
                                     </ul>
@@ -703,6 +722,38 @@
                             </fieldset>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title is-info">Comment</p>
+                    <a class="card-header-icon" id="comment" aria-label="more options">
+                        <span class="icon">
+                            <i class="fa-regular fa-comment"></i>
+                        </span>
+                    </a>
+                </header>
+                <div class="card-content" id="comment-content">
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.comment.label(class_="label") }}
+                                    <div class="control">
+                                    {{ form.comment(class_="textarea") }}
+                                    </div>
+                                    <p class="help">Use this for notes about the QSO, particularly anything that couldn't be logged.</p>
+                                </div>
+                                {% if form.comment.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.comment.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </nav>
                 </div>
             </div>
             <div class="box">
