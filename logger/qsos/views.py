@@ -52,6 +52,12 @@ def save_changes(qso, form, new):
     qso.my_sota_ref = request.form.get('my_sota_ref', '').upper() or None
     qso.pota_ref = request.form.get('pota_ref', '').upper() or None
     qso.my_pota_ref = request.form.get('my_pota_ref', '').upper() or None
+    qso.rst_rcvd = request.form.get('rst_rcvd', '') or None
+    qso.rst_sent = request.form.get('rst_sent', '') or None
+    qso.srx = request.form.get('srx', '') or None
+    qso.srx_string = request.form.get('srx_string', '') or None
+    qso.stx = request.form.get('stx', '') or None
+    qso.stx_string = request.form.get('stx_string', '') or None
     qso.sat_name = request.form.get('sat_name', '') or None
     qso.sat_mode = request.form.get('sat_mode', '') or None
     qso.dxcc = request.form.get('dxcc', '') or None
@@ -62,6 +68,7 @@ def save_changes(qso, form, new):
     qso.my_itu_zone = request.form.get('my_itu_zone', '') or None
     qso.country = request.form.get('country', '') or None
     qso.my_country = request.form.get('my_country', '') or None
+    qso.comment = request.form.get('comment', '') or None
     stat_callsign = request.form.get('station_callsign', '') or qso.station_callsign
     qso.station_callsign = stat_callsign
     if qso.sota_ref:
