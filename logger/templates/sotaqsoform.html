@@ -335,6 +335,26 @@
                                 </div>
                             </div>
                         </nav>
+                        <nav class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    <div class="field">
+                                        {{ form.comment.label(class_="label") }}
+                                        <div class="control">
+                                        {{ form.comment(class_="textarea") }}
+                                        </div>
+                                        <p class="help">Use this for notes about the QSO, particularly anything that couldn't be logged.</p>
+                                    </div>
+                                    {% if form.comment.errors %}
+                                        <ul class="errors">
+                                            {% for error in form.comment.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </nav>
                     </div>
                 </div>
                 <div class="box">

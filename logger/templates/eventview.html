@@ -218,6 +218,12 @@
                     <a class="button is-link level-item" href="{{ url_for ('qsos.sat', event=event.id )  }}"><span class="icon"><i class="fa-solid fa-satellite"></i></span></a>
                 </div>
                 {% endif %}
+                {% if event.type == "Non-Amateur" %}
+                <div class="level-left">
+                    <p class="level-item">Add a Non-Amateur QSO to this event</p>
+                    <a class="button is-link level-item" href="{{ url_for ('qsos.nonam', event=event.id )  }}"><span class="icon"><i class="fa-solid fa-satellite"></i></span></a>
+                </div>
+                {% endif %}
                 <div class="level-right">
                     <p class="level-item">Export QSOs for this event</p>
                     <a class="button is-link level-item" href="{{ url_for ('events.export', id=event.id )  }}"><span class="icon"><i class="fa-solid fa-file-arrow-down"></i></span></a>
