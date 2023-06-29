@@ -17,6 +17,37 @@ EXPORT_DATES = ['qso_date', 'qso_date_off', 'qslrdate', 'qslsdate', 'lotw_qslsda
 
 EXPORT_TIMES = ['time_on', 'time_off']
 
+LATS = ['lat', 'my_lat']
+
+LONS = ['lon', 'my_lon']
+
+
+def adiflon(lon):
+    if not lon:
+        return False
+    lonstring = ""
+    if lon == abs(lon):
+        lonstring += ("E")
+    else:
+        lonstring +=("W")
+    lonstring += (f"{abs(int(lon)):03d} ")
+    lonstring += (f"{(abs(lon) % 1 * 60.0):06.3f}")
+    return lonstring
+
+
+def adiflat(lat):
+    if not lat:
+        return False
+    latstring = ""
+    if lat == abs(lat):
+        latstring += ("N")
+    else:
+        latstring += ("S")
+    latstring += (f"{abs(int(lat)):03d} ")
+    latstring += (f"{(abs(lat) % 1 * 60.0):06.3f}")
+    return latstring
+
+
 def adiftext(qsos):
     '''returns ADIF text (ready for export) from a collection of QSOs'''
     # we want to export an ADIF header with information about our export and then an ADI row for each record
@@ -39,6 +70,17 @@ def adiftext(qsos):
                     ADIF += "".join("<{0}:6>{1:%H%M%S}\n".format(str(col).split('.')[1], timeused))
                     continue
             if str(col).split('.')[1] == "id":
+                continue
+            if str(col).split('.')[1] in LATS:
+                lat = getattr(qso,str(col).split('.')[1])
+                if lat:
+                    print(lat)
+                    ADIF += "".join("<{0}:11>{1}\n".format(str(col).split('.')[1], adiflat(float(lat))))
+                continue
+            if str(col).split('.')[1] in LONS:
+                lon = getattr(qso,str(col).split('.')[1])
+                if lon:
+                    ADIF += "".join("<{0}:11>{1}\n".format(str(col).split('.')[1], adiflon(float(lon))))
                 continue
             else:
                 if getattr(qso,str(col).split('.')[1]):
