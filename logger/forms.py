@@ -41,9 +41,21 @@ class QSOForm(FlaskForm):
     my_sota_ref = StringField('My SOTA Reference')
     pota_ref = StringField('POTA Reference')
     my_pota_ref = StringField('My POTA Reference')
+    wwff_ref = StringField('WWFF Reference')
+    my_wwff_ref = StringField('My WWFF Reference')
+    sig = StringField('Special Interest Group')
+    sig_info = StringField('SIG Information')
+    my_sig = StringField('My Special Interest Group')
+    my_sig_info = StringField('My SIG Information')
+    iota = StringField('Islands on the Air', validators=[Length(max=6)])
+    my_iota = StringField('My IOTA', validators=[Length(max=6)])
+    prop_mode = SelectField('Propogation Mode',
+                            choices=[('', '----'), ('AS', 'Aircraft Scatter'), ('AUE', 'Aurora-E'), ('AE', 'Aurora'), ('BS', 'Backscatter'), ('ECH', 'Echolink'), ('EME', 'Earth-Moon-Earth'),
+                                     ('ES', 'Sporadic-E'), ('F2', 'F2 Reflection'), ('FAI', 'Field Aligned Irregularities'), ('GWAVE', 'Ground Wave'), ('INTERNET', 'Internet-assisted'),
+                                     ('ION', 'Ionoscatter'), ('IRL', 'IRLP'), ('LOS', 'Line of Signt'), ('MS', 'Meteor Scatter'), ('RPT', 'Repeater'), ('RS', 'Rain Scatter'),
+                                     ('SAT', 'Satellite'), ('TEP', 'Trans-equatorial'), ('TR', 'Tropospheric Ducting')])
     sat_name = StringField('Sat Name')
-    sat_mode = SelectField('Sat Mode',
-                       choices=['', 'H', 'A', 'V', 'U', 'L', 'S', 'S2', 'C', 'X', 'K', 'R']) # convert this to look at the config selected and bands on the rig
+    sat_mode = StringField('Sat Mode')
     band = SelectField('Band',
                        choices=['', '2190m', '630m', '560m', '160m', '80m', '60m', '40m', '30m', '20m', '17m', '15m',
                                 '12m', '10m', '8m', '6m', '5m', '4m', '2m', '1.25m', '70cm', '33cm', '23cm', '13cm',

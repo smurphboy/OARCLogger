@@ -68,9 +68,17 @@ def save_changes(qso, form, new):
     qso.my_itu_zone = request.form.get('my_itu_zone', '') or None
     qso.country = request.form.get('country', '') or None
     qso.my_country = request.form.get('my_country', '') or None
+    qso.wwff_ref = request.form.get('wwff_ref', '') or None
+    qso.my_wwff_ref = request.form.get('my_wwff_ref', '') or None
+    qso.sig = request.form.get('sig', '') or None
+    qso.sig_info = request.form.get('sig_info', '') or None
+    qso.my_sig = request.form.get('my_sig', '') or None
+    qso.my_sig_info = request.form.get('my_sig_info', '') or None
+    qso.iota = request.form.get('iota', '') or None
+    qso.my_iota = request.form.get('my_iota', '') or None
     qso.comment = request.form.get('comment', '') or None
-    stat_callsign = request.form.get('station_callsign', '') or qso.station_callsign
-    qso.station_callsign = stat_callsign
+    qso.prop_mode = request.form.get('prop_mode', '') or None
+    qso.station_callsign = request.form.get('station_callsign', '') or qso.station_callsign
     if qso.sota_ref:
         url = ("https://api2.sota.org.uk/api/summits/" + qso.sota_ref)
         sotasummit = requests.request("GET", url)
@@ -255,6 +263,14 @@ def lookupband():
         bandmode['band'] = str(bandmode['band']) + 'mm'
     print(str(bandmode['band']))
     return jsonify(bandmode=str(bandmode['band']))
+
+
+@qsos.route('/_maidenhead')
+def lookuplatlong():
+    gridsquare = request.args.get('maidenhead')
+    latlong = mh.to_location(gridsquare, center=True)
+    print(str(latlong))
+    return jsonify(latlong=latlong)
 
 
 @qsos.route('delete/<int:id>/<callsign>')

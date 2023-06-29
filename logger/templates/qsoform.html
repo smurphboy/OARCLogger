@@ -333,10 +333,123 @@
                             </div>   
                         </div>
                     </nav>
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.prop_mode.label(class_="label") }}
+                                    <div class="control">
+                                    {{ form.prop_mode(class_="input", placeholder_="e.g. Sat or ") }}
+                                    </div>
+                                    {% if form.prop_mode.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.prop_mode.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
+                            </div>
+                        </div>
+                    </nav>
                 </div>
                 <footer class="card-footer" id="modes_bands-footer">
                     <button class="button card-footer-item" id="modes_bandsbutton">Lookup Band from Freq</button>
                 </footer>
+            </div>
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title">Additional Callsigns</p>
+                    <a class="card-header-icon" id="add_callsigns" aria-label="more options">
+                        <span class="icon">
+                            <i class="fas fa-angle-down" aria-hidden="true"></i>
+                        </span>
+                    </a>
+                </header>
+                <div class="card-content is-hidden" id="add_callsigns-content">
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.station_callsign.label(class_='label') }}
+                                    <div class="control">
+                                        {{ form.station_callsign(class_="input", placeholder_="Logged call on the air") }}
+                                    </div>
+                                </div>
+                                {% if form.station_callsign.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.station_callsign.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.operator.label(class_='label') }}
+                                    <div class="control">
+                                        {{ form.operator(class_="input", placeholder_="Logging OPs call") }}
+                                    </div>
+                                </div>
+                                {% if form.operator.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.operator.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </nav>
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.owner_callsign.label(class_='label') }}
+                                    <div class="control">
+                                        {{ form.owner_callsign(class_="input", placeholder_="Call of Station Owner") }}
+                                    </div>
+                                </div>
+                                {% if form.owner_callsign.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.owner_callsign.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.contacted_op.label(class_='label') }}
+                                    <div class="control">
+                                        {{ form.contacted_op(class_="input", placeholder_="Call of contacted Op") }}
+                                    </div>
+                                </div>
+                                {% if form.contacted_op.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.contacted_op.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.eq_call.label(class_='label') }}
+                                    <div class="control">
+                                        {{ form.eq_call(class_="input", placeholder_="Call of owner of contacted station") }}
+                                    </div>
+                                </div>
+                                {% if form.eq_call.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.eq_call.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div> 
+                        </div>
+                    </nav>
+                </div>
             </div>
             <div class="card">
                 <header class="card-header">
@@ -347,7 +460,7 @@
                         </span>
                     </a>
                 </header>
-                <div class="card-content" id="reports-content">
+                <div class="card-content is-hidden" id="reports-content">
                     <nav class="level">
                         <div class="level-left">
                             <div class="level-item">
@@ -461,7 +574,7 @@
                         </span>
                     </a>
                 </header>
-                <div class="card-content" id="locations-content">
+                <div class="card-content is-hidden" id="locations-content">
                     <div class="field is-horizontal">
                         <div class="field-label is-normal">
                             {{ form.my_gridsquare.label(class_="label") }}
@@ -501,12 +614,9 @@
                                 {% endfor %}
                             </ul>
                             {% endif %}
-                            <div class="field has-addons">
+                            <div class="field">
                                 <div class="control">
                                 {{ form.my_lon(class_="input", placeholder_="My longitude") }}
-                                </div>
-                                <div class="control">
-                                    <a class="button is-info" id="mylatlon2maiden">&lt; Gridsquare</a>
                                 </div>
                             </div>
                             {% if form.my_lon.errors %}
@@ -557,12 +667,9 @@
                                 {% endfor %}
                             </ul>
                             {% endif %}
-                            <div class="field has-addons">
+                            <div class="field">
                                 <div class="control">
                                 {{ form.lon(class_="input", placeholder_="Called station longitude") }}
-                                </div>
-                                <div class="control">
-                                    <a class="button is-info" id="latlon2maiden">&lt; Gridsquare</a>
                                 </div>
                             </div>
                             {% if form.lon.errors %}
@@ -578,7 +685,7 @@
             </div>
             <div class="card">
                 <header class="card-header">
-                    <p class="card-header-title is-info">SOTA / POTA</p>
+                    <p class="card-header-title is-info">SOTA / POTA / IOTA / WWFF</p>
                     <a class="card-header-icon" id="sota_pota" aria-label="more options">
                         <span class="icon">
                             <i class="fas fa-angle-down" aria-hidden="true"></i>
@@ -722,6 +829,185 @@
                             </fieldset>
                         </div>
                     </div>
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            {{ form.my_wwff_ref.label(class_="label") }}
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="control">
+                                {{ form.my_wwff_ref(class_="input", placeholder_="e.g. GFF-0004") }}
+                                </div>
+                            </div>
+                            {% if form.my_wwff_ref.errors %}
+                            <ul class="errors">
+                                {% for error in form.my_wwff_ref.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            {{ form.wwff_ref.label(class_="label") }}
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="control">
+                                {{ form.wwff_ref(class_="input", placeholder_="e.g. GFF-0004") }}
+                                </div>
+                            </div>
+                            {% if form.wwff_ref.errors %}
+                            <ul class="errors">
+                                {% for error in form.wwff_ref.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            {{ form.my_wwff_ref.label(class_="label") }}
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="control">
+                                {{ form.my_wwff_ref(class_="input", placeholder_="e.g. GFF-0004") }}
+                                </div>
+                            </div>
+                            {% if form.my_wwff_ref.errors %}
+                            <ul class="errors">
+                                {% for error in form.my_wwff_ref.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            {{ form.iota.label(class_="label") }}
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="control">
+                                {{ form.iota(class_="input", placeholder_="e.g. EU-005") }}
+                                </div>
+                            </div>
+                            {% if form.iota.errors %}
+                            <ul class="errors">
+                                {% for error in form.iota.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            {{ form.my_iota.label(class_="label") }}
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="control">
+                                {{ form.my_iota(class_="input", placeholder_="e.g. EU-005") }}
+                                </div>
+                            </div>
+                            {% if form.my_iota.errors %}
+                            <ul class="errors">
+                                {% for error in form.my_iota.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title is-info">Sat and SIG</p>
+                    <a class="card-header-icon" id="sat_sig" aria-label="more options">
+                        <span class="icon">
+                            <i class="fas fa-angle-down" aria-hidden="true"></i>
+                        </span>
+                    </a>
+                </header>
+                <div class="card-content is-hidden" id="sat_sig-content">
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.sig.label(class_="label") }}
+                                    <div class="field">
+                                        <div class="control">
+                                        {{ form.sig(class_="input", placeholder_="e.g. WAB or WAI") }}
+                                        </div>
+                                    </div>
+                                    {% if form.sig.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.sig.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.sig_info.label(class_="label") }}
+                                    <div class="control">
+                                    {{ form.sig_info(class_="input", placeholder_="e.g. ST46") }}
+                                    </div>
+                                    {% if form.sig_info.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.sig_info.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.sat_name.label(class_="label") }}
+                                    <div class="field">
+                                        <div class="control">
+                                        {{ form.sat_name(class_="input", placeholder_="e.g. SO-50") }}
+                                        </div>
+                                    </div>
+                                    {% if form.sat_name.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.sat_name.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.sat_mode.label(class_="label") }}
+                                    <div class="control">
+                                    {{ form.sat_mode(class_="input", placeholder_="e.g. V/U") }}
+                                    </div>
+                                    {% if form.sat_mode.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.sat_mode.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
                 </div>
             </div>
             <div class="card">
@@ -781,6 +1067,18 @@ $(document).ready(function() {
 
     $("#sota_pota").click(function() {
     $("#sota_pota-content").toggleClass('is-hidden');
+    });
+
+    $("#locations").click(function() {
+    $("#locations-content").toggleClass('is-hidden');
+    });
+
+    $("#sat_sig").click(function() {
+    $("#sat_sig-content").toggleClass('is-hidden');
+    });
+
+    $("#reports").click(function() {
+    $("#reports-content").toggleClass('is-hidden');
     });
 
     $("#qsoon").click(function() {
@@ -846,6 +1144,30 @@ $(document).ready(function() {
             $("#band_rx").val(data.bandmode);
         })
         );
+        return false;
+        });
+    });
+
+    $(function() {
+        $('#mymaiden2latlon').click(function() {
+        $.getJSON($SCRIPT_ROOT + '/qsos/_maidenhead', {
+            maidenhead: $('input[name="my_gridsquare"]').val()
+        }, function(data) {
+            $("#my_lat").val(data.latlong[0]),
+            $("#my_lon").val(data.latlong[1]);
+        })
+        return false;
+        });
+    });
+
+    $(function() {
+        $('#maiden2latlon').click(function() {
+        $.getJSON($SCRIPT_ROOT + '/qsos/_maidenhead', {
+            maidenhead: $('input[name="gridsquare"]').val()
+        }, function(data) {
+            $("#lat").val(data.latlong[0]),
+            $("#lon").val(data.latlong[1]);
+        })
         return false;
         });
     });
