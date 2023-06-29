@@ -76,6 +76,8 @@ def save_changes(event, form, new):
         event.type = request.form['type']
         event.sota_ref = request.form.get('sota_ref', '') or None
         event.pota_ref = request.form.get('pota_ref', '') or None
+        event.sat_name = request.form.get('sat_name', '') or None
+        event.sat_mode = request.form.get('sat_mode', '') or None
         event.my_gridsquare = request.form.get('my_gridsquare', '') or None
         event.comment = request.form['comment']
         event.user_id=current_user.get_id()
