@@ -6,6 +6,7 @@
 			<h1 class="title algolia-lvl0">
 				{% block title %} <p>Welcome, {{ current_user.name }}</p> {% endblock %}
 			</h1>
+            <p class="subtitle">All QSOs are summarised here. Only QSOs between 1 July 2023 and 31 August 2023 are eligible for WAOARC Season 2.</p>
 			{% if (callsigns is defined) and callsigns %}
 			<div class="subtitle is-4 algolia-lvl1">
 				<p>You have the following callsigns</p>     
