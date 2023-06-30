@@ -52,7 +52,7 @@ class QSOForm(FlaskForm):
     prop_mode = SelectField('Propogation Mode',
                             choices=[('', '----'), ('AS', 'Aircraft Scatter'), ('AUE', 'Aurora-E'), ('AE', 'Aurora'), ('BS', 'Backscatter'), ('ECH', 'Echolink'), ('EME', 'Earth-Moon-Earth'),
                                      ('ES', 'Sporadic-E'), ('F2', 'F2 Reflection'), ('FAI', 'Field Aligned Irregularities'), ('GWAVE', 'Ground Wave'), ('INTERNET', 'Internet-assisted'),
-                                     ('ION', 'Ionoscatter'), ('IRL', 'IRLP'), ('LOS', 'Line of Signt'), ('MS', 'Meteor Scatter'), ('RPT', 'Repeater'), ('RS', 'Rain Scatter'),
+                                     ('ION', 'Ionoscatter'), ('IRL', 'IRLP'), ('LOS', 'Line of Sight'), ('MS', 'Meteor Scatter'), ('RPT', 'Repeater'), ('RS', 'Rain Scatter'),
                                      ('SAT', 'Satellite'), ('TEP', 'Trans-equatorial'), ('TR', 'Tropospheric Ducting')])
     sat_name = StringField('Sat Name')
     sat_mode = StringField('Sat Mode')
