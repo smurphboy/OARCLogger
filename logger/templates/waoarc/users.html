@@ -85,14 +85,16 @@ $(document).ready(function () {
         lengthMenu: [
             [10, 25, 50, -1],
             [10, 25, 50, 'All'],
-        ]
+        ],
+        order: [[2, 'desc']],
     });
 
     $('#unclaimed').DataTable({
         lengthMenu: [
             [10, 25, 50, -1],
             [10, 25, 50, 'All'],
-        ]
+        ],
+        order: [[1, 'desc']],
     });
 
     setTimeout(function(){
