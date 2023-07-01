@@ -48,7 +48,7 @@ def gettingstarted():
 @waoarc.route("/users")
 def users():
     '''Detail of Users and Callsigns tile on Leaderboard'''
-    calls = db.session.query(User.name, func.string_agg(Callsign.name, ', ')).join(User).group_by(User.name).all()
+    calls = db.session.query(User.name, Callsign.name, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name, Callsign.name).all()
     unccalls = QSO.query.with_entities(QSO.call).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).distinct()
     callsigns = Callsign.query.with_entities(Callsign.name).distinct()
     unclaimedcalls = list(set(unccalls).difference(callsigns))
