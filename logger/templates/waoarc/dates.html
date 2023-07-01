@@ -34,7 +34,7 @@
     <div class="container">
         <div class="box">
             <h1 class="title">QSOs by Day</h1>
-            <table id="calls" class="table is-striped is-hoverable">
+            <table id="qsoday" class="table is-striped is-hoverable">
                 <thead>
                     <tr>
                         <th>Date</th>
@@ -53,31 +53,71 @@
                 </tbody>
             </table>
         </div>
-        <div>
+        <div class="box">
+            <h1 class="title">QSOs by Day Chart</h1>
             <canvas id="myChart"></canvas>
+        </div>
+        <div class="box">
+            <h1 class="title">QSOs by User by Day</h1>
+            <table id="qsouserday" class="table is-striped is-hoverable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>User</th>
+                        <th>Total QSOs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for day in usersbyday %}
+                    <tr>
+                        <td>{{ day[0] }}</td>
+                        <td>{{ day[1] }}</td>
+                        <td>{{ day[2] }}</td>
+                    </tr>
+                    {% else %}
+                    No QSOs
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </section>
 <script>
-    const ctx = document.getElementById('myChart');
-  
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: {{ labels|safe }},
-            datasets: [{
-            label: 'Count by Day',
-            data: {{ values }},
-            borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-            y: {
-                beginAtZero: true
-            }
-            }
+const ctx = document.getElementById('myChart');
+
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: {{ labels|safe }},
+        datasets: [{
+        label: 'Count by Day',
+        data: {{ values }},
+        borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+        y: {
+            beginAtZero: true
         }
+        }
+    }
+});
+
+$(document).ready(function () {
+    $('#qsoday').DataTable({
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ]
     });
-  </script>
+
+    $('#qsouserday').DataTable({
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ]
+    });
+});
+</script>
 {% endblock %}

@@ -1,7 +1,6 @@
 import datetime
 import operator
 import os
-from datetime import datetime
 
 from flask import (Blueprint, abort, current_app, flash, redirect,
                    render_template, request, url_for)
@@ -38,7 +37,9 @@ def leaderboards():
     facts['totalituz'] = QSO.query.with_entities(QSO.ituz).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).distinct().count()
     facts['bandtable'] = db.session.query(QSO.station_callsign, db.func.count(db.distinct(QSO.band))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.station_callsign).order_by(db.func.count(db.distinct(QSO.band)).desc()).limit(10).all()
     facts['totalbands'] = QSO.query.with_entities(QSO.band).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).distinct().count()
-    return render_template('leaderboard.html', facts=facts, unclaimed=unclaimed)
+    facts['qsostoday'] = db.session.query(QSO.id).filter(QSO.qso_date==datetime.date.today()).count()
+    qsobyday = db.session.query(QSO.qso_date, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.qso_date).order_by(QSO.qso_date.desc()).all()
+    return render_template('leaderboard.html', facts=facts, unclaimed=unclaimed, qsobyday=qsobyday)
 
 
 @waoarc.route("/gettingstarted")
@@ -71,5 +72,5 @@ def dates():
     for label in labels:
         dates.append(label.strftime('%Y-%m-%d'))
     values = list(map(list, zip(*qsobyday)))[1]
-    print(dates)
-    return render_template('dates.html', qsobyday=qsobyday, labels=dates, values=values)
+    usersbyday = db.session.query(QSO.qso_date, User.name, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(QSO.qso_date, User.name).order_by(QSO.qso_date.desc()).all()
+    return render_template('dates.html', qsobyday=qsobyday, labels=dates, values=values, usersbyday=usersbyday)

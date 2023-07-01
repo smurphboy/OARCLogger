@@ -127,12 +127,29 @@
                 </div>
                 <div class="tile is-child box">
                     <h1 class="title"><i class="fa-regular fa-calendar"></i><a href="{{ url_for('waoarc.dates') }}"> Dates & Times</a></h1>
-                    <p class="subtitle">Last QSOs for each callsign</p>
-                    <ul>
-                        {% for call in calls %}
-                        <li><span class="has-text-weight-semibold">{{ call }}</span>: {{ latestqso(call) }}</li>
-                        {% endfor %}
-                    </ul>
+                    <p class="subtitle">QSOs by Date and Time</p>
+                    <div class="block">
+                        <p>Today there have been {{ facts.qsostoday }} QSOs.</p>
+                    </div>
+                    <h4 class="title is-4">QSOs by Day</h1>
+                    <table id="calls" class="table is-striped is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Total QSOs</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for qso in qsobyday %}
+                            <tr>
+                                <td>{{ qso[0] }}</td>
+                                <td>{{ qso[1] }}</td>
+                            </tr>
+                            {% else %}
+                            No QSOs
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div class="tile is-parent is-vertical">
