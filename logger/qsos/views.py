@@ -44,10 +44,10 @@ def save_changes(qso, form, new):
     qso.owner_callsign = request.form.get('owner_callsign', '').upper() or None
     qso.contacted_op = request.form.get('contacted_op', '').upper() or None
     qso.eq_call = request.form.get('eq_call', '').upper() or None
-    qso.lat = request.form.get('lat', '') or None
-    qso.my_lat = request.form.get('my_lat', '') or None
-    qso.lon = request.form.get('lon', '') or None
-    qso.my_lon = request.form.get('my_lon', '') or None
+    qso.lat = request.form.get('lat', '')[:11] or None
+    qso.my_lat = request.form.get('my_lat', '')[:11] or None
+    qso.lon = request.form.get('lon', '')[:11] or None
+    qso.my_lon = request.form.get('my_lon', '')[:11] or None
     qso.sota_ref = request.form.get('sota_ref', '').upper() or None
     qso.my_sota_ref = request.form.get('my_sota_ref', '').upper() or None
     qso.pota_ref = request.form.get('pota_ref', '').upper() or None
@@ -85,9 +85,9 @@ def save_changes(qso, form, new):
         if sotasummit.status_code == 200:
             summit = sotasummit.json()
             if not qso.lat:
-                qso.lat = summit['latitude']
+                qso.lat = summit['latitude'][:11]
             if not qso.lon:
-                qso.lon = summit['longitude']
+                qso.lon = summit['longitude'][:11]
             if not qso.gridsquare:
                 qso.gridsquare = summit['locator']
             if not qso.country:
@@ -99,9 +99,9 @@ def save_changes(qso, form, new):
         if sotasummit.status_code == 200:
             summit = sotasummit.json()
             if not qso.my_lat:
-                qso.my_lat = summit['latitude']
+                qso.my_lat = summit['latitude'][:11]
             if not qso.my_lon:
-                qso.my_lon = summit['longitude']
+                qso.my_lon = summit['longitude'][:11]
             if not qso.my_gridsquare:
                 qso.my_gridsquare = summit['locator']
             if not qso.my_country:
@@ -318,8 +318,8 @@ def sota(event):
             sotasummit = requests.request("GET", url)
             if sotasummit.status_code == 200:
                 summit = sotasummit.json()
-                newqso.lat = summit['latitude']
-                newqso.lon = summit['longitude']
+                newqso.lat = str(summit['latitude'])[:11]
+                newqso.lon = str(summit['longitude'])[:11]
                 newqso.gridsquare = summit['locator']
                 newqso.country = summit['associationName']
                 db.session.commit()
@@ -328,8 +328,8 @@ def sota(event):
             sotasummit = requests.request("GET", url)
             if sotasummit.status_code == 200:
                 summit = sotasummit.json()
-                newqso.my_lat = summit['latitude']
-                newqso.my_lon = summit['longitude']
+                newqso.my_lat = str(summit['latitude'])[:11]
+                newqso.my_lon = str(summit['longitude'])[:11]
                 newqso.my_gridsquare = summit['locator']
                 newqso.my_country = summit['associationName']
                 db.session.commit()
@@ -467,8 +467,8 @@ def nonam(event):
             sotasummit = requests.request("GET", url)
             if sotasummit.status_code == 200:
                 summit = sotasummit.json()
-                newqso.lat = summit['latitude']
-                newqso.lon = summit['longitude']
+                newqso.lat = str(summit['latitude'])[:11]
+                newqso.lon = str(summit['longitude'])[:11]
                 newqso.gridsquare = summit['locator']
                 newqso.country = summit['associationName']
                 db.session.commit()
@@ -477,8 +477,8 @@ def nonam(event):
             sotasummit = requests.request("GET", url)
             if sotasummit.status_code == 200:
                 summit = sotasummit.json()
-                newqso.my_lat = summit['latitude']
-                newqso.my_lon = summit['longitude']
+                newqso.my_lat = str(summit['latitude'])[:11]
+                newqso.my_lon = str(summit['longitude'])[:11]
                 newqso.my_gridsquare = summit['locator']
                 newqso.my_country = summit['associationName']
                 db.session.commit()
