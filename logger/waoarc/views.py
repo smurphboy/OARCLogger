@@ -49,4 +49,13 @@ def gettingstarted():
 def users():
     '''Detail of Users and Callsigns tile on Leaderboard'''
     calls = db.session.query(User.name, func.string_agg(Callsign.name, ', ')).join(User).group_by(User.name).all()
-    return render_template('users.html', calls=calls)
+    unccalls = QSO.query.with_entities(QSO.call).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).distinct()
+    callsigns = Callsign.query.with_entities(Callsign.name).distinct()
+    unclaimedcalls = list(set(unccalls).difference(callsigns))
+    unclaimedtable = []
+    for call in unclaimedcalls:
+        line = []
+        line.append(call[0])
+        line.append(QSO.query.filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.call == call[0]).count())
+        unclaimedtable.append(line)
+    return render_template('users.html', calls=calls, unclaimedcalls=unclaimedcalls, unclaimedtable=unclaimedtable)

@@ -52,11 +52,42 @@
                 </tbody>
             </table>
         </div>
+        <div class="box">
+            <h1 class="title">Unclaimed Callsigns</h1>
+            {% if unclaimedtable %}
+            <table id="unclaimed" class="table is-striped is-hoverable">
+                <thead>
+                    <tr>
+                        <th>Callsign</th>
+                        <th>QSO Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for call in unclaimedtable %}
+                    <tr>
+                        <td>{{ call[0] }}</td>
+                        <td>{{ call[1] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No unclaimed callsigns at this point.</p>
+            {% endif %}
+        </div>
     </div>
 </section>
 <script>
 $(document).ready(function () {
     $('#calls').DataTable({
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ]
+    });
+
+    $(document).ready(function () {
+    $('#unclaimed').DataTable({
         lengthMenu: [
             [10, 25, 50, -1],
             [10, 25, 50, 'All'],
