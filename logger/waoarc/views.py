@@ -1,3 +1,4 @@
+import datetime
 import operator
 import os
 from datetime import datetime
@@ -59,3 +60,16 @@ def users():
         line.append(QSO.query.filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.call == call[0]).count())
         unclaimedtable.append(line)
     return render_template('users.html', calls=calls, unclaimedcalls=unclaimedcalls, unclaimedtable=unclaimedtable)
+
+
+@waoarc.route("/dates")
+def dates():
+    '''All the date and time related info for the Leaderboard Dates detail page'''
+    qsobyday = db.session.query(QSO.qso_date, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.qso_date).order_by(QSO.qso_date.desc()).all()
+    labels = list(map(list, zip(*qsobyday)))[0]
+    dates = []
+    for label in labels:
+        dates.append(label.strftime('%Y-%m-%d'))
+    values = list(map(list, zip(*qsobyday)))[1]
+    print(dates)
+    return render_template('dates.html', qsobyday=qsobyday, labels=dates, values=values)

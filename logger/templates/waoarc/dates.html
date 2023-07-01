@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<link href="https://cdn.datatables.net/v/bm/dt-1.13.4/cr-1.6.2/fc-4.2.2/fh-3.3.2/rg-1.3.1/sb-1.4.2/sp-2.1.2/sl-1.6.2/datatables.min.css" rel="stylesheet"/>
+<script src="https://cdn.datatables.net/v/bm/dt-1.13.4/cr-1.6.2/fc-4.2.2/fh-3.3.2/rg-1.3.1/sb-1.4.2/sp-2.1.2/sl-1.6.2/datatables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+{% block hero %}is-primary{% endblock %}
+{% block content %}
+		<div class="bd-hero-heading">
+			<h1 class="title algolia-lvl0">
+				{% block title %} <p>Dates & Times</p> {% endblock %}
+			</h1>
+            <p class="subtitle">QSOs by Date and Time</p>
+		</div>
+    </div>
+</section>
+<section>
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="box notification">
+            <div class="notification is-info">
+                {% for message in messages%}
+                {{ message }}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+</section>
+<section>
+    <div class="container">
+        <div class="box">
+            <h1 class="title">QSOs by Day</h1>
+            <table id="calls" class="table is-striped is-hoverable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Total QSOs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for qso in qsobyday %}
+                    <tr>
+                        <td>{{ qso[0] }}</td>
+                        <td>{{ qso[1] }}</td>
+                    </tr>
+                    {% else %}
+                    No QSOs
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+</section>
+<script>
+    const ctx = document.getElementById('myChart');
+  
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ labels|safe }},
+            datasets: [{
+            label: 'Count by Day',
+            data: {{ values }},
+            borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+            y: {
+                beginAtZero: true
+            }
+            }
+        }
+    });
+  </script>
+{% endblock %}

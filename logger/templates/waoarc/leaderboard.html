@@ -126,7 +126,7 @@
 
                 </div>
                 <div class="tile is-child box">
-                    <h1 class="title"><i class="fa-regular fa-calendar"></i> Time and Date</h1>
+                    <h1 class="title"><i class="fa-regular fa-calendar"></i><a href="{{ url_for('waoarc.dates') }}"> Dates & Times</a></h1>
                     <p class="subtitle">Last QSOs for each callsign</p>
                     <ul>
                         {% for call in calls %}
