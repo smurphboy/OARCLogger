@@ -269,6 +269,7 @@ def lookupband():
 def lookuplatlong():
     gridsquare = request.args.get('maidenhead')
     latlong = mh.to_location(gridsquare, center=True)
+    latlong = (str(latlong[0])[:11], str(latlong[1])[:11])
     print(str(latlong))
     return jsonify(latlong=latlong)
 

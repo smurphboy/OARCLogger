@@ -869,25 +869,6 @@
                     </div>
                     <div class="field is-horizontal">
                         <div class="field-label is-normal">
-                            {{ form.my_wwff_ref.label(class_="label") }}
-                        </div>
-                        <div class="field-body">
-                            <div class="field">
-                                <div class="control">
-                                {{ form.my_wwff_ref(class_="input", placeholder_="e.g. GFF-0004") }}
-                                </div>
-                            </div>
-                            {% if form.my_wwff_ref.errors %}
-                            <ul class="errors">
-                                {% for error in form.my_wwff_ref.errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="field is-horizontal">
-                        <div class="field-label is-normal">
                             {{ form.iota.label(class_="label") }}
                         </div>
                         <div class="field-body">
@@ -1013,7 +994,7 @@
             <div class="card">
                 <header class="card-header">
                     <p class="card-header-title is-info">Comment</p>
-                    <a class="card-header-icon" id="comment" aria-label="more options">
+                    <a class="card-header-icon" aria-label="more options">
                         <span class="icon">
                             <i class="fa-regular fa-comment"></i>
                         </span>
@@ -1153,8 +1134,8 @@ $(document).ready(function() {
         $.getJSON($SCRIPT_ROOT + '/qsos/_maidenhead', {
             maidenhead: $('input[name="my_gridsquare"]').val()
         }, function(data) {
-            $("#my_lat").val(data.latlong[0]),
-            $("#my_lon").val(data.latlong[1]);
+            $("#my_lat").val(data.latlong[0].toString().substring(0,11)),
+            $("#my_lon").val(data.latlong[1].toString().substring(0,11));
         })
         return false;
         });
@@ -1165,8 +1146,8 @@ $(document).ready(function() {
         $.getJSON($SCRIPT_ROOT + '/qsos/_maidenhead', {
             maidenhead: $('input[name="gridsquare"]').val()
         }, function(data) {
-            $("#lat").val(data.latlong[0]),
-            $("#lon").val(data.latlong[1]);
+            $("#lat").val(data.latlong[0].toString().substring(0,11)),
+            $("#lon").val(data.latlong[1].toString().substring(0,11));
         })
         return false;
         });
@@ -1178,8 +1159,8 @@ $(document).ready(function() {
             $('input[name="my_sota_ref"]').val().split("/")[1];
             $.getJSON($sotaapi,
                 function(data) {
-                $("#my_lat").val(data.latitude),
-                $("#my_lon").val(data.longitude),
+                $("#my_lat").val(data.latitude.toString().substring(0,11)),
+                $("#my_lon").val(data.longitude.toString().substring(0,11)),
                 $("#my_gridsquare").val(data.locator),
                 $("#mysummitname").val(data.name);
             });
@@ -1193,8 +1174,8 @@ $(document).ready(function() {
             $('input[name="sota_ref"]').val().split("/")[1];
             $.getJSON($sotaapi2,
                 function(data) {
-                $("#lat").val(data.latitude),
-                $("#lon").val(data.longitude),
+                $("#lat").val(data.latitude.toString().substring(0,11)),
+                $("#lon").val(data.longitude.toString().substring(0,11)),
                 $("#gridsquare").val(data.locator),
                 $("#summitname").val(data.name);
             });
@@ -1207,8 +1188,8 @@ $(document).ready(function() {
             var $potaapi = 'https://api.pota.app/park/'+ $('input[name="my_pota_ref"]').val();
             $.getJSON($potaapi,
                 function(data) {
-                $("#my_lat").val(data.latitude),
-                $("#my_lon").val(data.longitude),
+                $("#my_lat").val(data.latitude.toString().substring(0,11)),
+                $("#my_lon").val(data.longitude.toString().substring(0,11)),
                 $("#my_gridsquare").val(data.grid6),
                 $("#myparkname").val(data.name);
             });
@@ -1221,8 +1202,8 @@ $(document).ready(function() {
             var $potaapi2 = 'https://api.pota.app/park/'+ $('input[name="pota_ref"]').val();
             $.getJSON($potaapi2,
                 function(data) {
-                $("#lat").val(data.latitude),
-                $("#lon").val(data.longitude),
+                $("#lat").val(data.latitude.toString().substring(0,11)),
+                $("#lon").val(data.longitude.toString().substring(0,11)),
                 $("#gridsquare").val(data.grid6),
                 $("#parkname").val(data.name);
             });
