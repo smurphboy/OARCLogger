@@ -22,7 +22,14 @@
                 <div class="tile is-child box">
                     <h1 class="title"><i class="fa-solid fa-address-card"></i> <a href="{{ url_for('waoarc.users') }}">Users & Callsigns</a></h1>
                     <p class="subtitle">There are currently {{ facts.totalusers }} OARC members registered with {{ facts.totalcallsigns }} callsigns.</p>
-                    <p>There are {{ facts.unclaimedcallsigns }} unclaimed callsigns identified in QSOs.</p>
+                    <p>{{ facts.unclaimedcallsigns }} callsign{% if facts.unclaimed|length == 1 %}s are{% else %} is{% endif %} identified in QSOs but unclaimed:</p>
+                    {% if unclaimed %}
+                    <ul>
+                        {% for call in unclaimed %}
+                        <li class="has-text-weight-semibold">{{ call[0] }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
                 </div>
                 <div class="tile is-child box">
                     <h1 class="title"><i class="fas fa-flag-usa" aria-hidden="true"></i> DXCC</h1>

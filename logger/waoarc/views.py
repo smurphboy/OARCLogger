@@ -25,9 +25,10 @@ def leaderboards():
     facts = {}
     facts['totalusers'] = User.query.count()
     facts['totalcallsigns'] = Callsign.query.count()
-    calls = QSO.query.with_entities(QSO.call).distinct()
+    calls = QSO.query.with_entities(QSO.call).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).distinct()
     callsigns = Callsign.query.with_entities(Callsign.name).distinct()
     unclaimed = list(set(calls).difference(callsigns))
+    print(unclaimed)
     facts['unclaimedcallsigns'] = len(unclaimed)
     facts['dxcctable'] = db.session.query(QSO.station_callsign, db.func.count(db.distinct(QSO.dxcc))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.station_callsign).order_by(db.func.count(db.distinct(QSO.dxcc)).desc()).limit(10).all()
     facts['totaldxcc'] = QSO.query.with_entities(QSO.dxcc).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).distinct().count()
@@ -37,7 +38,7 @@ def leaderboards():
     facts['totalituz'] = QSO.query.with_entities(QSO.ituz).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).distinct().count()
     facts['bandtable'] = db.session.query(QSO.station_callsign, db.func.count(db.distinct(QSO.band))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.station_callsign).order_by(db.func.count(db.distinct(QSO.band)).desc()).limit(10).all()
     facts['totalbands'] = QSO.query.with_entities(QSO.band).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).distinct().count()
-    return render_template('leaderboard.html', facts=facts)
+    return render_template('leaderboard.html', facts=facts, unclaimed=unclaimed)
 
 
 @waoarc.route("/gettingstarted")
@@ -48,4 +49,5 @@ def gettingstarted():
 @waoarc.route("/users")
 def users():
     '''Detail of Users and Callsigns tile on Leaderboard'''
-    return render_template('users.html')
+    calls = db.session.query(User.name, func.string_agg(Callsign.name, ', ')).join(User).group_by(User.name).all()
+    return render_template('users.html', calls=calls)
