@@ -14,9 +14,9 @@ class QSOForm(FlaskForm):
     time_on = TimeField('QSO On Time', validators=[InputRequired()], default=datetime.datetime.utcnow())
     qso_date_off = DateField('QSO Date Off')
     time_off = TimeField('QSO Off Time')
-    dxcc = StringField('DXCC')
-    cqz = StringField('CQ Zone')
-    ituz = StringField('ITU Zone')
+    dxcc = IntegerField('DXCC')
+    cqz = IntegerField('CQ Zone')
+    ituz = IntegerField('ITU Zone')
     call = StringField('Call', validators=[InputRequired(),
                                             Length(max=50)])
     station_callsign = StringField('Station Callsign')
