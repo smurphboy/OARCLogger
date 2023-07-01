@@ -22,7 +22,7 @@
                 <div class="tile is-child box">
                     <h1 class="title"><i class="fa-solid fa-address-card"></i> <a href="{{ url_for('waoarc.users') }}">Users & Callsigns</a></h1>
                     <p class="subtitle">There are currently {{ facts.totalusers }} OARC members registered with {{ facts.totalcallsigns }} callsigns.</p>
-                    <p>{{ facts.unclaimedcallsigns }} callsign{% if facts.unclaimed|length == 1 %}s are{% else %} is{% endif %} identified in QSOs but unclaimed:</p>
+                    <p>{{ facts.unclaimedcallsigns }} callsign{% if unclaimed|length == 1 %} is{% else %}s are{% endif %} identified in QSOs but unclaimed:</p>
                     {% if unclaimed %}
                     <ul>
                         {% for call in unclaimed %}
