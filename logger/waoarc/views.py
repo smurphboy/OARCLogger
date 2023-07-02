@@ -44,17 +44,8 @@ def leaderboards():
     facts['topcalls'] = db.session.query(User.name, Callsign.name, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name, Callsign.name).order_by(func.count(QSO.id).desc()).limit(1).all()
     facts['topusers'] = db.session.query(User.name, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(func.count(QSO.id).desc()).limit(1).all()
     qsobyday = db.session.query(QSO.qso_date, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.qso_date).order_by(QSO.qso_date.desc()).all()
-    qsobybands = db.session.query(QSO.band, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.band).order_by(func.count(QSO.id).desc()).all()
-    labels = list(map(list, zip(*qsobybands)))[0]
-    bandlabels = ['None' if v is None else v for v in labels]
-    bandvalues = list(map(list, zip(*qsobybands)))[1]
-    qsobymodes = db.session.query(QSO.mode, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.mode).order_by(func.count(QSO.id).desc()).all()
-    labels = list(map(list, zip(*qsobymodes)))[0]
-    modelabels = ['None' if v is None else v for v in labels]
-    modevalues = list(map(list, zip(*qsobymodes)))[1]
     workedcallsigns = db.session.query(User.name, QSO.call, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.call == Callsign.name).join(User, Callsign.user_id == User.id).group_by(QSO.call, User.name).order_by(func.count(QSO.id).desc()).limit(10).all()
-    return render_template('leaderboard.html', facts=facts, unclaimed=unclaimed, qsobyday=qsobyday, bandlabels=bandlabels,
-                           bandvalues=bandvalues, modelabels=modelabels, modevalues=modevalues, workedcallsigns=workedcallsigns)
+    return render_template('leaderboard.html', facts=facts, unclaimed=unclaimed, qsobyday=qsobyday, workedcallsigns=workedcallsigns)
 
 
 @waoarc.route("/gettingstarted")
@@ -90,3 +81,20 @@ def dates():
     values = list(map(list, zip(*qsobyday)))[1]
     usersbyday = db.session.query(QSO.qso_date, User.name, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(QSO.qso_date, User.name).order_by(QSO.qso_date.desc()).order_by(func.count(QSO.id).desc()).all()
     return render_template('dates.html', qsobyday=qsobyday, labels=dates, values=values, usersbyday=usersbyday)
+
+@waoarc.route("/bands")
+def bands():
+    qsobybands = db.session.query(QSO.band, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.band).order_by(func.count(QSO.id).desc()).all()
+    labels = list(map(list, zip(*qsobybands)))[0]
+    bandlabels = ['None' if v is None else v for v in labels]
+    bandvalues = list(map(list, zip(*qsobybands)))[1]
+    qsobymodes = db.session.query(QSO.mode, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.mode).order_by(func.count(QSO.id).desc()).all()
+    labels = list(map(list, zip(*qsobymodes)))[0]
+    modelabels = ['None' if v is None else v for v in labels]
+    modevalues = list(map(list, zip(*qsobymodes)))[1]
+    qsobypropmodes = db.session.query(QSO.prop_mode, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.prop_mode).order_by(func.count(QSO.id).desc()).all()
+    labels = list(map(list, zip(*qsobypropmodes)))[0]
+    propmodelabels = ['None' if v is None else v for v in labels]
+    propmodevalues = list(map(list, zip(*qsobypropmodes)))[1]
+    return render_template('bands.html', bandlabels=bandlabels, bandvalues=bandvalues, modelabels=modelabels, modevalues=modevalues, propmodelabels=propmodelabels,
+                           propmodevalues=propmodevalues)

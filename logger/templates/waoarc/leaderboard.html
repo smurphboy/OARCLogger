@@ -107,12 +107,8 @@
             </div>
             <div class="tile is-parent is-vertical">
                 <div class="tile is-child box">
-                    <h1 class="title"><i class="fa-solid fa-tower-broadcast"></i> Bands and Modes</h1>
+                    <h1 class="title"><i class="fa-solid fa-tower-broadcast"></i> <a href="{{ url_for('waoarc.bands') }}">Bands and Modes</a></h1>
                     <p class="subtitle">Members have worked {{ facts.totalbands }} Bands and {{ facts.totalmodes }} Modes across all Callsigns</p>
-                    <h4 class="title is-4">QSOs by Band</h4>
-                    <div>
-                        <canvas id="bands"></canvas>
-                    </div>
                     <h4 class="title is-4">Top Ten callsigns working bands:</h4>
                     {% if facts.bandtable %}
                     <table class="table">
@@ -133,10 +129,6 @@
                         </tbody>
                     </table>
                     {% endif %}
-                    <h4 class="title is-4">QSOs by Mode</h4>
-                    <div>
-                        <canvas id="modes"></canvas>
-                    </div>
                     <h4 class="title is-4">Top Ten callsigns working modes:</h4>
                     {% if facts.modetable %}
                     <table class="table">
@@ -207,31 +199,5 @@
     </div>
 </section>
 <script>
-const ctx = document.getElementById('bands');
-const ctx1 = document.getElementById('modes');
-
-new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-        labels: {{ bandlabels|safe }},
-        datasets: [{
-            label: 'QSOs by Band',
-            data: {{ bandvalues }},
-            hoverOffset: 4
-            }]
-    }
-});
-
-new Chart(ctx1, {
-    type: 'doughnut',
-    data: {
-        labels: {{ modelabels|safe }},
-        datasets: [{
-            label: 'QSOs by Mode',
-            data: {{ modevalues }},
-            hoverOffset: 4
-            }]
-    }
-});
 </script>
 {% endblock %}
