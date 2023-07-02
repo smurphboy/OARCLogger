@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
-
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
 {% block hero %}is-primary{% endblock %}
 {% block content %}
 		<div class="bd-hero-heading">
@@ -22,6 +24,10 @@
                 <div class="tile is-child box">
                     <h1 class="title"><i class="fa-solid fa-address-card"></i> <a href="{{ url_for('waoarc.users') }}">Users & Callsigns</a></h1>
                     <p class="subtitle">There are currently {{ facts.totalusers }} OARC members registered with {{ facts.totalcallsigns }} callsigns.</p>
+                    <div class="block">
+                        <p>Top User is <span class="has-text-weight-semibold">{{ facts.topusers[0][0] }}</span> with <span class="has-text-weight-semibold">{{ facts.topusers[0][1] }}</span> QSOs</p>
+                        <p>Top Callsign is <span class="has-text-weight-semibold">{{ facts.topcalls[0][1] }}</span>, owned by <span class="has-text-weight-semibold">{{ facts.topcalls[0][0] }}</span> with <span class="has-text-weight-semibold">{{ facts.topcalls[0][2] }}</span> QSOs</p>
+                    </div>
                     <p>{{ facts.unclaimedcallsigns }} callsign{% if unclaimed|length == 1 %} is{% else %}s are{% endif %} identified in QSOs but unclaimed:</p>
                     {% if unclaimed %}
                     <ul>
@@ -103,6 +109,10 @@
                 <div class="tile is-child box">
                     <h1 class="title"><i class="fa-solid fa-tower-broadcast"></i> Bands and Modes</h1>
                     <p class="subtitle">Members have worked {{ facts.totalbands }} Bands and {{ facts.totalmodes }} Modes across all Callsigns</p>
+                    <h4 class="title is-4">QSOs by Band</h4>
+                    <div>
+                        <canvas id="bands"></canvas>
+                    </div>
                     <h4 class="title is-4">Top Ten callsigns working bands:</h4>
                     {% if facts.bandtable %}
                     <table class="table">
@@ -173,4 +183,19 @@
         </div>
     </div>
 </section>
+<script>
+const ctx = document.getElementById('bands');
+
+new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: {{ bandlabels|safe }},
+        datasets: [{
+            label: 'QSOs by Bands',
+            data: {{ bandvalues }},
+            hoverOffset: 4
+            }]
+    }
+});
+</script>
 {% endblock %}

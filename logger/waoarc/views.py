@@ -39,8 +39,15 @@ def leaderboards():
     facts['totalbands'] = QSO.query.with_entities(QSO.band).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).distinct().count()
     facts['qsostoday'] = db.session.query(QSO.id).filter(QSO.qso_date==datetime.date.today()).count()
     facts['qsosyesterday'] = db.session.query(QSO.id).filter(QSO.qso_date==datetime.date.today()-datetime.timedelta(days=1)).count()
+    facts['topcalls'] = db.session.query(User.name, Callsign.name, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name, Callsign.name).order_by(func.count(QSO.id).desc()).limit(1).all()
+    facts['topusers'] = db.session.query(User.name, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name, Callsign.name).order_by(func.count(QSO.id).desc()).limit(1).all()
+
     qsobyday = db.session.query(QSO.qso_date, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.qso_date).order_by(QSO.qso_date.desc()).all()
-    return render_template('leaderboard.html', facts=facts, unclaimed=unclaimed, qsobyday=qsobyday)
+    qsobybands = db.session.query(QSO.band, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.band).order_by(func.count(QSO.id).desc()).all()
+    labels = list(map(list, zip(*qsobybands)))[0]
+    bandlabels = ['None' if v is None else v for v in labels]
+    bandvalues = list(map(list, zip(*qsobybands)))[1]
+    return render_template('leaderboard.html', facts=facts, unclaimed=unclaimed, qsobyday=qsobyday, bandlabels=bandlabels, bandvalues=bandvalues)
 
 
 @waoarc.route("/gettingstarted")
@@ -52,6 +59,7 @@ def gettingstarted():
 def users():
     '''Detail of Users and Callsigns tile on Leaderboard'''
     calls = db.session.query(User.name, Callsign.name, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name, Callsign.name).order_by(func.count(QSO.id).desc()).all()
+    users = db.session.query(User.name, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name, Callsign.name).order_by(func.count(QSO.id).desc()).all()
     unccalls = QSO.query.with_entities(QSO.call).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).distinct()
     callsigns = Callsign.query.with_entities(Callsign.name).distinct()
     unclaimedcalls = list(set(unccalls).difference(callsigns))
@@ -61,7 +69,7 @@ def users():
         line.append(call[0])
         line.append(QSO.query.filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.call == call[0]).count())
         unclaimedtable.append(line)
-    return render_template('users.html', calls=calls, unclaimedcalls=unclaimedcalls, unclaimedtable=unclaimedtable)
+    return render_template('users.html', calls=calls, unclaimedcalls=unclaimedcalls, unclaimedtable=unclaimedtable, users=users)
 
 
 @waoarc.route("/dates")

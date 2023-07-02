@@ -32,7 +32,7 @@
 <section>
     <div class="container">
         <div class="box">
-            <h1 class="title">Users and Callsigns</h1>
+            <h1 class="title">QSOs by Callsign</h1>
             <table id="calls" class="table is-striped is-hoverable">
                 <thead>
                     <tr>
@@ -50,6 +50,27 @@
                     </tr>
                     {% else %}
                     No Callsigns
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="box">
+            <h1 class="title">QSOs by Users</h1>
+            <table id="users" class="table is-striped is-hoverable">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Total QSOs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user[0] }}</td>
+                        <td>{{ user[1] }}</td>
+                    </tr>
+                    {% else %}
+                    No Users
                     {% endfor %}
                 </tbody>
             </table>
@@ -86,7 +107,15 @@ $(document).ready(function () {
             [10, 25, 50, -1],
             [10, 25, 50, 'All'],
         ],
-        order: [[2, 'desc']],
+        order: [[2, 'desc']]
+    });
+
+    $('#users').DataTable({
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        order: [[1, 'desc']]
     });
 
     $('#unclaimed').DataTable({
@@ -94,7 +123,7 @@ $(document).ready(function () {
             [10, 25, 50, -1],
             [10, 25, 50, 'All'],
         ],
-        order: [[1, 'desc']],
+        order: [[1, 'desc']]
     });
 
     setTimeout(function(){
