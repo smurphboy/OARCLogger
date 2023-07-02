@@ -133,7 +133,30 @@
                         </tbody>
                     </table>
                     {% endif %}
-
+                    <h4 class="title is-4">QSOs by Mode</h4>
+                    <div>
+                        <canvas id="modes"></canvas>
+                    </div>
+                    <h4 class="title is-4">Top Ten callsigns working modes:</h4>
+                    {% if facts.modetable %}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Callsign</th>
+                                <th>Distinct Modes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    {% for mode in facts.modetable %}
+                    <tr>
+                        {%- if loop.index > 10 %}{% break %}{% endif %}
+                        <td><span class="has-text-weight-semibold">{{ mode[0] }}</span></td>
+                        <td>{{ mode[1] }}</td>
+                    </tr>
+                    {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
                 </div>
                 <div class="tile is-child box">
                     <h1 class="title"><i class="fa-regular fa-calendar"></i><a href="{{ url_for('waoarc.dates') }}"> Dates & Times</a></h1>
@@ -185,14 +208,27 @@
 </section>
 <script>
 const ctx = document.getElementById('bands');
+const ctx1 = document.getElementById('modes');
 
 new Chart(ctx, {
     type: 'doughnut',
     data: {
         labels: {{ bandlabels|safe }},
         datasets: [{
-            label: 'QSOs by Bands',
+            label: 'QSOs by Band',
             data: {{ bandvalues }},
+            hoverOffset: 4
+            }]
+    }
+});
+
+new Chart(ctx1, {
+    type: 'doughnut',
+    data: {
+        labels: {{ modelabels|safe }},
+        datasets: [{
+            label: 'QSOs by Mode',
+            data: {{ modevalues }},
             hoverOffset: 4
             }]
     }
