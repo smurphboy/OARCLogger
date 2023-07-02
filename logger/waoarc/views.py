@@ -38,6 +38,7 @@ def leaderboards():
     facts['bandtable'] = db.session.query(QSO.station_callsign, db.func.count(db.distinct(QSO.band))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.station_callsign).order_by(db.func.count(db.distinct(QSO.band)).desc()).limit(10).all()
     facts['totalbands'] = QSO.query.with_entities(QSO.band).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).distinct().count()
     facts['qsostoday'] = db.session.query(QSO.id).filter(QSO.qso_date==datetime.date.today()).count()
+    facts['qsosyesterday'] = db.session.query(QSO.id).filter(QSO.qso_date==datetime.date.today()-datetime.timedelta(days=1)).count()
     qsobyday = db.session.query(QSO.qso_date, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.qso_date).order_by(QSO.qso_date.desc()).all()
     return render_template('leaderboard.html', facts=facts, unclaimed=unclaimed, qsobyday=qsobyday)
 
