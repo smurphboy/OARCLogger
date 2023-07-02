@@ -114,7 +114,7 @@
                     <div class="block">
                     {% for band in facts.bandtable %}
                         {%- if loop.index > 10 %}{% break %}{% endif %}
-                        <p><span class="has-text-weight-semibold">{{ band.0 }}</span> worked <span class="has-text-weight-semibold">{{ band.1 }}</span>{{ band.1 }} band{% if band.1 > 1 %}s{% endif %}</p>
+                        <p><span class="has-text-weight-semibold">{{ band.0 }}</span> worked <span class="has-text-weight-semibold">{{ band.1 }}</span> band{% if band.1 > 1 %}s{% endif %}</p>
                     {% endfor %}
                     </div>
                     {% endif %}
