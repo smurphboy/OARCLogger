@@ -189,10 +189,10 @@
             <div class="tile is-parent is-vertical">
                 <div class="tile is-child box">
                     <h1 class="title"><i class="fa-solid fa-headset"></i> Most Worked</h1>
-                    <p class="subtitle">Most worked callsigns (Top 10 over 2 QSOs)</p>
-                    {% if qsopartycounts %}
-                        {% for entry in qsopartycounts %}
-                        <p><a class="has-text-weight-semibold" href="{{ url_for ('callsigns.call', callsign=entry.0 | replace('/','_')) }}">{{ entry.0 }}</a> worked <a class="has-text-weight-semibold" href="{{ url_for ('callsigns.search', call=entry.1 | replace('/','_')) }}">{{ entry.1 }}</a> {{ entry.2 }} time{% if entry.2 > 1 %}s{% endif %}</p>
+                    <p class="subtitle">Most worked callsigns (Top 10)</p>
+                    {% if workedcallsigns %}
+                        {% for entry in workedcallsigns %}
+                        <p><span class="has-text-weight-semibold">{{ entry.0 }}</span> worked as <span class="has-text-weight-semibold">{{ entry.1 }}</span> {{ entry.2 }} time{% if entry.2 > 1 %}s{% endif %}</p>
                         {% endfor %}
                     {% else %}
                         <p>Not enough QSOs loaded yet</p>

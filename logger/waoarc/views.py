@@ -52,7 +52,9 @@ def leaderboards():
     labels = list(map(list, zip(*qsobymodes)))[0]
     modelabels = ['None' if v is None else v for v in labels]
     modevalues = list(map(list, zip(*qsobymodes)))[1]
-    return render_template('leaderboard.html', facts=facts, unclaimed=unclaimed, qsobyday=qsobyday, bandlabels=bandlabels, bandvalues=bandvalues, modelabels=modelabels, modevalues=modevalues)
+    workedcallsigns = db.session.query(User.name, QSO.call, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.call == Callsign.name).join(User, Callsign.user_id == User.id).group_by(QSO.call, User.name).order_by(func.count(QSO.id).desc()).limit(10).all()
+    return render_template('leaderboard.html', facts=facts, unclaimed=unclaimed, qsobyday=qsobyday, bandlabels=bandlabels,
+                           bandvalues=bandvalues, modelabels=modelabels, modevalues=modevalues, workedcallsigns=workedcallsigns)
 
 
 @waoarc.route("/gettingstarted")
