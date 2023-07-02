@@ -32,29 +32,6 @@
 <section>
     <div class="container">
         <div class="box">
-            <h1 class="title">QSOs by Callsign</h1>
-            <table id="calls" class="table is-striped is-hoverable">
-                <thead>
-                    <tr>
-                        <th>Username</th>
-                        <th>Callsigns</th>
-                        <th>Total QSOs</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for call in calls %}
-                    <tr>
-                        <td>{{ call[0] }}</td>
-                        <td>{{ call[1] }}</td>
-                        <td>{{ call[2] }}</td>
-                    </tr>
-                    {% else %}
-                    No Callsigns
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="box">
             <h1 class="title">QSOs by Users</h1>
             <table id="users" class="table is-striped is-hoverable">
                 <thead>
@@ -71,6 +48,29 @@
                     </tr>
                     {% else %}
                     No Users
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="box">
+            <h1 class="title">QSOs by Callsign</h1>
+            <table id="calls" class="table is-striped is-hoverable">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Callsign</th>
+                        <th>Total QSOs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for call in calls %}
+                    <tr>
+                        <td>{{ call[0] }}</td>
+                        <td>{{ call[1] }}</td>
+                        <td>{{ call[2] }}</td>
+                    </tr>
+                    {% else %}
+                    No Callsigns
                     {% endfor %}
                 </tbody>
             </table>
