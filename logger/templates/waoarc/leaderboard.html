@@ -109,45 +109,21 @@
                 <div class="tile is-child box">
                     <h1 class="title"><i class="fa-solid fa-tower-broadcast"></i> <a href="{{ url_for('waoarc.bands') }}">Bands and Modes</a></h1>
                     <p class="subtitle">Members have worked {{ facts.totalbands }} Bands and {{ facts.totalmodes }} Modes across all Callsigns</p>
-                    <h4 class="title is-4">Top Ten callsigns working bands:</h4>
+                    <p class="subtitle">Top Ten callsigns working bands:</p>
                     {% if facts.bandtable %}
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Callsign</th>
-                                <th>Distinct Bands</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    <div class="block">
                     {% for band in facts.bandtable %}
-                    <tr>
                         {%- if loop.index > 10 %}{% break %}{% endif %}
-                        <td><span class="has-text-weight-semibold">{{ band[0] }}</span></td>
-                        <td>{{ band[1] }}</td>
-                    </tr>
+                        <p><span class="has-text-weight-semibold">{{ band.0 }}</span> worked <span class="has-text-weight-semibold">{{ band.1 }}</span>{{ band.1 }} band{% if band.1 > 1 %}s{% endif %}</p>
                     {% endfor %}
-                        </tbody>
-                    </table>
+                    </div>
                     {% endif %}
-                    <h4 class="title is-4">Top Ten callsigns working modes:</h4>
+                    <p class="subtitle">Top Ten callsigns working modes:</p>
                     {% if facts.modetable %}
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Callsign</th>
-                                <th>Distinct Modes</th>
-                            </tr>
-                        </thead>
-                        <tbody>
                     {% for mode in facts.modetable %}
-                    <tr>
                         {%- if loop.index > 10 %}{% break %}{% endif %}
-                        <td><span class="has-text-weight-semibold">{{ mode[0] }}</span></td>
-                        <td>{{ mode[1] }}</td>
-                    </tr>
+                        <p><span class="has-text-weight-semibold">{{ mode.0 }}</span> worked <span class="has-text-weight-semibold"{{ mode.1 }}></span>{{ mode.1 }} mode{% if mode.1 > 1 %}s{% endif %}</p>
                     {% endfor %}
-                        </tbody>
-                    </table>
                     {% endif %}
                 </div>
                 <div class="tile is-child box">
