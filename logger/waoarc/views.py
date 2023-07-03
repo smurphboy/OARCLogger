@@ -108,7 +108,10 @@ def dxcc():
     dxccnums = ['None' if v is None else v for v in labels]
     dxcclabels = []
     for label in dxccnums:
-        dxcclabels.append(countrylookup(label))
+        if label == "None":
+            dxcclabels.append("None")
+        else:
+            dxcclabels.append(countrylookup(label))
     dxccvalues = list(map(list, zip(*qsobydxcc)))[1]
     qsobycqz = db.session.query(QSO.cqz, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.cqz).order_by(func.count(QSO.id).desc()).all()
     labels = list(map(list, zip(*qsobycqz)))[0]
