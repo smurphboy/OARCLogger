@@ -58,6 +58,75 @@
                 </div>
             </div>
         </div>
+        <div class="box">
+            <h1 class="title">Members by DXCC</h1>
+            <table id="dxcct" class="table is-striped is-hoverable">
+                <thead>
+                    <tr>
+                        <th>Member</th>
+                        <th>Callsigns</th>
+                        <th>Total DXCC</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for call in dxccmembers %}
+                    <tr>
+                        <td>{{ call[0] }}</td>
+                        <td>{{ call[1] }}</td>
+                        <td>{{ call[2] }}</td>
+                    </tr>
+                    {% else %}
+                    No DXCC data
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="box">
+            <h1 class="title">Members by CQ Zone</h1>
+            <table id="cqzt" class="table is-striped is-hoverable">
+                <thead>
+                    <tr>
+                        <th>Member</th>
+                        <th>Callsigns</th>
+                        <th>Total CQZ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for call in cqzmembers %}
+                    <tr>
+                        <td>{{ call[0] }}</td>
+                        <td>{{ call[1] }}</td>
+                        <td>{{ call[2] }}</td>
+                    </tr>
+                    {% else %}
+                    No CQZ data
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="box">
+            <h1 class="title">Members by ITU Zone</h1>
+            <table id="ituzt" class="table is-striped is-hoverable">
+                <thead>
+                    <tr>
+                        <th>Member</th>
+                        <th>Callsigns</th>
+                        <th>Total ITUZ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for call in ituzmembers %}
+                    <tr>
+                        <td>{{ call[0] }}</td>
+                        <td>{{ call[1] }}</td>
+                        <td>{{ call[2] }}</td>
+                    </tr>
+                    {% else %}
+                    No ITUZ data
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </section>
 <script>
@@ -99,6 +168,37 @@ new Chart(ctx2, {
             hoverOffset: 4
             }]
     }
+});
+
+$(document).ready(function () {
+    $('#dxcct').DataTable({
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        order: [[2, 'desc']]
+    });
+
+    $('#cqzt').DataTable({
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        order: [[2, 'desc']]
+    });
+
+    $('#ituzt').DataTable({
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        order: [[2, 'desc']]
+    });
+
+    setTimeout(function(){
+        $(".notification").fadeOut("slow");
+    }, 5000);
+
 });
 </script>
 {% endblock %}
