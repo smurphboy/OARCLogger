@@ -228,18 +228,23 @@ class QSO(db.Model):
         for col_name in update_dictionary:
             if hasattr(self, col_name.lower()):
                 if col_name.lower() in DATE_FIELDS:
-                    print(col_name, update_dictionary[col_name])
+                    #print(col_name, update_dictionary[col_name])
                     setattr(self, col_name.lower(), datetime.datetime.strptime(update_dictionary[col_name], '%Y%m%d').date())
                 elif col_name.lower() in TIME_FIELDS:
-                    print(col_name, update_dictionary[col_name])
-                    setattr(self, col_name.lower(), datetime.datetime.strptime(update_dictionary[col_name], '%H%M%S').time())
+                    #print(col_name, update_dictionary[col_name])
+                    print(col_name, " : ", update_dictionary[col_name])
+                    if len(update_dictionary[col_name]) == 6:
+                        setattr(self, col_name.lower(), datetime.datetime.strptime(update_dictionary[col_name], '%H%M%S').time())
+                    else:
+                        print("HHMM")
+                        setattr(self, col_name.lower(), datetime.datetime.strptime(update_dictionary[col_name], '%H%M').time())
                 else:
                     setattr(self, col_name.lower(), update_dictionary[col_name])
             else:
                 print(col_name.lower(), ': not found')
         db.session.add(self)
         db.session.commit()
-        print('created')
+        #print('created')
 
 
 qsoevent = db.Table('qsoevent', 
