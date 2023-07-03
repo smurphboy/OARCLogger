@@ -70,7 +70,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for qso in qsos %}
+                        {% for qso in qsos|sort(attribute="qso_date,time_on") %}
                         <tr>
                             <td>{{ qso.qso_date }}</td>
                             <td>{{ qso.time_on }}</td>
@@ -108,8 +108,11 @@ $(document).ready(function () {
             [10, 25, 50, -1],
             [10, 25, 50, 'All'],
         ],
+        order: [[0, 'desc'], [1, 'desc']],
         columnDefs: [
-            { orderable: false, targets: [4, 8] }
+            { 
+                orderable: false, targets: [4, 8],
+            }
         ]
     });
 
