@@ -6,10 +6,10 @@
 {% block content %}
             <div class="bd-hero-heading">
                 <h1 class="title algolia-lvl0">
-                    {% block title %} <p>Add a New Event for {{ username }}</p> {% endblock %}
+                    {% block title %} <p>{% if request.endpoint == 'events.eventedit' %}Edit{% else %}Add{% endif %} an Event for {{ username }}</p> {% endblock %}
                 </h1>
                 <div class="subtitle is-4 algolia-lvl1">
-                    <p>Enter Event details below and press Add:</p>     
+                    <p>Enter Event details below and press {% if request.endpoint == 'events.eventedit' %}Edit{% else %}Add{% endif %}:</p>     
                 </div>
             </div>
         </div>
@@ -18,208 +18,213 @@
         <div class="box">
             <form method="POST">
                 {{ form.csrf_token }}
-                <div class="columns">
-                    <div class="column">
-                        <div class="field">
-                            {{ form.name.label(class_='label') }}
-                            <div class="control">
-                                {{ form.name(class_="input") }}
+                <div class="box">
+                    <div class="columns">
+                        <div class="column">
+                            <div class="field">
+                                {{ form.name.label(class_='label') }}
+                                <div class="control">
+                                    {{ form.name(class_="input") }}
+                                </div>
+                                <p class="help">Name your event, for example [Activation of G/SC-010 August 2022]</p>
                             </div>
-                            <p class="help">Name your event, for example [Activation of G/SC-010 August 2022]</p>
+                            {% if form.name.errors %}
+                                <ul class="errors">
+                                    {% for error in form.name.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        <div class="field">
+                                            {{ form.start_date.label(class_="label") }}
+                                            <div class="control">
+                                            {{ form.start_date(class_="input") }}
+                                            </div>
+                                        </div>
+                                        {% if form.start_date.errors %}
+                                            <ul class="errors">
+                                                {% for error in form.start_date.errors %}
+                                                    <li>{{ error }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </div>
+                                    <div class="level-item">
+                                        <div class="field">
+                                            {{ form.start_time.label(class_="label") }}
+                                            <div class="control">
+                                            {{ form.start_time(class_="input") }}
+                                            </div>
+                                        </div>
+                                        {% if form.start_time.errors %}
+                                            <ul class="errors">
+                                                {% for error in form.start_time.errors %}
+                                                    <li>{{ error }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="field">
+                                            {{ form.end_date.label(class_="label") }}
+                                            <div class="control">
+                                            {{ form.end_date(class_="input") }}
+                                            </div>
+                                        </div>
+                                        {% if form.end_date.errors %}
+                                            <ul class="errors">
+                                                {% for error in form.end_date.errors %}
+                                                    <li>{{ error }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </div>
+                                    <div class="level-item">
+                                        <div class="field">
+                                            {{ form.end_time.label(class_="label") }}
+                                            <div class="control">
+                                            {{ form.end_time(class_="input") }}
+                                            </div>
+                                        </div>
+                                        {% if form.end_time.errors %}
+                                            <ul class="errors">
+                                                {% for error in form.end_time.errors %}
+                                                    <li>{{ error }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </nav>
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        <div class="field">
+                                            {{ form.my_gridsquare.label(class_="label") }}
+                                            <div class="control">
+                                            {{ form.my_gridsquare(class_="input", placeholder_="My Gridsquare") }}
+                                            </div>
+                                        </div>
+                                        {% if form.my_gridsquare.errors %}
+                                        <ul class="errors">
+                                        {% for error in form.my_gridsquare.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                        </ul>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </nav>
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        <div class="field">
+                                            {{ form.type.label(class_="label") }}
+                                            <div class="select">
+                                            {{ form.type() }}
+                                            </div>
+                                        </div>
+                                        {% if form.type.errors %}
+                                        <ul class="errors">
+                                        {% for error in form.type.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                        </ul>
+                                        {% endif %}
+                                    </div>
+                                    <div class="level-item SOTA Activation SOTA-POTA">
+                                        <div class="field">
+                                            {{ form.sota_ref.label(class_="label") }}
+                                            <div class="control">
+                                            {{ form.sota_ref(class_="input", placeholder_="SOTA Ref for Event") }}
+                                            </div>
+                                        </div>
+                                        {% if form.sota_ref.errors %}
+                                        <ul class="errors">
+                                        {% for error in form.sota_ref.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                        </ul>
+                                        {% endif %}
+                                    </div>
+                                    <div class="level-item POTA Activation SOTA-POTA">
+                                        <div class="field">
+                                            {{ form.pota_ref.label(class_="label") }}
+                                            <div class="control">
+                                            {{ form.pota_ref(class_="input", placeholder_="POTA Refs for Event") }}
+                                            </div>
+                                        </div>
+                                        {% if form.pota_ref.errors %}
+                                        <ul class="errors">
+                                        {% for error in form.pota_ref.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                        </ul>
+                                        {% endif %}
+                                    </div>
+                                    <div class="level-item Satellite Activation Satellite">
+                                        <div class="field">
+                                            {{ form.sat_name.label(class_="label") }}
+                                            <div class="control">
+                                            {{ form.sat_name(class_="input", placeholder_="Name of Satellite worked") }}
+                                            </div>
+                                        </div>
+                                        {% if form.sat_name.errors %}
+                                        <ul class="errors">
+                                        {% for error in form.sat_name.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                        </ul>
+                                        {% endif %}
+                                    </div>
+                                    <div class="level-item Satellite Activation Satellite">
+                                        <div class="field">
+                                            {{ form.sat_mode.label(class_="label") }}
+                                            <div class="control">
+                                            {{ form.sat_mode(class_="input", placeholder_="Satellite Mode") }}
+                                            </div>
+                                        </div>
+                                        {% if form.sat_mode.errors %}
+                                        <ul class="errors">
+                                        {% for error in form.sat_mode.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                        </ul>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </nav>
                         </div>
-                        {% if form.name.errors %}
-                            <ul class="errors">
-                                {% for error in form.name.errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    <div class="field">
-                                        {{ form.start_date.label(class_="label") }}
-                                        <div class="control">
-                                        {{ form.start_date(class_="input") }}
-                                        </div>
-                                    </div>
-                                    {% if form.start_date.errors %}
-                                        <ul class="errors">
-                                            {% for error in form.start_date.errors %}
-                                                <li>{{ error }}</li>
-                                            {% endfor %}
-                                        </ul>
-                                    {% endif %}
+                        <div class="column">
+                            <div class="field">
+                                {{ form.comment.label(class_="label") }}
+                                <div class="control">
+                                {{ form.comment(class_="textarea") }}
                                 </div>
-                                <div class="level-item">
-                                    <div class="field">
-                                        {{ form.start_time.label(class_="label") }}
-                                        <div class="control">
-                                        {{ form.start_time(class_="input") }}
-                                        </div>
-                                    </div>
-                                    {% if form.start_time.errors %}
-                                        <ul class="errors">
-                                            {% for error in form.start_time.errors %}
-                                                <li>{{ error }}</li>
-                                            {% endfor %}
-                                        </ul>
-                                    {% endif %}
-                                </div>
+                                <p class="help">Use this for notes about the event, including details of any activations or other notes.</p>
                             </div>
-                            <div class="level-right">
-                                <div class="level-item">
-                                    <div class="field">
-                                        {{ form.end_date.label(class_="label") }}
-                                        <div class="control">
-                                        {{ form.end_date(class_="input") }}
-                                        </div>
-                                    </div>
-                                    {% if form.end_date.errors %}
-                                        <ul class="errors">
-                                            {% for error in form.end_date.errors %}
-                                                <li>{{ error }}</li>
-                                            {% endfor %}
-                                        </ul>
-                                    {% endif %}
-                                </div>
-                                <div class="level-item">
-                                    <div class="field">
-                                        {{ form.end_time.label(class_="label") }}
-                                        <div class="control">
-                                        {{ form.end_time(class_="input") }}
-                                        </div>
-                                    </div>
-                                    {% if form.end_time.errors %}
-                                        <ul class="errors">
-                                            {% for error in form.end_time.errors %}
-                                                <li>{{ error }}</li>
-                                            {% endfor %}
-                                        </ul>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </nav>
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    <div class="field">
-                                        {{ form.my_gridsquare.label(class_="label") }}
-                                        <div class="control">
-                                        {{ form.my_gridsquare(class_="input", placeholder_="My Gridsquare") }}
-                                        </div>
-                                    </div>
-                                    {% if form.my_gridsquare.errors %}
-                                    <ul class="errors">
-                                    {% for error in form.my_gridsquare.errors %}
+                            {% if form.comment.errors %}
+                                <ul class="errors">
+                                    {% for error in form.comment.errors %}
                                         <li>{{ error }}</li>
                                     {% endfor %}
-                                    </ul>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </nav>
-                        <nav class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    <div class="field">
-                                        {{ form.type.label(class_="label") }}
-                                        <div class="select">
-                                        {{ form.type() }}
-                                        </div>
-                                    </div>
-                                    {% if form.type.errors %}
-                                    <ul class="errors">
-                                    {% for error in form.type.errors %}
-                                        <li>{{ error }}</li>
-                                    {% endfor %}
-                                    </ul>
-                                    {% endif %}
-                                </div>
-                                <div class="level-item SOTA Activation SOTA-POTA">
-                                    <div class="field">
-                                        {{ form.sota_ref.label(class_="label") }}
-                                        <div class="control">
-                                        {{ form.sota_ref(class_="input", placeholder_="SOTA Ref for Event") }}
-                                        </div>
-                                    </div>
-                                    {% if form.sota_ref.errors %}
-                                    <ul class="errors">
-                                    {% for error in form.sota_ref.errors %}
-                                        <li>{{ error }}</li>
-                                    {% endfor %}
-                                    </ul>
-                                    {% endif %}
-                                </div>
-                                <div class="level-item POTA Activation SOTA-POTA">
-                                    <div class="field">
-                                        {{ form.pota_ref.label(class_="label") }}
-                                        <div class="control">
-                                        {{ form.pota_ref(class_="input", placeholder_="POTA Refs for Event") }}
-                                        </div>
-                                    </div>
-                                    {% if form.pota_ref.errors %}
-                                    <ul class="errors">
-                                    {% for error in form.pota_ref.errors %}
-                                        <li>{{ error }}</li>
-                                    {% endfor %}
-                                    </ul>
-                                    {% endif %}
-                                </div>
-                                <div class="level-item Satellite Activation Satellite">
-                                    <div class="field">
-                                        {{ form.sat_name.label(class_="label") }}
-                                        <div class="control">
-                                        {{ form.sat_name(class_="input", placeholder_="Name of Satellite worked") }}
-                                        </div>
-                                    </div>
-                                    {% if form.sat_name.errors %}
-                                    <ul class="errors">
-                                    {% for error in form.sat_name.errors %}
-                                        <li>{{ error }}</li>
-                                    {% endfor %}
-                                    </ul>
-                                    {% endif %}
-                                </div>
-                                <div class="level-item Satellite Activation Satellite">
-                                    <div class="field">
-                                        {{ form.sat_mode.label(class_="label") }}
-                                        <div class="control">
-                                        {{ form.sat_mode(class_="input", placeholder_="Satellite Mode") }}
-                                        </div>
-                                    </div>
-                                    {% if form.sat_mode.errors %}
-                                    <ul class="errors">
-                                    {% for error in form.sat_mode.errors %}
-                                        <li>{{ error }}</li>
-                                    {% endfor %}
-                                    </ul>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </nav>
-                    </div>
-                    <div class="column">
-                        <div class="field">
-                            {{ form.comment.label(class_="label") }}
-                            <div class="control">
-                            {{ form.comment(class_="textarea") }}
-                            </div>
-                            <p class="help">Use this for notes about the event, including details of any activations or other notes.</p>
+                                </ul>
+                            {% endif %}
                         </div>
-                        {% if form.comment.errors %}
-                            <ul class="errors">
-                                {% for error in form.comment.errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
                     </div>
                 </div>
-                <div class="control">
-                    <p>
-                        <input type="submit" class="button is-link" value="Add">
-                    </p>
+                <div class="box">
+                    <div class="control">
+                        <p>
+                            <input type="submit" class="button is-link" value="{% if request.endpoint == 'events.eventedit' %}Edit{% else %}Add{% endif %}">
+                            <input type="button" class="button cancel" onclick="history.back(-1)" value="Cancel">
+                        </p>
+                    </div>
                 </div>
             </form>
         </div>

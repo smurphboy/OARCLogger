@@ -6,10 +6,10 @@
 {% block content %}
     <div class="bd-hero-heading">
         <h1 class="title is-size-1">
-            {% block title %} <p>Add a New QSO for {{ station_callsign }}</p> {% endblock %}
+            {% block title %} <p>{% if request.endpoint == 'qsos.editqso' %}Edit{% else %}Add{% endif %} a QSO for {{ station_callsign }}</p> {% endblock %}
         </h1>
         <div class="subtitle is-4 algolia-lvl1">
-            <p>Enter QSO details below and press Add:</p>     
+            <p>Enter QSO details below and press {% if request.endpoint == 'qsos.editqso' %}Edit{% else %}Add{% endif %}:</p>     
         </div>
     </div>
 </section>
@@ -1026,8 +1026,9 @@
             <div class="box">
                 <nav class="level">
                     <div class="level-left">
-                        <p class="level-item">Add a QSO to this callsign</p>
-                        <input class="button is-link level-item" name="add_qso" type="submit" form="qsoform"></input>
+                        <p class="level-item">{% if request.endpoint == 'qsos.editqso' %}Edit{% else %}Add{% endif %} QSO</p>
+                        <input class="button is-link level-item" name="add_qso" type="submit" form="qsoform" value="{% if request.endpoint == 'qsos.editqso' %}Edit{% else %}Add{% endif %}"></input>
+                        <input type="button" class="button cancel" onclick="history.back(-1)" value="Cancel">
                     </div>
                 </nav>
             </div>
