@@ -9,6 +9,7 @@ from sqlalchemy import desc, func, and_
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from logger.forms import CallsignForm
+from logger.helpers import countrylookup
 from logger.models import QSO, Callsign, User, db
 
 waoarc = Blueprint('waoarc', __name__, template_folder='../templates/waoarc')
@@ -98,3 +99,24 @@ def bands():
     propmodevalues = list(map(list, zip(*qsobypropmodes)))[1]
     return render_template('bands.html', bandlabels=bandlabels, bandvalues=bandvalues, modelabels=modelabels, modevalues=modevalues, propmodelabels=propmodelabels,
                            propmodevalues=propmodevalues)
+
+
+@waoarc.route("/dxcc")
+def dxcc():
+    qsobydxcc = db.session.query(QSO.dxcc, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.dxcc).order_by(func.count(QSO.id).desc()).all()
+    labels = list(map(list, zip(*qsobydxcc)))[0]
+    dxccnums = ['None' if v is None else v for v in labels]
+    dxcclabels = []
+    for label in dxccnums:
+        dxcclabels.append(countrylookup(label))
+    dxccvalues = list(map(list, zip(*qsobydxcc)))[1]
+    qsobycqz = db.session.query(QSO.cqz, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.cqz).order_by(func.count(QSO.id).desc()).all()
+    labels = list(map(list, zip(*qsobycqz)))[0]
+    cqzlabels = ['None' if v is None else v for v in labels]
+    cqzvalues = list(map(list, zip(*qsobycqz)))[1]
+    qsobyituz = db.session.query(QSO.ituz, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.ituz).order_by(func.count(QSO.id).desc()).all()
+    labels = list(map(list, zip(*qsobyituz)))[0]
+    ituzlabels = ['None' if v is None else v for v in labels]
+    ituzvalues = list(map(list, zip(*qsobyituz)))[1]
+    return render_template('dxcc.html', dxcclabels=dxcclabels, dxccvalues=dxccvalues, cqzlabels=cqzlabels, cqzvalues=cqzvalues, ituzlabels=ituzlabels,
+                           ituzvalues=ituzvalues)    
