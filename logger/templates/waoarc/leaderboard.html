@@ -52,20 +52,20 @@
                     {% endfor %}
                     </div>
                     {% endif %}
-                    <p class="subtitle">Top Ten CQZ members:</p>
+                    <p class="subtitle">Top Five CQZ members:</p>
                     {% if facts.cqztable %}
                     <div class="block">
                     {% for cqz in facts.cqztable %}
-                        {%- if loop.index > 10 %}{% break %}{% endif %}
+                        {%- if loop.index > 5 %}{% break %}{% endif %}
                         <p><span class="has-text-weight-semibold">{{ cqz.0 }}</span> worked <span class="has-text-weight-semibold">{{ cqz.1 }}</span> CQZ{% if cqz.1 > 1 %}s{% endif %}</p>
                     {% endfor %}
                     </div>
                     {% endif %}
-                    <p class="subtitle">Top Ten ITUZ members:</p>
+                    <p class="subtitle">Top Five ITUZ members:</p>
                     {% if facts.ituztable %}
                     <div class="block">
                     {% for ituz in facts.ituztable %}
-                        {%- if loop.index > 10 %}{% break %}{% endif %}
+                        {%- if loop.index > 5 %}{% break %}{% endif %}
                         <p><span class="has-text-weight-semibold">{{ ituz.0 }}</span> worked <span class="has-text-weight-semibold">{{ ituz.1 }}</span> ITUZ{% if ituz.1 > 1 %}s{% endif %}</p>
 
                     {% endfor %}
@@ -74,26 +74,6 @@
                 </div>
             </div>
             <div class="tile is-parent is-vertical">
-                <div class="tile is-child box">
-                    <h1 class="title"><i class="fa-solid fa-tower-broadcast"></i> <a href="{{ url_for('waoarc.bands') }}">Bands and Modes</a></h1>
-                    <p class="subtitle">Members have worked {{ facts.totalbands }} Bands and {{ facts.totalmodes }} Modes across all Callsigns</p>
-                    <p class="subtitle">Top Ten members working bands:</p>
-                    {% if facts.bandtable %}
-                    <div class="block">
-                    {% for band in facts.bandtable %}
-                        {%- if loop.index > 10 %}{% break %}{% endif %}
-                        <p><span class="has-text-weight-semibold">{{ band.0 }}</span> worked <span class="has-text-weight-semibold">{{ band.1 }}</span> band{% if band.1 > 1 %}s{% endif %}</p>
-                    {% endfor %}
-                    </div>
-                    {% endif %}
-                    <p class="subtitle">Top Ten members working modes:</p>
-                    {% if facts.modetable %}
-                    {% for mode in facts.modetable %}
-                        {%- if loop.index > 10 %}{% break %}{% endif %}
-                        <p><span class="has-text-weight-semibold">{{ mode.0 }}</span> worked <span class="has-text-weight-semibold">{{ mode.1 }}</span> mode{% if mode.1 > 1 %}s{% endif %}</p>
-                    {% endfor %}
-                    {% endif %}
-                </div>
                 <div class="tile is-child box">
                     <h1 class="title"><i class="fa-regular fa-calendar"></i><a href="{{ url_for('waoarc.dates') }}"> Dates & Times</a></h1>
                     <p class="subtitle">QSOs by Date and Time</p>
@@ -120,6 +100,26 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                </div>
+                <div class="tile is-child box">
+                    <h1 class="title"><i class="fa-solid fa-tower-broadcast"></i> <a href="{{ url_for('waoarc.bands') }}">Bands and Modes</a></h1>
+                    <p class="subtitle">Members have worked {{ facts.totalbands }} Bands and {{ facts.totalmodes }} Modes across all Callsigns</p>
+                    <p class="subtitle">Top Ten members working bands:</p>
+                    {% if facts.bandtable %}
+                    <div class="block">
+                    {% for band in facts.bandtable %}
+                        {%- if loop.index > 10 %}{% break %}{% endif %}
+                        <p><span class="has-text-weight-semibold">{{ band.0 }}</span> worked <span class="has-text-weight-semibold">{{ band.1 }}</span> band{% if band.1 > 1 %}s{% endif %}</p>
+                    {% endfor %}
+                    </div>
+                    {% endif %}
+                    <p class="subtitle">Top Ten members working modes:</p>
+                    {% if facts.modetable %}
+                    {% for mode in facts.modetable %}
+                        {%- if loop.index > 10 %}{% break %}{% endif %}
+                        <p><span class="has-text-weight-semibold">{{ mode.0 }}</span> worked <span class="has-text-weight-semibold">{{ mode.1 }}</span> mode{% if mode.1 > 1 %}s{% endif %}</p>
+                    {% endfor %}
+                    {% endif %}
                 </div>
             </div>
             <div class="tile is-parent is-vertical">
