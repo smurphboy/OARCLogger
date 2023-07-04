@@ -78,7 +78,7 @@ def users():
 @waoarc.route("/dates")
 def dates():
     '''All the date and time related info for the Leaderboard Dates detail page'''
-    qsobyday = db.session.query(QSO.qso_date, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.qso_date).order_by(QSO.qso_date.desc()).all()
+    qsobyday = db.session.query(QSO.qso_date, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.qso_date).order_by(QSO.qso_date).all()
     labels = list(map(list, zip(*qsobyday)))[0]
     dates = []
     for label in labels:
