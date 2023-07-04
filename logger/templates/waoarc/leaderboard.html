@@ -135,8 +135,24 @@
                     {% endif %}
                 </div>
                 <div class="tile is-child box">
-                    <h1 class="title"><i class="fa-solid fa-map-location-dot"></i> Maps - Coming Soon</h1>
-                    <p class="subtitle">Most Recent QSOs</p>
+                    <h1 class="title"><i class="fa-solid fa-map-location-dot"></i> <a href="{{ url_for('waoarc.grids') }}">Grids</a></h1>
+                    <p class="subtitle">Members have worked {{ facts.totalgrids }} Gridsquares and activated {{ facts.totalmygrids }} Gridsquares across all Callsigns</p>
+                    <p class="subtitle">Top Ten members working gridsquares:</p>
+                    {% if facts.gridtable %}
+                    <div class="block">
+                    {% for grid in facts.gridtable %}
+                        {%- if loop.index > 10 %}{% break %}{% endif %}
+                        <p><span class="has-text-weight-semibold">{{ grid.0 }}</span> worked <span class="has-text-weight-semibold">{{ grid.1 }}</span> gridsquare{% if grid.1 > 1 %}s{% endif %}</p>
+                    {% endfor %}
+                    </div>
+                    {% endif %}
+                    <p class="subtitle">Top Ten members activating gridsquares:</p>
+                    {% if facts.mygridtable %}
+                    {% for grid in facts.mygridtable %}
+                        {%- if loop.index > 10 %}{% break %}{% endif %}
+                        <p><span class="has-text-weight-semibold">{{ grid.0 }}</span> activated <span class="has-text-weight-semibold">{{ grid.1 }}</span> gridsquare{% if grid.1 > 1 %}s{% endif %}</p>
+                    {% endfor %}
+                    {% endif %}
                 </div>
             </div>
         </div>
