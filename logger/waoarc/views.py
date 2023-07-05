@@ -151,16 +151,16 @@ def grids():
 
 @waoarc.route("/map")
 def simplemap():
-    squares = QSO.query.with_entities(func.left(QSO.gridsquare,4)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'),(QSO.gridsquare != None)).group_by(db.distinct(func.left(QSO.gridsquare,4))).all()
-    print(squares)
+    squares = QSO.query.with_entities(func.left(QSO.gridsquare,4)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(db.distinct(func.left(QSO.gridsquare,4))).all()
     bounds = []
     lats = []
     lons = []
     for square in squares:
-        lat = (mh.to_location(square[0], center=True)[0])
-        lon = (mh.to_location(square[0], center=True)[1])
-        lats.append(lat)
-        lons.append(lon)
-        bounds.append([[lat - 0.5, lon -1.0 ],[lat + 0.5, lon + 1.0]])
+        if square[0] is not None:
+            lat = (mh.to_location(square[0], center=True)[0])
+            lon = (mh.to_location(square[0], center=True)[1])
+            lats.append(lat)
+            lons.append(lon)
+            bounds.append([[lat - 0.5, lon -1.0 ],[lat + 0.5, lon + 1.0]])
     extent = [[min(lats),min(lons)],[max(lats),max(lons)]]
     return render_template('map.html', bounds=bounds, extent=extent)
