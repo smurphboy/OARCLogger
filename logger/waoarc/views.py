@@ -151,7 +151,7 @@ def grids():
 
 @waoarc.route("/map")
 def simplemap():
-    squares = QSO.query.with_entities(func.left(QSO.gridsquare,4)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(db.distinct(func.left(QSO.gridsquare,4))).all()
+    squares = db.session.query(func.left(QSO.gridsquare,4)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(db.distinct(func.left(QSO.gridsquare,4))).all()
     bounds = []
     lats = []
     lons = []
