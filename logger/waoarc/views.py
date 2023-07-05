@@ -2,6 +2,7 @@ import datetime
 import operator
 import os
 
+import maidenhead as mh
 from flask import (Blueprint, abort, current_app, flash, redirect,
                    render_template, request, url_for)
 from flask_login import current_user, login_required, login_user, logout_user
@@ -146,3 +147,20 @@ def grids():
     mygridmembers = db.session.query(User.name, func.string_agg(db.distinct(Callsign.name), ', '), db.func.count(db.distinct(func.left(QSO.my_gridsquare,4)))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(func.left(QSO.my_gridsquare,4))).desc()).all()
     return render_template('grids.html', gridlabels=gridlabels, gridvalues=gridvalues, mygridlabels=mygridlabels,
                            mygridvalues=mygridvalues, gridmembers=gridmembers, mygridmembers=mygridmembers)
+
+
+@waoarc.route("/map")
+def simplemap():
+    squares = QSO.query.with_entities(func.left(QSO.gridsquare,4)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'),(QSO.gridsquare != None)).group_by(db.distinct(func.left(QSO.gridsquare,4))).all()
+    print(squares)
+    bounds = []
+    lats = []
+    lons = []
+    for square in squares:
+        lat = (mh.to_location(square[0], center=True)[0])
+        lon = (mh.to_location(square[0], center=True)[1])
+        lats.append(lat)
+        lons.append(lon)
+        bounds.append([[lat - 0.5, lon -1.0 ],[lat + 0.5, lon + 1.0]])
+    extent = [[min(lats),min(lons)],[max(lats),max(lons)]]
+    return render_template('map.html', bounds=bounds, extent=extent)
