@@ -4,6 +4,7 @@ flask-login
 flask-migrate
 flask-wtf
 flask-sqlalchemy
+geojson
 maidenhead
 psycopg2
 python-dotenv

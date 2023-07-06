@@ -150,8 +150,8 @@ def grids():
                            mygridvalues=mygridvalues, gridmembers=gridmembers, mygridmembers=mygridmembers)
 
 
-@waoarc.route("/map")
-def map():
+@waoarc.route("/workedmap")
+def workedmap():
     squares = db.session.query(func.left(QSO.gridsquare,4), func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(func.left(QSO.gridsquare,4)).all()
     print(squares)
     features = []
