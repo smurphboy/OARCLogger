@@ -3,10 +3,9 @@ import operator
 import os
 
 import maidenhead as mh
-from flask import (Blueprint, abort, current_app, flash, jsonify, redirect,
+from flask import (Blueprint, abort, current_app, flash, redirect,
                    render_template, request, url_for)
 from flask_login import current_user, login_required, login_user, logout_user
-from geojson import Feature, Polygon, FeatureCollection
 from sqlalchemy import desc, func, and_
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -151,17 +150,17 @@ def grids():
 
 
 @waoarc.route("/map")
-def map():
-    squares = db.session.query(func.left(QSO.gridsquare,4), func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(func.left(QSO.gridsquare,4)).all()
-    print(squares)
-    features = []
+def simplemap():
+    squares = db.session.query(func.left(QSO.gridsquare,4)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(func.left(QSO.gridsquare,4)).all()
+    bounds = []
+    lats = []
+    lons = []
     for square in squares:
         if square[0] is not None:
             lat = (mh.to_location(square[0], center=True)[0])
             lon = (mh.to_location(square[0], center=True)[1])
-            my_poly = Polygon([[(lon - 1.0, lat - 0.5),(lon + 1.0, lat - 0.5),(lon + 1.0, lat + 0.5), (lon - 1.0, lat + 0.5), (lon - 1.0, lat - 0.5)]])
-            features.append(Feature(geometry=my_poly, properties={"qsos": square[1], "name": str(square[0])}))
-    gridsquares = FeatureCollection(features)
-    print(gridsquares.is_valid)
-    print(gridsquares.errors())
-    return render_template('map.html', gridsquares=gridsquares)
+            lats.append(lat)
+            lons.append(lon)
+            bounds.append([[lat - 0.5, lon -1.0 ],[lat + 0.5, lon + 1.0]])
+    extent = [[min(lats),min(lons)],[max(lats),max(lons)]]
+    return render_template('map.html', bounds=bounds, extent=extent)
