@@ -135,7 +135,29 @@
                     {% endif %}
                 </div>
                 <div class="tile is-child box">
-                    <h1 class="title"><i class="fa-solid fa-map-location-dot"></i> <a href="{{ url_for('waoarc.grids') }}">Grids</a></h1>
+                    <h1 class="title"><i class="fa-solid fa-map-location-dot"></i> Grids</h1>
+                    <div class="tabs is-toggle is-fullwidth">
+                        <ul>
+                            <li>
+                                <a href="{{ url_for('waoarc.gridtable') }}">
+                                    <span class="icon is-small"><i class="fa-solid fa-table"></i></span>
+                                    <span>Table</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('waoarc.gridchart') }}">
+                                    <span class="icon is-small"><i class="fa-solid fa-chart-pie"></i></span>
+                                    <span>Chart</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('waoarc.workedmap') }}">
+                                    <span class="icon is-small"><i class="fa-solid fa-map-location-dot"></i></span>
+                                    <span>Map</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                     <p class="subtitle">Members have worked {{ facts.totalgrids }} Gridsquares and activated {{ facts.totalmygrids }} Gridsquares across all Callsigns</p>
                     <p class="subtitle">Top Ten members working gridsquares:</p>
                     {% if facts.gridtable %}

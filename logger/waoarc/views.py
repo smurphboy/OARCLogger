@@ -134,8 +134,8 @@ def dxcc():
                            ituzvalues=ituzvalues, dxccmembers=dxccmembers, cqzmembers=cqzmembers, ituzmembers=ituzmembers)    
 
 
-@waoarc.route("/grids")
-def grids():
+@waoarc.route("/gridchart")
+def gridchart():
     qsobygrid = db.session.query(func.left(QSO.gridsquare,4), func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(func.left(QSO.gridsquare,4)).order_by(func.count(QSO.id).desc()).all()
     labels = list(map(list, zip(*qsobygrid)))[0]
     gridlabels = ['None' if v is None else v for v in labels]
@@ -144,16 +144,20 @@ def grids():
     labels = list(map(list, zip(*qsobymygrid)))[0]
     mygridlabels = ['None' if v is None else v for v in labels]
     mygridvalues = list(map(list, zip(*qsobymygrid)))[1]
+    return render_template('gridchart.html', gridlabels=gridlabels, gridvalues=gridvalues, mygridlabels=mygridlabels,
+                           mygridvalues=mygridvalues)
+
+
+@waoarc.route("/gridtable")
+def gridtable():
     gridmembers = db.session.query(User.name, func.string_agg(db.distinct(Callsign.name), ', '), db.func.count(db.distinct(func.left(QSO.gridsquare,4)))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(func.left(QSO.gridsquare,4))).desc()).all()
     mygridmembers = db.session.query(User.name, func.string_agg(db.distinct(Callsign.name), ', '), db.func.count(db.distinct(func.left(QSO.my_gridsquare,4)))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(func.left(QSO.my_gridsquare,4))).desc()).all()
-    return render_template('grids.html', gridlabels=gridlabels, gridvalues=gridvalues, mygridlabels=mygridlabels,
-                           mygridvalues=mygridvalues, gridmembers=gridmembers, mygridmembers=mygridmembers)
+    return render_template('gridtable.html', gridmembers=gridmembers, mygridmembers=mygridmembers)
 
 
 @waoarc.route("/workedmap")
 def workedmap():
     squares = db.session.query(func.left(QSO.gridsquare,4), func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(func.left(QSO.gridsquare,4)).all()
-    print(squares)
     features = []
     for square in squares:
         if square[0] is not None:
@@ -162,6 +166,4 @@ def workedmap():
             my_poly = Polygon([[(lon - 1.0, lat - 0.5),(lon + 1.0, lat - 0.5),(lon + 1.0, lat + 0.5), (lon - 1.0, lat + 0.5), (lon - 1.0, lat - 0.5)]])
             features.append(Feature(geometry=my_poly, properties={"qsos": square[1], "name": str(square[0])}))
     gridsquares = FeatureCollection(features)
-    print(gridsquares.is_valid)
-    print(gridsquares.errors())
-    return render_template('map.html', gridsquares=gridsquares)
+    return render_template('workedmap.html', gridsquares=gridsquares)

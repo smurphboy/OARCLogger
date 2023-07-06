@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+{% block hero %}is-primary{% endblock %}
+{% block content %}
+		<div class="bd-hero-heading">
+			<h1 class="title algolia-lvl0">
+				{% block title %} <p>Gridsquares</p> {% endblock %}
+			</h1>
+            <p class="subtitle">QSOs by Gridsquare</p>
+		</div>
+    </div>
+</section>
+<section>
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="box notification">
+            <div class="notification is-info">
+                {% for message in messages%}
+                {{ message }}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+</section>
+<section>
+    <div class="container">
+        <div class="box">
+            <div class="tabs is-toggle is-fullwidth">
+                <ul>
+                    <li>
+                        <a href="{{ url_for('waoarc.gridtable') }}">
+                            <span class="icon is-small"><i class="fa-solid fa-table"></i></span>
+                            <span>Table</span>
+                        </a>
+                    </li>
+                    <li class="is-active">
+                        <a href="{{ url_for('waoarc.gridchart') }}">
+                            <span class="icon is-small"><i class="fa-solid fa-chart-pie"></i></span>
+                            <span>Chart</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('waoarc.workedmap') }}">
+                            <span class="icon is-small"><i class="fa-solid fa-map-location-dot"></i></span>
+                            <span>Map</span>
+                        </a>
+                    </li>
+                </ul>
+              </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <div class="box">
+                    <h1 class="title">QSOs by Gridsquare worked</h1>
+                    <div>
+                        <canvas id="grid"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="box">
+                    <h1 class="title">QSOs by Gridsquare activated</h1>
+                    <div>
+                        <canvas id="mygrid"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+const ctx = document.getElementById('grid');
+const ctx1 = document.getElementById('mygrid');
+
+new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: {{ gridlabels|safe }},
+        datasets: [{
+            label: 'QSOs by Gridsquares worked',
+            data: {{ gridvalues }},
+            hoverOffset: 4
+            }]
+    }
+});
+
+new Chart(ctx1, {
+    type: 'doughnut',
+    data: {
+        labels: {{ mygridlabels|safe }},
+        datasets: [{
+            label: 'QSOs by Gridsquares activated',
+            data: {{ mygridvalues }},
+            hoverOffset: 4
+            }]
+    }
+});
+
+
+$(document).ready(function () {
+    setTimeout(function(){
+        $(".notification").fadeOut("slow");
+    }, 5000);
+
+});
+</script>
+{% endblock %}

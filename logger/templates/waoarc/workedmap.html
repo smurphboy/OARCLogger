@@ -60,6 +60,30 @@ crossorigin=""/>
 </section>
 <section>
     <div class="box">
+        <div class="tabs is-toggle is-fullwidth">
+            <ul>
+                <li>
+                    <a href="{{ url_for('waoarc.gridtable') }}">
+                        <span class="icon is-small"><i class="fa-solid fa-table"></i></span>
+                        <span>Table</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('waoarc.gridchart') }}">
+                        <span class="icon is-small"><i class="fa-solid fa-chart-pie"></i></span>
+                        <span>Chart</span>
+                    </a>
+                </li>
+                <li class="is-active">
+                    <a href="{{ url_for('waoarc.workedmap') }}">
+                        <span class="icon is-small"><i class="fa-solid fa-map-location-dot"></i></span>
+                        <span>Map</span>
+                    </a>
+                </li>
+            </ul>
+          </div>
+    </div>
+    <div class="box">
         <div style="height: 480px;" id="map"></div>
     </div>
 </section>
