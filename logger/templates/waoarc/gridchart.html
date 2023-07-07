@@ -123,9 +123,15 @@ new Chart(ctx2, {
         datasets: [{
             label: 'Memebers QSOs by Gridsquares worked',
             data: {{ membervalues }},
-            hoverOffset: 4
-            }]
+            hoverOffset: 4,
+            }],
+        },
+    options: {
+        plugins: {
+            legend: false,
+        }
     }
+    
 });
 
 new Chart(ctx3, {
@@ -135,8 +141,13 @@ new Chart(ctx3, {
         datasets: [{
             label: 'Members QSOs by Gridsquares activated',
             data: {{ mymembervalues }},
-            hoverOffset: 4
-            }]
+            hoverOffset: 4,
+            }],
+        },
+    options: {
+        plugins: {
+            legend: false,
+        }
     }
 });
 
