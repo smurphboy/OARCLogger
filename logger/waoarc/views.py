@@ -144,15 +144,26 @@ def gridchart():
     labels = list(map(list, zip(*qsobymygrid)))[0]
     mygridlabels = ['None' if v is None else v for v in labels]
     mygridvalues = list(map(list, zip(*qsobymygrid)))[1]
+    gridmembers = db.session.query(func.concat(User.name, ' : ', func.string_agg(db.distinct(Callsign.name), ', ')), db.func.count(db.distinct(func.left(QSO.gridsquare,4)))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(func.left(QSO.gridsquare,4))).desc()).all()
+    labels = list(map(list, zip(*gridmembers)))[0]
+    memberlabels = ['None' if v is None else v for v in labels]
+    membervalues = list(map(list, zip(*gridmembers)))[1]
+    mygridmembers = db.session.query(func.concat(User.name, ' : ',func.string_agg(db.distinct(Callsign.name), ', ')), db.func.count(db.distinct(func.left(QSO.my_gridsquare,4)))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(func.left(QSO.my_gridsquare,4))).desc()).all()
+    labels = list(map(list, zip(*mygridmembers)))[0]
+    mymemberlabels = ['None' if v is None else v for v in labels]
+    mymembervalues = list(map(list, zip(*mygridmembers)))[1]
     return render_template('gridchart.html', gridlabels=gridlabels, gridvalues=gridvalues, mygridlabels=mygridlabels,
-                           mygridvalues=mygridvalues)
+                           mygridvalues=mygridvalues, memberlabels=memberlabels, membervalues=membervalues,
+                           mymemberlabels=mymemberlabels, mymembervalues=mymembervalues)
 
 
 @waoarc.route("/gridtable")
 def gridtable():
     gridmembers = db.session.query(User.name, func.string_agg(db.distinct(Callsign.name), ', '), db.func.count(db.distinct(func.left(QSO.gridsquare,4)))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(func.left(QSO.gridsquare,4))).desc()).all()
     mygridmembers = db.session.query(User.name, func.string_agg(db.distinct(Callsign.name), ', '), db.func.count(db.distinct(func.left(QSO.my_gridsquare,4)))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(func.left(QSO.my_gridsquare,4))).desc()).all()
-    return render_template('gridtable.html', gridmembers=gridmembers, mygridmembers=mygridmembers)
+    gridqsos = db.session.query(func.left(QSO.gridsquare, 4), func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(func.left(QSO.gridsquare,4)).order_by(func.left(QSO.gridsquare,4).desc()).all()
+    mygridqsos = db.session.query(func.left(QSO.my_gridsquare, 4), func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(func.left(QSO.my_gridsquare,4)).order_by(func.left(QSO.my_gridsquare,4).desc()).all()
+    return render_template('gridtable.html', gridmembers=gridmembers, mygridmembers=mygridmembers, gridqsos=gridqsos, mygridqsos=mygridqsos)
 
 
 @waoarc.route("/workedmap")

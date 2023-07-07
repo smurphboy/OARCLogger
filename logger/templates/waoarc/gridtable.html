@@ -55,51 +55,99 @@
                 </ul>
               </div>
         </div>
-        <div class="box">
-            <h1 class="title">Members by Gridsquare worked</h1>
-            <table id="gridt" class="table is-striped is-hoverable">
-                <thead>
-                    <tr>
-                        <th>Member</th>
-                        <th>Callsigns</th>
-                        <th>Total Gridsquares Worked</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for call in gridmembers %}
-                    <tr>
-                        <td>{{ call[0] }}</td>
-                        <td>{{ call[1] }}</td>
-                        <td>{{ call[2] }}</td>
-                    </tr>
-                    {% else %}
-                    No Gridsquare data
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="box">
-            <h1 class="title">Members by Gridsquares activated</h1>
-            <table id="mygridt" class="table is-striped is-hoverable">
-                <thead>
-                    <tr>
-                        <th>Member</th>
-                        <th>Callsigns</th>
-                        <th>Total Gridsquares Activated</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for call in mygridmembers %}
-                    <tr>
-                        <td>{{ call[0] }}</td>
-                        <td>{{ call[1] }}</td>
-                        <td>{{ call[2] }}</td>
-                    </tr>
-                    {% else %}
-                    No CQZ data
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div class="tile is-ancestor">
+            <div class="tile is-vertical is-parent">
+                <div class="tile is-child box">
+                    <h1 class="title">Members by Gridsquare worked</h1>
+                    <table id="gridt" class="table is-striped is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>Member</th>
+                                <th>Callsigns</th>
+                                <th>Total Gridsquares Worked</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for call in gridmembers %}
+                            <tr>
+                                <td>{{ call[0] }}</td>
+                                <td>{{ call[1] }}</td>
+                                <td>{{ call[2] }}</td>
+                            </tr>
+                            {% else %}
+                            No Gridsquare data
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tile is-child box">
+                    <h1 class="title">QSOs by Gridsquare worked</h1>
+                    <table id="qsot" class="table is-striped is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>Gridsquare</th>
+                                <th>QSOs</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for call in gridqsos %}
+                            <tr>
+                                <td>{{ call[0] }}</td>
+                                <td>{{ call[1] }}</td>
+                            </tr>
+                            {% else %}
+                            No Gridsquare data
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tile is-vertical is-parent">
+                <div class="tile is-child box">
+                    <h1 class="title">Members by Gridsquares activated</h1>
+                    <table id="mygridt" class="table is-striped is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>Member</th>
+                                <th>Callsigns</th>
+                                <th>Total Gridsquares Activated</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for call in mygridmembers %}
+                            <tr>
+                                <td>{{ call[0] }}</td>
+                                <td>{{ call[1] }}</td>
+                                <td>{{ call[2] }}</td>
+                            </tr>
+                            {% else %}
+                            No CQZ data
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tile is-child box">
+                    <h1 class="title">QSOs by Gridsquares activated</h1>
+                    <table id="myqsot" class="table is-striped is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>Gridsquare Activated</th>
+                                <th>QSOs</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for call in mygridqsos %}
+                            <tr>
+                                <td>{{ call[0] }}</td>
+                                <td>{{ call[1] }}</td>
+                            </tr>
+                            {% else %}
+                            No CQZ data
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -113,7 +161,7 @@ $(document).ready(function () {
         order: [[2, 'desc']]
     });
 
-    $('#cqzt').DataTable({
+    $('#mygridt').DataTable({
         lengthMenu: [
             [10, 25, 50, -1],
             [10, 25, 50, 'All'],
@@ -121,12 +169,20 @@ $(document).ready(function () {
         order: [[2, 'desc']]
     });
 
-    $('#mygridt').DataTable({
+    $('#qsot').DataTable({
         lengthMenu: [
             [10, 25, 50, -1],
             [10, 25, 50, 'All'],
         ],
-        order: [[2, 'desc']]
+        order: [[1, 'desc']]
+    });
+
+    $('#myqsot').DataTable({
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        order: [[1, 'desc']]
     });
 
     setTimeout(function(){

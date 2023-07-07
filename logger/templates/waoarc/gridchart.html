@@ -54,20 +54,32 @@
                 </ul>
               </div>
         </div>
-        <div class="columns">
-            <div class="column">
-                <div class="box">
+        <div class="tile is-ancestor">
+            <div class="tile is-vertical is-parent">
+                <div class="tile is-child box">
                     <h1 class="title">QSOs by Gridsquare worked</h1>
                     <div>
                         <canvas id="grid"></canvas>
                     </div>
                 </div>
+                <div class="tile is-child box">
+                    <h1 class="title">Members QSOs by Gridsquare worked</h1>
+                    <div>
+                        <canvas id="member"></canvas>
+                    </div>
+                </div>               
             </div>
-            <div class="column">
-                <div class="box">
+            <div class="tile is-vertical is-parent">
+                <div class="tile is-child box">
                     <h1 class="title">QSOs by Gridsquare activated</h1>
                     <div>
                         <canvas id="mygrid"></canvas>
+                    </div>
+                </div>
+                <div class="tile is-child box">
+                    <h1 class="title">Members QSOs by Gridsquare activated</h1>
+                    <div>
+                        <canvas id="mymember"></canvas>
                     </div>
                 </div>
             </div>
@@ -77,6 +89,8 @@
 <script>
 const ctx = document.getElementById('grid');
 const ctx1 = document.getElementById('mygrid');
+const ctx2 = document.getElementById('member');
+const ctx3 = document.getElementById('mymember');
 
 new Chart(ctx, {
     type: 'doughnut',
@@ -102,6 +116,29 @@ new Chart(ctx1, {
     }
 });
 
+new Chart(ctx2, {
+    type: 'doughnut',
+    data: {
+        labels: {{ memberlabels|safe }},
+        datasets: [{
+            label: 'Memebers QSOs by Gridsquares worked',
+            data: {{ membervalues }},
+            hoverOffset: 4
+            }]
+    }
+});
+
+new Chart(ctx3, {
+    type: 'doughnut',
+    data: {
+        labels: {{ mymemberlabels|safe }},
+        datasets: [{
+            label: 'Members QSOs by Gridsquares activated',
+            data: {{ mymembervalues }},
+            hoverOffset: 4
+            }]
+    }
+});
 
 $(document).ready(function () {
     setTimeout(function(){
