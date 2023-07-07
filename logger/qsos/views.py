@@ -32,10 +32,10 @@ def save_changes(qso, form, new):
     qso.submode = request.form.get('submode', '') or None
     qso.band = request.form.get('band', '') or None
     qso.band_rx = request.form.get('band_rx', '') or None
-    qso.gridsquare = request.form.get('gridsquare', '') or None
+    qso.gridsquare = request.form.get('gridsquare', '').lstrip() or None
     if qso.gridsquare:
         qso.gridsquare = qso.gridsquare[:2].upper() + qso.gridsquare[2:4] + qso.gridsquare[4:].lower()
-    qso.my_gridsquare = request.form.get('my_gridsquare', '') or None
+    qso.my_gridsquare = request.form.get('my_gridsquare', '').lstrip() or None
     if qso.my_gridsquare:
         qso.my_gridsquare = qso.my_gridsquare[:2].upper() + qso.my_gridsquare[2:4] + qso.my_gridsquare[4:].lower()
     qso.operator = request.form.get('operator', '').upper() or None
@@ -387,10 +387,10 @@ def sat(event):
         freq = request.form.get('freq', '') or None
         sat_name = request.form.get('sat_name', '').upper() or None
         sat_mode = request.form.get('sat_mode', '').upper() or None
-        gridsquare = request.form.get('gridsquare', '') or None
+        gridsquare = request.form.get('gridsquare', '').lstrip() or None
         if gridsquare:
             gridsquare = gridsquare[:2].upper() + gridsquare[2:4] + gridsquare[4:].lower()
-        my_gridsquare = request.form.get('my_gridsquare', '') or None
+        my_gridsquare = request.form.get('my_gridsquare', '').lstrip() or None
         if my_gridsquare:
             my_gridsquare = my_gridsquare[:2].upper() + my_gridsquare[2:4] + my_gridsquare[4:].lower()
         mode = request.form.get('mode', '') or None
