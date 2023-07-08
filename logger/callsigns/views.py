@@ -80,7 +80,7 @@ def virtual(call):
     callsigns = []
     for vircall in calls:
         callsigns.append(str(vircall))
-    virtualcall = QSO.query.filter(QSO.call.in_(callsigns)).order_by(QSO.qso_date.desc(), QSO.time_on.desc()).all()
+    virtualcall = QSO.query.filter_by(call = call).order_by(QSO.qso_date.desc(), QSO.time_on.desc()).all()
     callsign = Callsign.query.filter_by(name=call).first()
     return render_template('virtualcallsign.html', call=call, qsos=virtualcall, callsign=callsign)
 
