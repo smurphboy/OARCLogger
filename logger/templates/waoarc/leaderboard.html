@@ -100,10 +100,9 @@
                     <h1 class="title"><i class="fa-regular fa-calendar"></i><a href="{{ url_for('waoarc.dates') }}"> Dates & Times</a></h1>
                     <p class="subtitle">QSOs by Date and Time</p>
                     <div class="block">
-                        <p>Today there have been <span class="has-text-weight-semibold">{{ facts.qsostoday }}</span> QSOs.</p>
-                        <p>Yesterday there were <span class="has-text-weight-semibold">{{ facts.qsosyesterday }}</span> QSOs.</p>
+                        <p>Overall there have been <span class="has-text-weight-semibold">{{ facts.totalqsos }}</span> QSOs. Today there have been <span class="has-text-weight-semibold">{{ facts.qsostoday }}</span> QSOs. Yesterday there were <span class="has-text-weight-semibold">{{ facts.qsosyesterday }}</span> QSOs.</p>
                     </div>
-                    <h4 class="title is-4">QSOs by Day</h1>
+                    <h4 class="subtitle">QSOs by Day</h1>
                     <table id="calls" class="table is-striped is-hoverable">
                         <thead>
                             <tr>
@@ -122,6 +121,25 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                    <h4 class="subtitle">QSOs by Week</h1>
+                        <table id="calls" class="table is-striped is-hoverable">
+                            <thead>
+                                <tr>
+                                    <th>Week</th>
+                                    <th>Total QSOs</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for qso in qsobyweek %}
+                                <tr>
+                                    <td>{{ qso[0]|int - 25 }}</td>
+                                    <td>{{ qso[1] }}</td>
+                                </tr>
+                                {% else %}
+                                No QSOs
+                                {% endfor %}
+                            </tbody>
+                        </table>
                 </div>
                 <div class="tile is-child box">
                     <h1 class="title"><i class="fa-solid fa-tower-broadcast"></i> <a href="{{ url_for('waoarc.bands') }}">Bands and Modes</a></h1>

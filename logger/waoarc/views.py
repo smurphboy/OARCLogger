@@ -26,8 +26,9 @@ def about():
 def leaderboards():
     '''Worked All OARC Season 2 leaderboards'''
     facts = {}
+    facts['totalqsos'] = QSO.query.count()
     facts['totalusers'] = User.query.count()
-    facts['totalcallsigns'] = Callsign.query.count()
+    facts['totalcallsigns'] = Callsign.query.filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).count()
     calls = QSO.query.with_entities(QSO.call).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).distinct()
     callsigns = Callsign.query.with_entities(Callsign.name).distinct()
     unclaimed = list(set(calls).difference(callsigns))
@@ -51,8 +52,9 @@ def leaderboards():
     facts['mygridtable'] = db.session.query(User.name, db.func.count(db.distinct(func.left(QSO.my_gridsquare,4)))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(func.left(QSO.my_gridsquare,4))).desc()).limit(10).all()
     facts['totalmygrids'] = QSO.query.with_entities(func.left(QSO.my_gridsquare,4)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).distinct().count()
     qsobyday = db.session.query(QSO.qso_date, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.qso_date).order_by(QSO.qso_date.desc()).all()
+    qsobyweek = db.session.query(func.date_part('week',QSO.qso_date), func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(func.date_part('week',QSO.qso_date)).order_by(func.date_part('week',QSO.qso_date)).all()
     workedcallsigns = db.session.query(User.name, QSO.call, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.call == Callsign.name).join(User, Callsign.user_id == User.id).group_by(QSO.call, User.name).order_by(func.count(QSO.id).desc()).limit(10).all()
-    return render_template('leaderboard.html', facts=facts, unclaimed=unclaimed, qsobyday=qsobyday, workedcallsigns=workedcallsigns)
+    return render_template('leaderboard.html', facts=facts, unclaimed=unclaimed, qsobyday=qsobyday, qsobyweek=qsobyweek, workedcallsigns=workedcallsigns)
 
 
 @waoarc.route("/gettingstarted")
@@ -83,16 +85,21 @@ def dates():
     facts={}
     facts['totalusers'] = User.query.count()
     qsobyday = db.session.query(QSO.qso_date, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.qso_date).order_by(QSO.qso_date).all()
-    labels = list(map(list, zip(*qsobyday)))[0]
-    dates = []
-    for label in labels:
-        dates.append(label.strftime('%Y-%m-%d'))
-    values = list(map(list, zip(*qsobyday)))[1]
+    daylabels = list(map(list, zip(*qsobyday)))[0]
+    daydates = []
+    for label in daylabels:
+        daydates.append(label.strftime('%Y-%m-%d'))
+    dayvalues = list(map(list, zip(*qsobyday)))[1]
     usersbyday = db.session.query(QSO.qso_date, User.name, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(QSO.qso_date, User.name).order_by(QSO.qso_date.desc()).order_by(func.count(QSO.id).desc()).all()
     qsobyweek = db.session.query(func.date_part('week',QSO.qso_date), func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(func.date_part('week',QSO.qso_date)).order_by(func.date_part('week',QSO.qso_date)).all()
+    weeklabels = list(map(list, zip(*qsobyweek)))[0]
+    weekdates = []
+    for label in weeklabels:
+        weekdates.append(label - 25)
+    weekvalues = list(map(list, zip(*qsobyweek)))[1]
     usersbyweek = db.session.query(func.date_part('week',QSO.qso_date), User.name, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(func.date_part('week',QSO.qso_date), User.name).order_by(func.date_part('week',QSO.qso_date).desc()).order_by(func.count(QSO.id).desc()).all()
-    return render_template('dates.html', qsobyday=qsobyday, labels=dates, values=values, usersbyday=usersbyday,
-                           qsobyweek=qsobyweek, usersbyweek=usersbyweek, facts=facts)
+    return render_template('dates.html', qsobyday=qsobyday, daylabels=daydates, dayvalues=dayvalues, weeklabels=weekdates,
+                           weekvalues=weekvalues, usersbyday=usersbyday, qsobyweek=qsobyweek, usersbyweek=usersbyweek, facts=facts)
 
 @waoarc.route("/bands")
 def bands():
