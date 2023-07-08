@@ -1,3 +1,4 @@
+import datetime
 from flask import (Blueprint, abort, flash, make_response, redirect,
                    render_template, request, url_for)
 from flask_login import current_user, login_required
@@ -95,3 +96,25 @@ def search(call):
         callsigns.append(str(mycall))
     qsos = QSO.query.filter(QSO.station_callsign.in_(callsigns), QSO.call == call).all()
     return render_template('callsignsearch.html', call=call, qsos=qsos, callsigns=callsigns)
+
+
+@callsigns.route("/duplicates")
+def dups(callsign):
+    '''find duplicates within a callsign based on call, band, mode, date and time'''
+    qsos = QSO.query.filter_by(station_callsign = callsign).all()
+    possdup = []
+    for leftqso in qsos:
+        for rightqso in qsos:
+            score = 0
+            if leftqso.id == rightqso.id:
+                break
+            if leftqso.qso_date != rightqso.qso_date:
+                break
+            #if leftqso.time_on 
+            if leftqso.call == rightqso.call:
+                score += 1
+                if leftqso.band == rightqso.band:
+                    score += 1
+                    if leftqso.mode == rightqso.mode:
+                        score += 1
+    return score
