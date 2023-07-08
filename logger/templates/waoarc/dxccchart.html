@@ -57,7 +57,7 @@
         <div class="tile is-ancestor">
             <div class="tile is-vertical is-parent">
                 <div class="tile is-child box">
-                    <h1 class="title">QSOs by DXCC/h1>
+                    <h1 class="title">QSOs by DXCC</h1>
                     <div>
                         <canvas id="dxcc"></canvas>
                     </div>
@@ -77,22 +77,25 @@
             </div>
             <div class="tile is-vertical is-parent">
                 <div class="tile is-child box">
-                    <h1 class="title">Members QSOs by DXCC</h1>
-                    <div>
-                        <canvas id="dxccm"></canvas>
-                    </div>
+                    <h1 class="title">Members QSOs by DXCC (340 Total)</h1>
+                    {% for member in dxccmembers %}
+                    <p>{{ member.0 }} : {{ member.1 }}</p>
+                    <progress class="progress is-info" value="{{ member.1 }}" max="340"></progress>
+                    {% endfor %}
                 </div>
                 <div class="tile is-child box">
-                    <h1 class="title">Members QSOs by CQ Zone</h1>
-                    <div>
-                        <canvas id="cqzm"></canvas>
-                    </div>
+                    <h1 class="title">Members QSOs by CQ Zone (40 Total)</h1>
+                    {% for member in cqzmembers %}
+                    <p>{{ member.0 }} : {{ member.1 }}</p>
+                    <progress class="progress is-info" value="{{ member.1 }}" max="40"></progress>
+                    {% endfor %}
                 </div>
                 <div class="tile is-child box">
-                    <h1 class="title">Members QSOs by ITU Zone</h1>
-                    <div>
-                        <canvas id="ituzm"></canvas>
-                    </div>
+                    <h1 class="title">Members QSOs by ITU Zone (90 Total)</h1>
+                    {% for member in ituzmembers %}
+                    <p>{{ member.0 }} : {{ member.1 }}</p>
+                    <progress class="progress is-info" value="{{ member.1 }}" max="90"></progress>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -102,9 +105,6 @@
 const ctx = document.getElementById('dxcc');
 const ctx1 = document.getElementById('ituz');
 const ctx2 = document.getElementById('cqz');
-const ctx3 = document.getElementById('dxccm');
-const ctx4 = document.getElementById('cqzm');
-const ctx5 = document.getElementById('ituzm');
 
 new Chart(ctx, {
     type: 'doughnut',
@@ -137,66 +137,10 @@ new Chart(ctx2, {
         datasets: [{
             label: 'Memebers QSOs by ITU Zone',
             data: {{ ituzvalues }},
-            hoverOffset: 4,
-            }],
-        },
-    options: {
-        plugins: {
-            legend: false,
-        }
+            hoverOffset: 4
+            }]
     }
     
-});
-
-new Chart(ctx3, {
-    type: 'doughnut',
-    data: {
-        labels: {{ dxccmlabels|safe }},
-        datasets: [{
-            label: 'Members QSOs by DXCC',
-            data: {{ dxccmvalues }},
-            hoverOffset: 4,
-            }],
-        },
-    options: {
-        plugins: {
-            legend: false,
-        }
-    }
-});
-
-new Chart(ctx4, {
-    type: 'doughnut',
-    data: {
-        labels: {{ ituzmlabels|safe }},
-        datasets: [{
-            label: 'Members QSOs by ITU Zone',
-            data: {{ ituzmvalues }},
-            hoverOffset: 4,
-            }],
-        },
-    options: {
-        plugins: {
-            legend: false,
-        }
-    }
-});
-
-new Chart(ctx3, {
-    type: 'doughnut',
-    data: {
-        labels: {{ cqzmlabels|safe }},
-        datasets: [{
-            label: 'Members QSOs by CQ Zone',
-            data: {{ cqzmvalues }},
-            hoverOffset: 4,
-            }],
-        },
-    options: {
-        plugins: {
-            legend: false,
-        }
-    }
 });
 
 $(document).ready(function () {

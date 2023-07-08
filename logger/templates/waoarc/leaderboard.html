@@ -38,7 +38,29 @@
                     {% endif %}
                 </div>
                 <div class="tile is-child box">
-                    <h1 class="title"><i class="fas fa-flag-usa" aria-hidden="true"></i><a href="{{ url_for('waoarc.dxcc') }}"> DXCC</a></h1>
+                    <h1 class="title"><i class="fas fa-flag-usa" aria-hidden="true"></i><a href="{{ url_for('waoarc.dxccchart') }}"> DXCC</a></h1>
+                    <div class="tabs is-toggle is-fullwidth">
+                        <ul>
+                            <li>
+                                <a href="{{ url_for('waoarc.dxcctable') }}">
+                                    <span class="icon is-small"><i class="fa-solid fa-table"></i></span>
+                                    <span>Table</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('waoarc.dxccchart') }}">
+                                    <span class="icon is-small"><i class="fa-solid fa-chart-pie"></i></span>
+                                    <span>Chart</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('waoarc.dxccmap') }}">
+                                    <span class="icon is-small"><i class="fa-solid fa-map-location-dot"></i></span>
+                                    <span>Map</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                     <p class="subtitle">Members have made contact with:</p>
                     <div class="block">
                     <ul><li>{{ facts.totaldxcc }} unique DXCC,</li><li>{{ facts.totalcqz}} unique CQ Zones and</li><li>{{ facts.totalituz }} ITU Zones across all callsigns</li></ul>

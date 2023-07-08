@@ -80,6 +80,8 @@ def users():
 @waoarc.route("/dates")
 def dates():
     '''All the date and time related info for the Leaderboard Dates detail page'''
+    facts={}
+    facts['totalusers'] = User.query.count()
     qsobyday = db.session.query(QSO.qso_date, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.qso_date).order_by(QSO.qso_date).all()
     labels = list(map(list, zip(*qsobyday)))[0]
     dates = []
@@ -87,7 +89,10 @@ def dates():
         dates.append(label.strftime('%Y-%m-%d'))
     values = list(map(list, zip(*qsobyday)))[1]
     usersbyday = db.session.query(QSO.qso_date, User.name, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(QSO.qso_date, User.name).order_by(QSO.qso_date.desc()).order_by(func.count(QSO.id).desc()).all()
-    return render_template('dates.html', qsobyday=qsobyday, labels=dates, values=values, usersbyday=usersbyday)
+    qsobyweek = db.session.query(func.date_part('week',QSO.qso_date), func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(func.date_part('week',QSO.qso_date)).order_by(func.date_part('week',QSO.qso_date)).all()
+    usersbyweek = db.session.query(func.date_part('week',QSO.qso_date), User.name, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(func.date_part('week',QSO.qso_date), User.name).order_by(func.date_part('week',QSO.qso_date).desc()).order_by(func.count(QSO.id).desc()).all()
+    return render_template('dates.html', qsobyday=qsobyday, labels=dates, values=values, usersbyday=usersbyday,
+                           qsobyweek=qsobyweek, usersbyweek=usersbyweek, facts=facts)
 
 @waoarc.route("/bands")
 def bands():
@@ -127,11 +132,12 @@ def dxccchart():
     labels = list(map(list, zip(*qsobyituz)))[0]
     ituzlabels = ['None' if v is None else v for v in labels]
     ituzvalues = list(map(list, zip(*qsobyituz)))[1]
-    dxccmembers = db.session.query(User.name, func.string_agg(db.distinct(Callsign.name), ', '), db.func.count(db.distinct(QSO.dxcc))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(QSO.dxcc)).desc()).all()
-    cqzmembers = db.session.query(User.name, func.string_agg(db.distinct(Callsign.name), ', '), db.func.count(db.distinct(QSO.cqz))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(QSO.cqz)).desc()).all()
-    ituzmembers = db.session.query(User.name, func.string_agg(db.distinct(Callsign.name), ', '), db.func.count(db.distinct(QSO.ituz))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(QSO.ituz)).desc()).all()
-    return render_template('dxcc.html', dxcclabels=dxcclabels, dxccvalues=dxccvalues, cqzlabels=cqzlabels, cqzvalues=cqzvalues, ituzlabels=ituzlabels,
-                           ituzvalues=ituzvalues, dxccmembers=dxccmembers, cqzmembers=cqzmembers, ituzmembers=ituzmembers)    
+    dxccmembers = db.session.query(func.concat(User.name, " (", func.string_agg(db.distinct(Callsign.name), ', '), ")"), db.func.count(db.distinct(QSO.dxcc))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(QSO.dxcc)).desc()).all()
+    cqzmembers = db.session.query(func.concat(User.name, " (", func.string_agg(db.distinct(Callsign.name), ', '), ")"), db.func.count(db.distinct(QSO.cqz))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(QSO.cqz)).desc()).all()
+    ituzmembers = db.session.query(func.concat(User.name, " (", func.string_agg(db.distinct(Callsign.name), ', '), ")"), db.func.count(db.distinct(QSO.ituz))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(QSO.ituz)).desc()).all()
+    return render_template('dxccchart.html', dxcclabels=dxcclabels, dxccvalues=dxccvalues, cqzlabels=cqzlabels, cqzvalues=cqzvalues,
+                           ituzlabels=ituzlabels, ituzvalues=ituzvalues, dxccmembers=dxccmembers, cqzmembers=cqzmembers,
+                           ituzmembers=ituzmembers)    
 
 
 @waoarc.route("/dxcctable")
@@ -141,6 +147,10 @@ def dxcctable():
     ituzmembers = db.session.query(User.name, func.string_agg(db.distinct(Callsign.name), ', '), db.func.count(db.distinct(QSO.ituz))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(QSO.ituz)).desc()).all()
     return render_template('dxcctable.html', dxccmembers=dxccmembers, cqzmembers=cqzmembers, ituzmembers=ituzmembers)
 
+
+@waoarc.route("/dxccmap")
+def dxccmap():
+    return render_template('dxccmap.html')
 
 @waoarc.route("/gridchart")
 def gridchart():

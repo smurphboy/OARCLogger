@@ -11,7 +11,7 @@
 			<h1 class="title algolia-lvl0">
 				{% block title %} <p>DXCC / CQ Zones & ITU Zones</p> {% endblock %}
 			</h1>
-            <p class="subtitle">QSOs by DXCC / CQZ / ITUZ</p>
+            <p class="subtitle">Member QSOs by DXCC / CQ Zones & ITU Zones</p>
 		</div>
     </div>
 </section>
@@ -32,30 +32,28 @@
 </section>
 <section>
     <div class="container">
-        <div class="columns">
-            <div class="column">
-                <div class="box">
-                    <h1 class="title">QSOs by DXCC</h1>
-                    <div>
-                        <canvas id="dxcc"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="column">
-                <div class="box">
-                    <h1 class="title">QSOs by CQZ</h1>
-                    <div>
-                        <canvas id="cqz"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="column">
-                <div class="box">
-                    <h1 class="title">QSOs by ITUZ</h1>
-                    <div>
-                        <canvas id="ituz"></canvas>
-                    </div>
-                </div>
+        <div class="box">
+            <div class="tabs is-toggle is-fullwidth">
+                <ul>
+                    <li class="is-active">
+                        <a href="{{ url_for('waoarc.dxcctable') }}">
+                            <span class="icon is-small"><i class="fa-solid fa-table"></i></span>
+                            <span>Table</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('waoarc.dxccchart') }}">
+                            <span class="icon is-small"><i class="fa-solid fa-chart-pie"></i></span>
+                            <span>Chart</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('waoarc.dxccmap') }}">
+                            <span class="icon is-small"><i class="fa-solid fa-map-location-dot"></i></span>
+                            <span>Map</span>
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
         <div class="box">
@@ -130,46 +128,6 @@
     </div>
 </section>
 <script>
-const ctx = document.getElementById('dxcc');
-const ctx1 = document.getElementById('cqz');
-const ctx2 = document.getElementById('ituz');
-
-new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-        labels: {{ dxcclabels|safe }},
-        datasets: [{
-            label: 'QSOs by DXCC',
-            data: {{ dxccvalues }},
-            hoverOffset: 4
-            }]
-    }
-});
-
-new Chart(ctx1, {
-    type: 'doughnut',
-    data: {
-        labels: {{ cqzlabels|safe }},
-        datasets: [{
-            label: 'QSOs by CQ Zone',
-            data: {{ cqzvalues }},
-            hoverOffset: 4
-            }]
-    }
-});
-
-new Chart(ctx2, {
-    type: 'doughnut',
-    data: {
-        labels: {{ ituzlabels|safe }},
-        datasets: [{
-            label: 'QSOs by ITU Zone',
-            data: {{ ituzvalues }},
-            hoverOffset: 4
-            }]
-    }
-});
-
 $(document).ready(function () {
     $('#dxcct').DataTable({
         lengthMenu: [
