@@ -107,8 +107,8 @@ def bands():
                            propmodevalues=propmodevalues)
 
 
-@waoarc.route("/dxcc")
-def dxcc():
+@waoarc.route("/dxccchart")
+def dxccchart():
     qsobydxcc = db.session.query(QSO.dxcc, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.dxcc).order_by(func.count(QSO.id).desc()).all()
     labels = list(map(list, zip(*qsobydxcc)))[0]
     dxccnums = ['None' if v is None else v for v in labels]
@@ -132,6 +132,14 @@ def dxcc():
     ituzmembers = db.session.query(User.name, func.string_agg(db.distinct(Callsign.name), ', '), db.func.count(db.distinct(QSO.ituz))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(QSO.ituz)).desc()).all()
     return render_template('dxcc.html', dxcclabels=dxcclabels, dxccvalues=dxccvalues, cqzlabels=cqzlabels, cqzvalues=cqzvalues, ituzlabels=ituzlabels,
                            ituzvalues=ituzvalues, dxccmembers=dxccmembers, cqzmembers=cqzmembers, ituzmembers=ituzmembers)    
+
+
+@waoarc.route("/dxcctable")
+def dxcctable():
+    dxccmembers = db.session.query(User.name, func.string_agg(db.distinct(Callsign.name), ', '), db.func.count(db.distinct(QSO.dxcc))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(QSO.dxcc)).desc()).all()
+    cqzmembers = db.session.query(User.name, func.string_agg(db.distinct(Callsign.name), ', '), db.func.count(db.distinct(QSO.cqz))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(QSO.cqz)).desc()).all()
+    ituzmembers = db.session.query(User.name, func.string_agg(db.distinct(Callsign.name), ', '), db.func.count(db.distinct(QSO.ituz))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(QSO.ituz)).desc()).all()
+    return render_template('dxcctable.html', dxccmembers=dxccmembers, cqzmembers=cqzmembers, ituzmembers=ituzmembers)
 
 
 @waoarc.route("/gridchart")

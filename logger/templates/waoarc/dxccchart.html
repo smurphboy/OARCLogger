@@ -7,9 +7,9 @@
 {% block content %}
 		<div class="bd-hero-heading">
 			<h1 class="title algolia-lvl0">
-				{% block title %} <p>Gridsquares</p> {% endblock %}
+				{% block title %} <p>DXCC / CQ Zone & ITU Zone Charts</p> {% endblock %}
 			</h1>
-            <p class="subtitle">QSOs by Gridsquare</p>
+            <p class="subtitle">QSOs by DXCC / CQ Zone & ITU Zone</p>
 		</div>
     </div>
 </section>
@@ -34,19 +34,19 @@
             <div class="tabs is-toggle is-fullwidth">
                 <ul>
                     <li>
-                        <a href="{{ url_for('waoarc.gridtable') }}">
+                        <a href="{{ url_for('waoarc.dxcctable') }}">
                             <span class="icon is-small"><i class="fa-solid fa-table"></i></span>
                             <span>Table</span>
                         </a>
                     </li>
                     <li class="is-active">
-                        <a href="{{ url_for('waoarc.gridchart') }}">
+                        <a href="{{ url_for('waoarc.dxccchart') }}">
                             <span class="icon is-small"><i class="fa-solid fa-chart-pie"></i></span>
                             <span>Chart</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ url_for('waoarc.workedmap') }}">
+                        <a href="{{ url_for('waoarc.dxccmap') }}">
                             <span class="icon is-small"><i class="fa-solid fa-map-location-dot"></i></span>
                             <span>Map</span>
                         </a>
@@ -57,29 +57,41 @@
         <div class="tile is-ancestor">
             <div class="tile is-vertical is-parent">
                 <div class="tile is-child box">
-                    <h1 class="title">QSOs by Gridsquare worked</h1>
+                    <h1 class="title">QSOs by DXCC/h1>
                     <div>
-                        <canvas id="grid"></canvas>
+                        <canvas id="dxcc"></canvas>
                     </div>
                 </div>
                 <div class="tile is-child box">
-                    <h1 class="title">Members QSOs by Gridsquare worked</h1>
+                    <h1 class="title">QSOs by CQ Zone</h1>
                     <div>
-                        <canvas id="member"></canvas>
+                        <canvas id="cqz"></canvas>
                     </div>
                 </div>               
+                <div class="tile is-child box">
+                    <h1 class="title">QSOs by ITU Zone</h1>
+                    <div>
+                        <canvas id="ituz"></canvas>
+                    </div>
+                </div>
             </div>
             <div class="tile is-vertical is-parent">
                 <div class="tile is-child box">
-                    <h1 class="title">QSOs by Gridsquare activated</h1>
+                    <h1 class="title">Members QSOs by DXCC</h1>
                     <div>
-                        <canvas id="mygrid"></canvas>
+                        <canvas id="dxccm"></canvas>
                     </div>
                 </div>
                 <div class="tile is-child box">
-                    <h1 class="title">Members QSOs by Gridsquare activated</h1>
+                    <h1 class="title">Members QSOs by CQ Zone</h1>
                     <div>
-                        <canvas id="mymember"></canvas>
+                        <canvas id="cqzm"></canvas>
+                    </div>
+                </div>
+                <div class="tile is-child box">
+                    <h1 class="title">Members QSOs by ITU Zone</h1>
+                    <div>
+                        <canvas id="ituzm"></canvas>
                     </div>
                 </div>
             </div>
@@ -87,18 +99,20 @@
     </div>
 </section>
 <script>
-const ctx = document.getElementById('grid');
-const ctx1 = document.getElementById('mygrid');
-const ctx2 = document.getElementById('member');
-const ctx3 = document.getElementById('mymember');
+const ctx = document.getElementById('dxcc');
+const ctx1 = document.getElementById('ituz');
+const ctx2 = document.getElementById('cqz');
+const ctx3 = document.getElementById('dxccm');
+const ctx4 = document.getElementById('cqzm');
+const ctx5 = document.getElementById('ituzm');
 
 new Chart(ctx, {
     type: 'doughnut',
     data: {
-        labels: {{ gridlabels|safe }},
+        labels: {{ dxcclabels|safe }},
         datasets: [{
-            label: 'QSOs by Gridsquares worked',
-            data: {{ gridvalues }},
+            label: 'QSOs by DXCC',
+            data: {{ dxccvalues }},
             hoverOffset: 4
             }]
     }
@@ -107,10 +121,10 @@ new Chart(ctx, {
 new Chart(ctx1, {
     type: 'doughnut',
     data: {
-        labels: {{ mygridlabels|safe }},
+        labels: {{ cqzlabels|safe }},
         datasets: [{
-            label: 'QSOs by Gridsquares activated',
-            data: {{ mygridvalues }},
+            label: 'QSOs by CQ Zone',
+            data: {{ cqzvalues }},
             hoverOffset: 4
             }]
     }
@@ -119,10 +133,10 @@ new Chart(ctx1, {
 new Chart(ctx2, {
     type: 'doughnut',
     data: {
-        labels: {{ memberlabels|safe }},
+        labels: {{ ituzlabels|safe }},
         datasets: [{
-            label: 'Memebers QSOs by Gridsquares worked',
-            data: {{ membervalues }},
+            label: 'Memebers QSOs by ITU Zone',
+            data: {{ ituzvalues }},
             hoverOffset: 4,
             }],
         },
@@ -137,10 +151,44 @@ new Chart(ctx2, {
 new Chart(ctx3, {
     type: 'doughnut',
     data: {
-        labels: {{ mymemberlabels|safe }},
+        labels: {{ dxccmlabels|safe }},
         datasets: [{
-            label: 'Members QSOs by Gridsquares activated',
-            data: {{ mymembervalues }},
+            label: 'Members QSOs by DXCC',
+            data: {{ dxccmvalues }},
+            hoverOffset: 4,
+            }],
+        },
+    options: {
+        plugins: {
+            legend: false,
+        }
+    }
+});
+
+new Chart(ctx4, {
+    type: 'doughnut',
+    data: {
+        labels: {{ ituzmlabels|safe }},
+        datasets: [{
+            label: 'Members QSOs by ITU Zone',
+            data: {{ ituzmvalues }},
+            hoverOffset: 4,
+            }],
+        },
+    options: {
+        plugins: {
+            legend: false,
+        }
+    }
+});
+
+new Chart(ctx3, {
+    type: 'doughnut',
+    data: {
+        labels: {{ cqzmlabels|safe }},
+        datasets: [{
+            label: 'Members QSOs by CQ Zone',
+            data: {{ cqzmvalues }},
             hoverOffset: 4,
             }],
         },
