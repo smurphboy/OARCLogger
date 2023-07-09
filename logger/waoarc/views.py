@@ -28,7 +28,8 @@ def leaderboards():
     facts = {}
     facts['totalqsos'] = QSO.query.filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).count()
     facts['totalusers'] = User.query.count()
-    facts['totalcallsigns'] = Callsign.query.filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).count()
+    facts['totalcallsigns'] = Callsign.query.count()
+    print (facts['totalcallsigns'])
     calls = QSO.query.with_entities(QSO.call).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).distinct()
     callsigns = Callsign.query.with_entities(Callsign.name).distinct()
     unclaimed = list(set(calls).difference(callsigns))
