@@ -85,13 +85,13 @@ def save_changes(qso, form, new):
         if sotasummit.status_code == 200:
             summit = sotasummit.json()
             if not qso.lat:
-                qso.lat = summit['latitude'][:11]
+                qso.lat = str(summit['latitude'])[:11]
             if not qso.lon:
-                qso.lon = summit['longitude'][:11]
+                qso.lon = str(summit['longitude'])[:11]
             if not qso.gridsquare:
-                qso.gridsquare = summit['locator']
+                qso.gridsquare = str(summit['locator'])
             if not qso.country:
-                qso.country = summit['associationName']
+                qso.country = str(summit['associationName'])
             db.session.commit()
     if qso.my_sota_ref:
         url = ("https://api2.sota.org.uk/api/summits/" + qso.my_sota_ref)
@@ -99,13 +99,13 @@ def save_changes(qso, form, new):
         if sotasummit.status_code == 200:
             summit = sotasummit.json()
             if not qso.my_lat:
-                qso.my_lat = summit['latitude'][:11]
+                qso.my_lat = str(summit['latitude'])[:11]
             if not qso.my_lon:
-                qso.my_lon = summit['longitude'][:11]
+                qso.my_lon = str(summit['longitude'])[:11]
             if not qso.my_gridsquare:
-                qso.my_gridsquare = summit['locator']
+                qso.my_gridsquare = str(summit['locator'])
             if not qso.my_country:
-                qso.my_country = summit['associationName']
+                qso.my_country = str(summit['associationName'])
             db.session.commit()
     if qso.station_callsign:
         info = dxcclookup(qso.station_callsign)

@@ -98,23 +98,41 @@ def search(call):
     return render_template('callsignsearch.html', call=call, qsos=qsos, callsigns=callsigns)
 
 
-@callsigns.route("/duplicates")
-def dups(callsign):
+@callsigns.route("/<callsign>/duplicates")
+def dupes(callsign):
     '''find duplicates within a callsign based on call, band, mode, date and time'''
+    callsign = callsign.replace('_', '/')
     qsos = QSO.query.filter_by(station_callsign = callsign).all()
-    possdup = []
+    possdupes = []
     for leftqso in qsos:
         for rightqso in qsos:
             score = 0
+            flag = False
+            for dupe in possdupes:
+                if (dupe[1] == leftqso) and (dupe[0] == rightqso):
+                    flag = True
+                    continue
+            if flag == True:
+                continue
             if leftqso.id == rightqso.id:
-                break
-            if leftqso.qso_date != rightqso.qso_date:
-                break
-            #if leftqso.time_on 
-            if leftqso.call == rightqso.call:
+                continue
+            if leftqso.call != rightqso.call:
+                continue
+            if leftqso.band == rightqso.band:
                 score += 1
-                if leftqso.band == rightqso.band:
-                    score += 1
-                    if leftqso.mode == rightqso.mode:
-                        score += 1
-    return score
+            if leftqso.mode == rightqso.mode:
+                score += 1
+            if leftqso.submode == rightqso.submode:
+                score += 1
+            if leftqso.mode == rightqso.submode:
+                score += 1
+            if leftqso.submode == rightqso.mode:
+                score += 1
+            leftt = datetime.datetime.combine(leftqso.qso_date, leftqso.time_on)
+            rightt = datetime.datetime.combine(rightqso.qso_date, rightqso.time_on)
+            deltat = leftt - rightt
+            if deltat >= datetime.timedelta(0):
+                possdupes.append((leftqso, rightqso, score, deltat))
+    if len(possdupes) > 1:
+        possdupes =sorted(possdupes, key=lambda x: x[2], reverse=True)
+    return render_template('dups.html', possdupes=possdupes, callsign=callsign)
