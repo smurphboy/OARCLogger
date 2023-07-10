@@ -13,14 +13,16 @@
         <div class="container">
             <div class="box">
                 <h1 class="title">Possible Duplicate QSOs</h1>
+                <p class="subtitle">Duplicates detected by same callsign, within 12 hours of each other. Scored on a scale of 0 to 3 against same band, mode and submode.</p>
                 {% set fields = [('QSO Date', 'qso_date'), ('Time On', 'time_on'), ('Call', 'call'), ('Band', 'band'), ('Mode', 'mode'), ('Submode', 'submode') ] %}
                 {% for row in possdupes %}
+                <p class="has-text-weight-semibold">Duplicate Score {{ row.2 }} out of 3. Time difference of QSOs = {{ row.3 }}</p>
                 <table class="table is-striped is-hoverable">
                     <thead>
                         <tr>
                             <th>Field</th>
-                            <th><a href="{{ url_for('qsos.viewqso', id=row.0.id) }}">QSO ID - {{ row.0.id }}</a></th>
-                            <th><a href="{{ url_for('qsos.viewqso', id=row.1.id) }}">QSO ID - {{ row.1.id }}</a></th>
+                            <th><a href="{{ url_for('qsos.viewqso', id=row.0.id) }}" target="_blank">QSO ID - {{ row.0.id }}</a></th>
+                            <th><a href="{{ url_for('qsos.viewqso', id=row.1.id) }}" target="_blank">QSO ID - {{ row.1.id }}</a></th>
                         </tr>
                     </thead>
                     <tbody>

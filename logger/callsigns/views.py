@@ -131,7 +131,7 @@ def dupes(callsign):
             leftt = datetime.datetime.combine(leftqso.qso_date, leftqso.time_on)
             rightt = datetime.datetime.combine(rightqso.qso_date, rightqso.time_on)
             deltat = leftt - rightt
-            if deltat >= datetime.timedelta(0):
+            if (deltat >= datetime.timedelta(0) and (deltat <= datetime.timedelta(0.5))): # QSOs are within half of a day of each other
                 possdupes.append((leftqso, rightqso, score, deltat))
     if len(possdupes) > 1:
         possdupes =sorted(possdupes, key=lambda x: x[2], reverse=True)

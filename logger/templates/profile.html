@@ -112,6 +112,7 @@
                         <th>New QSO</th>
                         <th>Export</th>
                         <th>Del Callsign</th>
+                        <th>Check Duplicates</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -122,9 +123,10 @@
                         <td>{{ countrylookup(callsign.name) }}</td>
                         <td>{{ qsocount(callsign.name) }}</td>
                         <td>{% if latestqso(callsign.name) != 'N/A' %}{{ latestqso(callsign.name) }}{% endif %}</td>
-                        <td><a class="has-text-infok" href="{{ url_for('qsos.postnewqso', station_callsign=callsign.name | replace('/','_')) }}">New QSO</a></td>
+                        <td><a class="has-text-info" href="{{ url_for('qsos.postnewqso', station_callsign=callsign.name | replace('/','_')) }}">New QSO</a></td>
                         <td><a class="has-text-primary-dark" href="{{ url_for ('callsigns.callsignexport', id=callsign.id | replace('/','_'))  }}"><span class="icon"><i class="fa-solid fa-file-arrow-down"></i></span>Export</a></td>
                         <td><a class="has-text-danger is-small" href="{{ url_for('callsigns.callsigndelete', id=callsign.id) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a></td>
+                        <td><a class="has-text-info" href="{{ url_for('callsigns.dupes', callsign=callsign.name | replace('/','_')) }}">Check Duplicates</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>
