@@ -10,7 +10,8 @@ from flask import (Blueprint, abort, current_app, flash, jsonify, redirect,
 from flask_login import current_user, login_required
 from werkzeug.utils import secure_filename
 
-from logger.forms import QSOForm, QSOUploadForm, SOTAQSOForm, SATQSOForm, NonAmQSOForm
+from logger.forms import (NonAmQSOForm, QSOForm, QSOUploadForm, SATQSOForm,
+                          SOTAQSOForm)
 from logger.models import QSO, Callsign, Event, User, db
 
 qsos = Blueprint('qsos', __name__, template_folder='templates')
@@ -181,6 +182,7 @@ def editqso(id):
 @qsos.route("/<user>/upload", methods=['GET', 'POST'])
 @login_required
 def uploadqsos(user):
+    '''upload ADIF for a user'''
     uploadform = QSOUploadForm()
     if request.method == 'POST':
         uploaded_file = request.files['file']

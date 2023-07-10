@@ -29,7 +29,6 @@ def leaderboards():
     facts['totalqsos'] = QSO.query.filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).count()
     facts['totalusers'] = User.query.count()
     facts['totalcallsigns'] = Callsign.query.count()
-    print (facts['totalcallsigns'])
     calls = QSO.query.with_entities(QSO.call).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).distinct()
     callsigns = Callsign.query.with_entities(Callsign.name).distinct()
     unclaimed = list(set(calls).difference(callsigns))
@@ -158,7 +157,9 @@ def dxcctable():
 
 @waoarc.route("/dxccmap")
 def dxccmap():
-    return render_template('dxccmap.html')
+    totaldxcc = QSO.query.with_entities(QSO.dxcc).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).distinct().count()    
+
+    return render_template('dxccmap.html', totaldxcc=totaldxcc)
 
 @waoarc.route("/gridchart")
 def gridchart():
@@ -203,4 +204,5 @@ def workedmap():
             my_poly = Polygon([[(lon - 1.0, lat - 0.5),(lon + 1.0, lat - 0.5),(lon + 1.0, lat + 0.5), (lon - 1.0, lat + 0.5), (lon - 1.0, lat - 0.5)]])
             features.append(Feature(geometry=my_poly, properties={"qsos": square[1], "name": str(square[0])}))
     gridsquares = FeatureCollection(features)
-    return render_template('workedmap.html', gridsquares=gridsquares)
+    totalgrids = QSO.query.with_entities(func.left(QSO.gridsquare,4)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).distinct().count()
+    return render_template('workedmap.html', gridsquares=gridsquares, totalgrids=totalgrids)
