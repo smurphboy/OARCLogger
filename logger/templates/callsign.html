@@ -92,6 +92,12 @@
                     <div class="level-left">
                         <p class="level-item">Add a new QSO for this callsign</p>
                         <a class="button is-link level-item" href="{{ url_for('qsos.postnewqso', station_callsign=station_callsign | replace('/','_')) }}">Add QSO</a>
+                    </div>
+                </div>
+            </div>
+            <div class="box">
+                <div class="level">
+                    <div class="level-left">
                         <p class="level-item">Check Duplicates for this callsign</p>
                         <a class="button is-info level-item" href="{{ url_for('callsigns.dupes', callsign=station_callsign | replace('/','_')) }}">Check Duplicates</a>
                     </div>

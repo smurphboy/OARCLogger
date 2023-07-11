@@ -427,6 +427,7 @@ DXCCS =    {0: "None (the contacted station is known to not be within a DXCC ent
 
 
 def adiflon(lon):
+    '''converts float lon to ADIF lon format'''
     if not lon:
         return False
     lonstring = ""
@@ -440,6 +441,7 @@ def adiflon(lon):
 
 
 def adiflat(lat):
+    '''converts float lat to ADIF lat format'''
     if not lat:
         return False
     latstring = ""
@@ -478,13 +480,24 @@ def adiftext(qsos):
             if str(col).split('.')[1] in LATS:
                 lat = getattr(qso,str(col).split('.')[1])
                 if lat:
-                    print(lat)
-                    ADIF += "".join("<{0}:11>{1}\n".format(str(col).split('.')[1], adiflat(float(lat))))
+                    # print(lat)
+                    if (lat[0].isdigit()) or (lat[0] == '-'):
+                        ADIF += "".join("<{0}:11>{1}\n".format(str(col).split('.')[1], adiflat(float(lat))))
+                        # print("lat float")
+                    else:
+                        ADIF += "".join("<{0}:11>{1}\n".format(str(col).split('.')[1], lat))
+                        # print('lat not float')
                 continue
             if str(col).split('.')[1] in LONS:
                 lon = getattr(qso,str(col).split('.')[1])
                 if lon:
-                    ADIF += "".join("<{0}:11>{1}\n".format(str(col).split('.')[1], adiflon(float(lon))))
+                    # print(lon)
+                    if (lon[0].isdigit()) or (lon[0] == '-'):
+                        ADIF += "".join("<{0}:11>{1}\n".format(str(col).split('.')[1], adiflon(float(lon))))
+                        # print("lon float")
+                    else:
+                        ADIF += "".join("<{0}:11>{1}\n".format(str(col).split('.')[1], lon))
+                        # print("lon non float")
                 continue
             else:
                 if getattr(qso,str(col).split('.')[1]):

@@ -106,7 +106,7 @@ var tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	};
 
 	info.update = function (props) {
-		const contents = props ? `<b>${props.name}</b><br />${props.qsos} QSOs made from this square` : 'Hover over a square';
+		const contents = props ? `<b>${props.dxcc_name}</b><br />${props.count} QSOs made from this square` : 'Hover over a square';
 		this._div.innerHTML = `<h4>Gridsquares Worked</h4>${contents}`;
 	};
 
@@ -131,7 +131,7 @@ function style(feature) {
         color: 'white',
         dashArray: '3',
         fillOpacity: 0.7,
-        fillColor: getColor(feature.properties.qsos)
+        fillColor: getColor(feature.properties.count)
     };
 }
 
