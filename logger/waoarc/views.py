@@ -160,14 +160,16 @@ def dxccmap():
     totaldxcc = QSO.query.with_entities(QSO.dxcc).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).distinct().count()    
     dxccsquares = QSO.query.with_entities(QSO.dxcc, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.dxcc).all()
     dxcccount = {}
-    for dxcc,count in dxccsquares:
-        dxcccount[dxcc] = count
+    for dxcc, count in dxccsquares:
+        if dxcc != None:
+            dxcccount[dxcc] = count
     with open("./dxcc.geojson") as f:
         gj = gjload(f)
     for feature in gj['features']:
-        print(feature['properties']['dxcc_entity_code'])
-        feature['properties']['count'] = dxcccount.get(feature['properties']['dxcc_entity_code'], 0)
-        print(dxcccount.get(feature['properties']['dxcc_entity_code'], 0))
+        # print(feature['properties']['dxcc_entity_code'])
+        if dxcccount.get(feature['properties']['dxcc_entity_code'], 0) != 0:
+            feature['properties']['count'] = dxcccount.get(feature['properties']['dxcc_entity_code'], 0)
+            print(dxcccount.get(feature['properties']['dxcc_entity_code'], 0), feature['properties']['dxcc_name'])
     return render_template('dxccmap.html', totaldxcc=totaldxcc, dxccsquares=gj)
 
 @waoarc.route("/gridchart")

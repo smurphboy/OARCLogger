@@ -149,9 +149,13 @@ function highlightFeature(e) {
     info.update(layer.feature.properties);
 }
 
+function qsoFilter(feature) {
+  if (feature.properties.count > 0) return true
+}
 
 /* global statesData */
 var geojson = L.geoJson(gridsquares, {
+    filter: qsoFilter,
     style : style,
     onEachFeature : onEachFeature
 }).addTo(map);
