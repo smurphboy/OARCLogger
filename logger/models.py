@@ -242,8 +242,9 @@ class QSO(db.Model):
                     setattr(self, col_name.lower(), update_dictionary[col_name])
             else:
                 print(col_name.lower(), ': not found')
-        if self['station_callsign'] == '':
-            self['station_callsign'] = self['operator']
+        if self.station_callsign is None:
+            self.station_callsign = self.operator
+        print(self.station_callsign)
         db.session.add(self)
         db.session.commit()
         #print('created')
