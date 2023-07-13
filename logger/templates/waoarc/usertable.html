@@ -32,6 +32,22 @@
 <section>
     <div class="container">
         <div class="box">
+            <div class="tabs is-toggle is-fullwidth">
+                <ul>
+                    <li class="is-active">
+                        <a href="{{ url_for('waoarc.usertable') }}">
+                            <span class="icon is-small"><i class="fa-solid fa-table"></i></span>
+                            <span>Table</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('waoarc.userchart') }}">
+                            <span class="icon is-small"><i class="fa-solid fa-chart-pie"></i></span>
+                            <span>Chart</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
             <h1 class="title">QSOs by Members</h1>
             <table id="users" class="table is-striped is-hoverable">
                 <thead>

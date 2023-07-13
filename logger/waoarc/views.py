@@ -62,8 +62,8 @@ def gettingstarted():
     '''Worked All OARC Season 2 getting started page'''
     return render_template('gettingstarted.html')
 
-@waoarc.route("/users")
-def users():
+@waoarc.route("/usertable")
+def usertable():
     '''Detail of Users and Callsigns tile on Leaderboard'''
     calls = db.session.query(User.name, Callsign.name, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name, Callsign.name).order_by(func.count(QSO.id).desc()).all()
     users = db.session.query(User.name, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(func.count(QSO.id).desc()).all()
@@ -76,7 +76,33 @@ def users():
         line.append(call[0])
         line.append(QSO.query.filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.call == call[0]).count())
         unclaimedtable.append(line)
-    return render_template('users.html', calls=calls, unclaimedcalls=unclaimedcalls, unclaimedtable=unclaimedtable, users=users)
+    return render_template('usertable.html', calls=calls, unclaimedcalls=unclaimedcalls, unclaimedtable=unclaimedtable, users=users)
+
+
+@waoarc.route("/userchart")
+def userchart():
+    calls = db.session.query(func.concat(User.name, " - ", Callsign.name), func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(func.concat(User.name, " - ", Callsign.name)).order_by(func.count(QSO.id).desc()).all()
+    labels = list(map(list, zip(*calls)))[0]
+    callsignlabels = ['None' if v is None else v for v in labels]
+    callsignvalues = list(map(list, zip(*calls)))[1] 
+    users = db.session.query(User.name, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(func.count(QSO.id).desc()).all()
+    labels = list(map(list, zip(*users)))[0]
+    memberlabels = ['None' if v is None else v for v in labels]
+    membervalues = list(map(list, zip(*users)))[1]
+    unccalls = QSO.query.with_entities(QSO.call).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).distinct()
+    callsigns = Callsign.query.with_entities(Callsign.name).distinct()
+    unclaimedcalls = list(set(unccalls).difference(callsigns))
+    unclaimedtable = []
+    for call in unclaimedcalls:
+        line = []
+        line.append(call[0])
+        line.append(QSO.query.filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.call == call[0]).count())
+        unclaimedtable.append(line)
+    labels = list(map(list, zip(*unclaimedtable)))[0]
+    unclaimedlabels = ['None' if v is None else v for v in labels]
+    unclaimedvalues = list(map(list, zip(*unclaimedtable)))[1]
+    return render_template('userchart.html', memberlabels=memberlabels, membervalues=membervalues, callsignlabels=callsignlabels,
+                           callsignvalues=callsignvalues, unclaimedlabels=unclaimedlabels, unclaimedvalues=unclaimedvalues)
 
 
 @waoarc.route("/dates")

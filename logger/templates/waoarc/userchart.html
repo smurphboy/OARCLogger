@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+{% block hero %}is-primary{% endblock %}
+{% block content %}
+		<div class="bd-hero-heading">
+			<h1 class="title algolia-lvl0">
+				{% block title %} <p>Member & Callsign Charts</p> {% endblock %}
+			</h1>
+            <p class="subtitle">QSOs by Member & Callsign</p>
+		</div>
+    </div>
+</section>
+<section>
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="box notification">
+            <div class="notification is-info">
+                {% for message in messages%}
+                {{ message }}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+</section>
+<section>
+    <div class="container">
+        <div class="box">
+            <div class="tabs is-toggle is-fullwidth">
+                <ul>
+                    <li>
+                        <a href="{{ url_for('waoarc.usertable') }}">
+                            <span class="icon is-small"><i class="fa-solid fa-table"></i></span>
+                            <span>Table</span>
+                        </a>
+                    </li>
+                    <li class="is-active">
+                        <a href="{{ url_for('waoarc.userchart') }}">
+                            <span class="icon is-small"><i class="fa-solid fa-chart-pie"></i></span>
+                            <span>Chart</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="tile is-ancestor">
+            <div class="tile is-vertical is-parent">
+                <div class="tile is-child box">
+                    <h1 class="title">QSOs by Member</h1>
+                    <div>
+                        <canvas id="member"></canvas>
+                    </div>
+                </div>
+                <div class="tile is-child box">
+                    <h1 class="title">QSOs by Callsign</h1>
+                    <div>
+                        <canvas id="callsign"></canvas>
+                    </div>
+                </div>               
+                <div class="tile is-child box">
+                    <h1 class="title">QSOs by Unclaimed Callsigns</h1>
+                    <div>
+                        <canvas id="unclaimed"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+const ctx = document.getElementById('member');
+const ctx1 = document.getElementById('callsign');
+const ctx2 = document.getElementById('unclaimed');
+
+new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: {{ memberlabels|safe }},
+        datasets: [{
+            label: 'QSOs by Member',
+            data: {{ membervalues }},
+            hoverOffset: 4
+            }]
+    }
+});
+
+new Chart(ctx1, {
+    type: 'doughnut',
+    data: {
+        labels: {{ callsignlabels|safe }},
+        datasets: [{
+            label: 'QSOs by Callsign',
+            data: {{ callsignvalues }},
+            hoverOffset: 4
+            }]
+    }
+});
+
+new Chart(ctx2, {
+    type: 'doughnut',
+    data: {
+        labels: {{ unclaimedlabels|safe }},
+        datasets: [{
+            label: 'QSOs by Unclaimed Callsign',
+            data: {{ unclaimedvalues }},
+            hoverOffset: 4
+            }]
+    }
+    
+});
+
+$(document).ready(function () {
+    setTimeout(function(){
+        $(".notification").fadeOut("slow");
+    }, 5000);
+
+});
+</script>
+{% endblock %}

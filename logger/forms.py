@@ -70,6 +70,7 @@ class QSOForm(FlaskForm):
                                 'ISCAT', 'JT4', 'JT6M', 'JT9', 'JT44', 'JT65', 'MSK144', 'MT63', 'OPERA', 'PAC', 'PAX', 'PSK2K',
                                 'Q15', 'QRA64', 'ROS', 'T10', 'THOR', 'THRB', 'TOR', 'V4', 'VOI', 'WINMOR', 'WSPR']) # convert this to look at the config selected and the modes available
     submode = SelectField('Sub Mode')
+    tx_pwr = IntegerField('TX Power')
     gridsquare = StringField('Gridsquare', validators=[Length(max=10)])
     my_gridsquare = StringField('My Gridsquare', validators=[Length(max=10)])
     comment = StringField('Comment', validators=[Length(max=255)])
@@ -139,6 +140,7 @@ class SOTAQSOForm(FlaskForm):
     my_sota_ref = StringField('My SOTA Reference')
     pota_ref = StringField('POTA Reference')
     my_pota_ref = StringField('My POTA Reference')
+    tx_pwr = IntegerField('TX Power')
     gridsquare = StringField('Gridsquare', validators=[Length(max=10)])
     my_gridsquare = StringField('My Gridsquare', validators=[Length(max=10)])
     dxcc = StringField('DXCC')
@@ -172,6 +174,7 @@ class POTAQSOForm(FlaskForm):
     rst_sent = StringField('RST Sent')
     pota_ref = StringField('POTA Reference')
     my_pota_ref = StringField('My POTA Reference')
+    tx_pwr = IntegerField('TX Power')
     gridsquare = StringField('Gridsquare', validators=[Length(max=10)])
     my_gridsquare = StringField('My Gridsquare', validators=[Length(max=10)])
     band = SelectField('Band',
@@ -203,6 +206,7 @@ class SOTAPOTAQSOForm(FlaskForm):
     my_sota_ref = StringField('My SOTA Reference')
     pota_ref = StringField('POTA Reference')
     my_pota_ref = StringField('My POTA Reference')
+    tx_pwr = IntegerField('TX Power')
     gridsquare = StringField('Gridsquare', validators=[Length(max=10)])
     my_gridsquare = StringField('My Gridsquare', validators=[Length(max=10)])
     band = SelectField('Band',
@@ -230,6 +234,7 @@ class SATQSOForm(FlaskForm):
     freq = StringField('Freq')
     sat_name = StringField('Satellite Name')
     sat_mode = StringField('Satellite Mode')
+    tx_pwr = IntegerField('TX Power')
     gridsquare = StringField('Gridsquare', validators=[Length(max=10)])
     my_gridsquare = StringField('My Gridsquare', validators=[Length(max=10)])
     band = SelectField('Band',
@@ -261,6 +266,7 @@ class NonAmQSOForm(FlaskForm):
     my_sota_ref = StringField('My SOTA Reference')
     pota_ref = StringField('POTA Reference')
     my_pota_ref = StringField('My POTA Reference')
+    tx_pwr = IntegerField('TX Power')
     gridsquare = StringField('Gridsquare', validators=[Length(max=10)])
     my_gridsquare = StringField('My Gridsquare', validators=[Length(max=10)])
     band = SelectField('Band',

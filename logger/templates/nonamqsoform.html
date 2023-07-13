@@ -335,6 +335,25 @@
                             <div class="level-left">
                                 <div class="level-item">
                                     <div class="field">
+                                        {{ form.tx_pwr.label(class_='label') }}
+                                        <div class="control">
+                                            {{ form.tx_pwr(class_="input", placeholder_="TX power in Watts") }}
+                                        </div>
+                                    </div>
+                                    {% if form.tx_pwr.errors %}
+                                        <ul class="errors">
+                                            {% for error in form.tx_pwr.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </nav>
+                        <nav class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    <div class="field">
                                         {{ form.comment.label(class_="label") }}
                                         <div class="control">
                                         {{ form.comment(class_="textarea") }}

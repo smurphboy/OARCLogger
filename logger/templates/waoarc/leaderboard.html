@@ -40,7 +40,23 @@
         <div class="tile is-ancestor">
             <div class="tile is-4 is-vertical is-parent">
                 <div class="tile is-child box">
-                    <h1 class="title"><i class="fa-solid fa-address-card"></i> <a href="{{ url_for('waoarc.users') }}">Members & Callsigns</a></h1>
+                    <h1 class="title"><i class="fa-solid fa-address-card"></i> Members & Callsigns</h1>
+                    <div class="tabs is-toggle is-fullwidth">
+                        <ul>
+                            <li>
+                                <a href="{{ url_for('waoarc.usertable') }}">
+                                    <span class="icon is-small"><i class="fa-solid fa-table"></i></span>
+                                    <span>Table</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('waoarc.userchart') }}">
+                                    <span class="icon is-small"><i class="fa-solid fa-chart-pie"></i></span>
+                                    <span>Chart</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                     <p class="subtitle">There are currently {{ facts.totalusers }} OARC members registered with {{ facts.totalcallsigns }} callsigns.</p>
                     <div class="block">
                         <p>Top Member is <span class="has-text-weight-semibold">{{ facts.topusers[0][0] }}</span> with <span class="has-text-weight-semibold">{{ facts.topusers[0][1] }}</span> QSOs</p>
@@ -252,7 +268,7 @@
             searching: false,
             order: [[0, 'desc']]
         });
-        
+
         $('#qsoweek').DataTable({
         lengthMenu: [
             [10, 25, 50, -1],
