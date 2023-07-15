@@ -3,6 +3,8 @@ from flask import (Blueprint, abort, flash, make_response, redirect,
                    render_template, request, url_for)
 from flask_login import current_user, login_required
 
+from sqlalchemy import desc, func, and_
+
 from logger.forms import CallsignForm
 from logger.helpers import adiftext
 from logger.models import QSO, Callsign, User, db
@@ -83,7 +85,12 @@ def virtual(call):
         callsigns.append(str(vircall))
     virtualcall = QSO.query.filter_by(call = call).order_by(QSO.qso_date.desc(), QSO.time_on.desc()).all()
     callsign = Callsign.query.filter_by(name=call).first()
-    return render_template('virtualcallsign.html', call=call, qsos=virtualcall, callsign=callsign)
+    matches = {}
+    for vcall in virtualcall:
+        matches[vcall.id] = QSO.query.with_entities(QSO.id, QSO.station_callsign, QSO.call, QSO.band, QSO.mode, QSO.qso_date, QSO.time_on).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.call == vcall.station_callsign, QSO.station_callsign == vcall.call, QSO.band == vcall.band, QSO.mode == vcall.mode, QSO.qso_date == vcall.qso_date).all()
+    print(matches)
+    print(call)
+    return render_template('virtualcallsign.html', call=call, qsos=virtualcall, callsign=callsign, matches=matches)
 
 
 @callsigns.route("/<call>/search")
