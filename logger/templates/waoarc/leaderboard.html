@@ -62,7 +62,7 @@
                         <p>Top Member is <span class="has-text-weight-semibold">{{ facts.topusers[0][0] }}</span> with <span class="has-text-weight-semibold">{{ facts.topusers[0][1] }}</span> QSOs</p>
                         <p>Top Callsign is <span class="has-text-weight-semibold">{{ facts.topcalls[0][1] }}</span>, owned by <span class="has-text-weight-semibold">{{ facts.topcalls[0][0] }}</span> with <span class="has-text-weight-semibold">{{ facts.topcalls[0][2] }}</span> QSOs</p>
                     </div>
-                    <p>{{ facts.unclaimedcallsigns }} callsign{% if unclaimed|length == 1 %} is{% else %}s are{% endif %} identified in QSOs but unclaimed:</p>
+                    <p><span class="has-text-weight-semibold">{{ facts.unclaimedcallsigns }}</span> callsign{% if unclaimed|length == 1 %} is{% else %}s are{% endif %} identified in QSOs but unclaimed:</p>
                     <!-- {% if unclaimed %}
                     <ul>
                         {% for call in unclaimed %}
