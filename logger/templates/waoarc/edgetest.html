@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Leaflet.EdgeMarker Plugin Demo Page</title>
+  <meta charset="utf-8" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+
+  <style type="text/css">
+    html,body{
+      font-family: 'Open Sans', sans-serif;
+      background-color: dimgray;
+      margin: auto auto auto auto;
+      text-align: center;
+      color: lightgray;
+    }
+    h1,h2{
+      font-family: 'Ubuntu', sans-serif;
+    }
+    .maintainer{
+      font-family: 'Open Sans', sans-serif;
+      color: azure2;
+      font-size: 10pt;
+    }
+    body{
+      width: 780px;
+      display:block;
+      padding: 1em;
+    }
+    #map{
+      width: 780px; height: 400px;
+      display: block;
+    }
+    a{
+      text-decoration: none;
+      color: lightgray;
+    }
+    pre{
+      text-align: left;
+    }
+    .info {
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+    }
+    .info h4 {
+        margin: 0 0 5px;
+        color: #777;
+    }
+        .legend {
+        line-height: 18px;
+        color: #555;
+    }
+    .legend i {
+        width: 18px;
+        height: 18px;
+        float: left;
+        margin-right: 8px;
+        opacity: 0.7;
+    }
+  </style>
+
+</head>
+<body>
+ 
+  <div id="map"></div>
+
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="{{ url_for('static', filename='js/Leaflet.EdgeMarker.js') }}"></script>
+  <script>
+var gridsquares = {{ gridsquares|safe }}
+
+    // create a map
+    var map = L.map('map').setView([51.2,10.43], 6);
+
+    // add an OpenStreetMap tile layer
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+	const info = L.control();
+
+	info.onAdd = function (map) {
+		this._div = L.DomUtil.create('div', 'info');
+		this.update();
+		return this._div;
+	};
+
+	info.update = function (props) {
+		const contents = props ? `<b>${props.name}</b><br />${props.qsos} QSOs made from this square` : 'Hover over a square';
+		this._div.innerHTML = `<h4>Gridsquares Worked</h4>${contents}`;
+	};
+
+	info.addTo(map);
+
+    function getColor(d) {
+    return d > 250 ? '#7f2704' :
+           d > 100 ? '#a63603' :
+           d > 50  ? '#d94801' :
+           d > 20  ? '#f16913' :
+           d > 10  ? '#fd8d3c' :
+           d > 5   ? '#fdae6b' :
+           d > 2   ? '#fdd0a2' :
+           d > 1   ? '#fee6ce' :
+                     '#fff5eb'
+}
+
+    function style(feature) {
+    return {
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7,
+        fillColor: getColor(feature.properties.qsos)
+    };
+}
+
+function highlightFeature(e) {
+    var layer = e.target;
+
+    layer.setStyle({
+        weight: 5,
+        color: '#666',
+        dashArray: '',
+        fillOpacity: 0.7
+    });
+
+    layer.bringToFront();
+    info.update(layer.feature.properties);
+}
+
+/* global statesData */
+var geojson = L.geoJson(gridsquares, {
+    style : style,
+    onEachFeature : onEachFeature
+}).addTo(map);
+
+function resetHighlight(e) {
+    geojson.resetStyle(e.target);
+    info.update();
+}
+
+function zoomToFeature(e) {
+    map.fitBounds(e.target.getBounds());
+}
+
+function onEachFeature(feature, layer) {
+    layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlight,
+        click: zoomToFeature
+    });
+}
+
+    // add your Markers, Circles and CircleMarkers
+    // L.circle([51.96309632078721, 7.622795104980469], 5000).addTo(map);
+    // L.circle([51.650378463223326, 9.440699815750122], 200).addTo(map);
+    // L.circleMarker([52.3688917060255, 9.722900390625]).addTo(map);
+    // L.circleMarker([51.508742458803326, 9.942626953125]).addTo(map);
+    // L.marker([48.85,2.35]).addTo(map);
+    // L.marker([52.52,13.40]).addTo(map);
+    // L.marker([40.18,44.51]).addTo(map);
+    // L.marker([48.21,16.37]).addTo(map);
+    // L.marker([53.9,27.57]).addTo(map);
+    // L.marker([50.85,4.35]).addTo(map);
+    // L.marker([43.85,18.38]).addTo(map);
+    // L.marker([42.7,23.32]).addTo(map);
+    // L.marker([50.09,14.42]).addTo(map);
+    // L.marker([55.68,12.57]).addTo(map);
+    // L.marker([59.44,24.75]).addTo(map);
+    // L.marker([60.18,24.93]).addTo(map);
+    // L.marker([37.98,23.73]).addTo(map);
+    // L.marker([64.17,-51.74]).addTo(map);
+    // L.marker([47.5,19.08]).addTo(map);
+    // L.marker([64.15,-21.95]).addTo(map);
+    // L.marker([41.9,12.48]).addTo(map);
+    // L.marker([56.95,24.1]).addTo(map);
+    // L.marker([47.14,9.52]).addTo(map);
+    // L.marker([54.68,25.32]).addTo(map);
+    // L.marker([49.61,6.13]).addTo(map);
+    // L.marker([42,21.43]).addTo(map);
+    // L.marker([35.9,14.51]).addTo(map);
+    // L.marker([52.37,4.9]).addTo(map);
+    // L.marker([59.91,10.74]).addTo(map);
+    // L.marker([52.25,21]).addTo(map);
+    // L.marker([38.72,-9.13]).addTo(map);
+    // L.marker([40.42,-3.7]).addTo(map);
+    // L.marker([59.33,18.06]).addTo(map);
+    // L.marker([46.95,7.45]).addTo(map);
+    // L.marker([50.43,30.52]).addTo(map);
+
+{% for key, value in mlayer.items()|sort(attribute='0') %}
+{{ key }} = L.circle({{ value }}, 200){{ ", " if not loop.last else ";" }}
+{% endfor %}
+
+var centres = L.layerGroup([{% for key, value in mlayer.items()|sort(attribute='0') %}{{ key }}{{ ", " if not loop.last else "" }}{% endfor %}]).addTo(map);
+
+
+// add the EdgeMarker to the map.
+var edgeMarkerLayer = L.edgeMarker({
+    icon: L.icon({ // style markers
+        iconUrl : '{{ url_for('static', filename="js/images/edge-arrow-marker-black.png") }}',
+        clickable: true,
+        iconSize: [48,48],
+        iconAnchor: [24, 24]
+    }),
+    layerGroup: centres
+    }).addTo(map);
+
+const legend = L.control({position: 'bottomright'});
+
+legend.onAdd = function (map) {
+
+    const div = L.DomUtil.create('div', 'info legend');
+    const grades = [0, 1, 2, 5, 10, 20, 50, 100, 250];
+    const labels = [];
+    let from, to;
+
+    for (let i = 0; i < grades.length; i++) {
+        from = grades[i];
+        to = grades[i + 1];
+
+        labels.push(`<i style="background:${getColor(from + 1)}"></i> ${from}${to ? `&ndash;${to}` : '+'}`);
+    }
+
+    div.innerHTML = labels.join('<br>');
+    return div;
+};
+
+legend.addTo(map);
+    // if you want to remove the edge markers
+    // edgeMarkerLayer.destroy();
+  </script>
+
+</body>
+</html>
+
+

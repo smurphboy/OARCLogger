@@ -234,12 +234,30 @@ def gridtable():
 def workedmap():
     squares = db.session.query(func.left(QSO.gridsquare,4), func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(func.left(QSO.gridsquare,4)).all()
     features = []
+    mlayer = {}
     for square in squares:
         if square[0] is not None:
             lat = (mh.to_location(square[0], center=True)[0])
             lon = (mh.to_location(square[0], center=True)[1])
             my_poly = Polygon([[(lon - 1.0, lat - 0.5),(lon + 1.0, lat - 0.5),(lon + 1.0, lat + 0.5), (lon - 1.0, lat + 0.5), (lon - 1.0, lat - 0.5)]])
             features.append(Feature(geometry=my_poly, properties={"qsos": square[1], "name": str(square[0])}))
+            mlayer[str(square[0])] = ([lat, lon])
     gridsquares = FeatureCollection(features)
     totalgrids = QSO.query.with_entities(func.left(QSO.gridsquare,4)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).distinct().count()
-    return render_template('workedmap.html', gridsquares=gridsquares, totalgrids=totalgrids)
+    return render_template('workedmap.html', gridsquares=gridsquares, totalgrids=totalgrids, mlayer=mlayer)
+
+@waoarc.route("/edgetest")
+def edgetest():
+    squares = db.session.query(func.left(QSO.gridsquare,4), func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(func.left(QSO.gridsquare,4)).all()
+    features = []
+    mlayer = {}
+    for square in squares:
+        if square[0] is not None:
+            lat = (mh.to_location(square[0], center=True)[0])
+            lon = (mh.to_location(square[0], center=True)[1])
+            my_poly = Polygon([[(lon - 1.0, lat - 0.5),(lon + 1.0, lat - 0.5),(lon + 1.0, lat + 0.5), (lon - 1.0, lat + 0.5), (lon - 1.0, lat - 0.5)]])
+            features.append(Feature(geometry=my_poly, properties={"qsos": square[1], "name": str(square[0])}))
+            mlayer[str(square[0])] = ([lat, lon])
+    gridsquares = FeatureCollection(features)
+    totalgrids = QSO.query.with_entities(func.left(QSO.gridsquare,4)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).distinct().count()
+    return render_template('edgetest.html', gridsquares=gridsquares, totalgrids=totalgrids, mlayer=mlayer)

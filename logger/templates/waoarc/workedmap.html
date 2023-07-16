@@ -1,9 +1,7 @@
 {% extends 'base.html' %}
 {% block scripts %}
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-crossorigin=""/>
-<style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style type="text/css">
 .info {
     padding: 6px 8px;
     font: 14px/16px Arial, Helvetica, sans-serif;
@@ -28,10 +26,6 @@ crossorigin=""/>
     opacity: 0.7;
 }
 </style>
- <!-- Make sure you put this AFTER Leaflet's CSS -->
- <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-     crossorigin=""></script>
 {% endblock %}
 {% block hero %}is-primary{% endblock %}
 {% block content %}
@@ -87,12 +81,15 @@ crossorigin=""/>
         <div style="height: 480px;" id="map"></div>
     </div>
 </section>
+<!-- Make sure you put this AFTER Leaflet's CSS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="{{ url_for('static', filename='js/Leaflet.EdgeMarker.js') }}"></script>
 <script>
 var gridsquares = {{ gridsquares|safe }}
 
 var map = L.map('map').setView([51.505, -0.09], 4);
 
-var tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
@@ -156,7 +153,7 @@ var geojson = L.geoJson(gridsquares, {
     onEachFeature : onEachFeature
 }).addTo(map);
 
-map.fitBounds(geojson.getBounds());
+// map.fitBounds(geojson.getBounds());
 
 function resetHighlight(e) {
     geojson.resetStyle(e.target);
@@ -174,6 +171,24 @@ function onEachFeature(feature, layer) {
         click: zoomToFeature
     });
 }
+
+//var
+{% for key, value in mlayer.items()|sort(attribute='0') %}
+{{ key }} = L.circle({{ value }}, 200){{ ", " if not loop.last else ";" }}
+{% endfor %}
+
+var centres = L.layerGroup([{% for key, value in mlayer.items()|sort(attribute='0') %}{{ key }}{{ ", " if not loop.last else "" }}{% endfor %}]).addTo(map);
+
+
+var edgeMarkerLayer = L.edgeMarker({
+    icon: L.icon({ // style markers
+        iconUrl : '{{ url_for('static', filename="js/images/edge-arrow-marker-black.png") }}',
+        clickable: true,
+        iconSize: [48,48],
+        iconAnchor: [24, 24]
+    }),
+    layerGroup: centres
+}).addTo(map);
 
 const legend = L.control({position: 'bottomright'});
 
