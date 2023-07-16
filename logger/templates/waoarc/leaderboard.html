@@ -63,13 +63,13 @@
                         <p>Top Callsign is <span class="has-text-weight-semibold">{{ facts.topcalls[0][1] }}</span>, owned by <span class="has-text-weight-semibold">{{ facts.topcalls[0][0] }}</span> with <span class="has-text-weight-semibold">{{ facts.topcalls[0][2] }}</span> QSOs</p>
                     </div>
                     <p>{{ facts.unclaimedcallsigns }} callsign{% if unclaimed|length == 1 %} is{% else %}s are{% endif %} identified in QSOs but unclaimed:</p>
-                    {% if unclaimed %}
+                    <!-- {% if unclaimed %}
                     <ul>
                         {% for call in unclaimed %}
                         <li class="has-text-weight-semibold">{{ call[0] }}</li>
                         {% endfor %}
                     </ul>
-                    {% endif %}
+                    {% endif %} -->
                 </div>
                 <div class="tile is-child box">
                     <h1 class="title"><i class="fas fa-flag-usa" aria-hidden="true"></i> DXCC</h1>
