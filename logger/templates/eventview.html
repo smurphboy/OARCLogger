@@ -177,7 +177,7 @@
                         <td>{{ qso.time_on }}</td>
                         <td>{{ qso.station_callsign }}</td>
                         <td><a href="{{url_for('qsos.viewqso', id=qso.id)}}">{{ qso.call }}</a></td>
-                        <td>{{ qso.band }}</td>
+                        <td data-order="{{ bandsortorder(qso.band) }}">{{ qso.band }}</td>
                         <td>{{ qso.mode }}</td>
                         <td>{{ qso.gridsquare }}</td>
                         <td>{{ qso.my_gridsquare }}</td>

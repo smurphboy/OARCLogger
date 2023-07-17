@@ -62,7 +62,7 @@
                         <td>{{ qso.time_on }}</td>
                         <td><span class="icon-text"><span><a href="{{url_for('qsos.viewqso', id=qso.id)}}">{{ qso.call }}<span class="icon"><i class="fa-solid fa-magnifying-glass is-info"></i></span></a></span></span></td>
                         <td><a class="is-link is-small" href="{{ url_for ('qsos.editqso', id=qso.id) }}"><span class="icon is-small"><i class="fa-solid fa-pen-to-square"></i></span><span>Edit</span></a></td>
-                        <td>{{ qso.band }}</td>
+                        <td data-order="{{ bandsortorder(qso.band) }}">{{ qso.band }}</td>
                         <td>{{ qso.mode }}</td>
                         <td>{{ qso.gridsquare }}</td>
                         <td>{{ qso.my_gridsquare }}</td>

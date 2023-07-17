@@ -22,6 +22,42 @@ from logger.rigs.views import rigs
 from logger.users.views import users
 from logger.waoarc.views import waoarc
 
+bandorder = {	
+'2190m' : 1,
+'630m' : 2,
+'560m' : 3,
+'160m' : 4,
+'80m' : 5,
+'60m' : 6,
+'40m' : 7,
+'30m' : 8,
+'20m' : 9,
+'17m' : 10,
+'15m' : 11,
+'12m' : 12,
+'10m' : 13,
+'8m' : 14,
+'6m' : 15,
+'5m' : 16,
+'4m' : 17,
+'2m' : 18,
+'1.25m' : 19,
+'70cm' : 20,
+'33cm' : 21,
+'23cm' : 22,
+'13cm' : 23,
+'9cm' : 24,
+'6cm' : 25,
+'3cm' : 26,
+'1.25cm' : 27,
+'6mm' : 28,
+'4mm' : 29,
+'2.5mm' : 30,
+'2mm' : 31,
+'1mm' : 32,
+'submm' : 33
+}
+
 
 def create_app():
     app = Flask(__name__)
@@ -143,8 +179,14 @@ def create_app():
             print(ret)
             return ret
         
+        def bandsortorder(band):
+            if band:
+                return bandorder[band]
+            else:
+                return 0
+        
         return dict(qsocount=qsocount, latestqso=latestqso, countrylookup=countrylookup,
                     get_adif_id=get_adif_id, dxccituz=dxccituz, dxcccqz=dxcccqz,
-                    homecallsign=homecallsign, bandfromfreq=bandfromfreq)
+                    homecallsign=homecallsign, bandfromfreq=bandfromfreq, bandsortorder=bandsortorder)
 
     return app
