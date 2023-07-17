@@ -1,14 +1,12 @@
 {% extends 'base.html' %}
-
-{% block content %}
-        <div class="bd-hero-heading">
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{% endblock %}
+{% block herobody %}
             <h1 class="title algolia-lvl0">
                 {% block title %} <p>Invalid file uploaded</p> {% endblock %}
             </h1>
             <div class="subtitle is-4 algolia-lvl1">
                 <p>Check you selected an ADIF file (ends .adi) and retry</p>     
             </div>
-        </div>
-    </div>
-</section>
 {% endblock %}

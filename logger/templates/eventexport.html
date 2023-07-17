@@ -1,15 +1,13 @@
 {% extends 'base.html' %}
-
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{% endblock %}
 {% block hero %}is-primary is-info{% endblock %}
-{% block content %}
-            <div class="bd-hero-heading">
-                <h1 class="title is-size-1">
-                    {% block title %} Export Event{% endblock %}
-                </h1>
-                <div class="subtitle is-4 algolia-lvl1">
-                    <p>{{ event.qsos|length }} QSOs to export for {{ event.name }} on {{ event.start_date }} until {{ event.end_date }} </p>     
-                </div>
-            </div>
+{% block herobody %}
+        <h1 class="title is-size-1">
+            {% block title %} Export Event{% endblock %}
+        </h1>
+        <div class="subtitle is-4 algolia-lvl1">
+            <p>{{ event.qsos|length }} QSOs to export for {{ event.name }} on {{ event.start_date }} until {{ event.end_date }} </p>     
         </div>
-    </section>
 {% endblock %}

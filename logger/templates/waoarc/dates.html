@@ -6,31 +6,13 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock %}
 {% block hero %}is-primary{% endblock %}
-{% block content %}
-		<div class="bd-hero-heading">
+{% block herobody %}
 			<h1 class="title algolia-lvl0">
 				{% block title %} <p>Dates & Times</p> {% endblock %}
 			</h1>
             <p class="subtitle">QSOs by Date and Time</p>
-		</div>
-    </div>
-</section>
-<section>
-    <div class="container">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <div class="box notification">
-            <div class="notification is-info">
-                {% for message in messages%}
-                {{ message }}
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
-        {% endwith %}
-    </div>
-</section>
-<section>
+{% endblock %}
+{% block content %}
     <div class="container">
         <div class="tile is-ancestor">
             <div class="tile is-parent is-vertical">
@@ -116,7 +98,8 @@
             </div>
         </div>
     </div>
-</section>
+{% endblock %}
+{% block bottombody %}
 <script>
 const ctx1 = document.getElementById('dayChart');
 const ctx2 = document.getElementById('weekChart');

@@ -1,81 +1,81 @@
 {% extends 'base.html' %}
-
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{% endblock %}
 {% block hero %}is-warning{% endblock %}
-{% block content %}
-		<div class="bd-hero-heading">
+{% block herobody %}
 			<h1 class="title is-size-1">
-			{% block title %} Edit {{ form.name.data }} {% endblock %}
+            Edit {{ form.name.data }}
 			</h1>
 			<div class="subtitle is-4 algolia-lvl1">
 				<p>Edit the antenna data</p>     
 			</div>
-		</div>
-	</div>
-</section>
-<section class="section">
-	<div class="container is-max-desktop">
-		<form method="POST" id="antform">
-			{{ form.csrf_token }}
-			<div class="field">
-				{{ form.name.label(class_='label') }}
-				<div class="control">
-					{{ form.name(class_="input ant") }}
-				</div>
-				<p class="help">Name your Antenna, for example [EFHW]</p>
-			</div>
-			{% if form.name.errors %}
-			<ul class="errors">
-				{% for error in form.name.errors %}
-					<li>{{ error }}</li>
-				{% endfor %}
-			</ul>
-			{% endif %}
-			<div class="field">
-				{{ form.manufacturer.label(class_='label') }}
-				<div class="control">
-					{{ form.manufacturer(class_="input ant") }}
-				</div>
-				<p class="help">Add the manufacturer of the antenna [Sotabeams]</p>
-			</div>
-			{% if form.manufacturer.errors %}
-			<ul class="errors">
-				{% for error in form.manufacturer.errors %}
-					<li>{{ error }}</li>
-				{% endfor %}
-			</ul>
-			{% endif %}
-			<div class="field">
-				{{ form.comment.label(class_='label') }}
-				<div class="control">
-					{{ form.comment(class_="input ant") }}
-				</div>
-				<p class="help">Add any comments about the antenna</p>
-			</div>
-			{% if form.comment.errors %}
-			<ul class="errors">
-				{% for error in form.comment.errors %}
-					<li>{{ error }}</li>
-				{% endfor %}
-			</ul>
-			{% endif %}
-			<input type="hidden" name="formsubmitted" value="antenna">
-            <nav class="level">
-                <div class="level-left">
-                    <div class="level-item">
-                        <div class="control">
-                            <p>
-                                <input type="submit" class="button is-link" value="Save Changes">
-                            </p>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="box">
+            <form method="POST" id="antform">
+                {{ form.csrf_token }}
+                <div class="field">
+                    {{ form.name.label(class_='label') }}
+                    <div class="control">
+                        {{ form.name(class_="input ant") }}
+                    </div>
+                    <p class="help">Name your Antenna, for example [EFHW]</p>
+                </div>
+                {% if form.name.errors %}
+                <ul class="errors">
+                    {% for error in form.name.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <div class="field">
+                    {{ form.manufacturer.label(class_='label') }}
+                    <div class="control">
+                        {{ form.manufacturer(class_="input ant") }}
+                    </div>
+                    <p class="help">Add the manufacturer of the antenna [Sotabeams]</p>
+                </div>
+                {% if form.manufacturer.errors %}
+                <ul class="errors">
+                    {% for error in form.manufacturer.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <div class="field">
+                    {{ form.comment.label(class_='label') }}
+                    <div class="control">
+                        {{ form.comment(class_="input ant") }}
+                    </div>
+                    <p class="help">Add any comments about the antenna</p>
+                </div>
+                {% if form.comment.errors %}
+                <ul class="errors">
+                    {% for error in form.comment.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <input type="hidden" name="formsubmitted" value="antenna">
+                <nav class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <div class="control">
+                                <p>
+                                    <input type="submit" class="button is-link" value="Save Changes">
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="level-right">
-                    <div class="level-item">
-                        <a class="button is-link is-light" href="{{ url_for ('antennas.antennalist', username=current_user.name) }}">Cancel</a>                       
+                    <div class="level-right">
+                        <div class="level-item">
+                            <a class="button is-link is-light" href="{{ url_for ('antennas.antennalist', username=current_user.name) }}">Cancel</a>                       
+                        </div>
                     </div>
-                </div>
-            </nav>
-		</form> 
-	</div>
-</section>
+                </nav>
+            </form> 
+        </div>
+    </div>
 {% endblock %}

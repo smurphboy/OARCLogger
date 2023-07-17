@@ -3,17 +3,15 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {% endblock %}
 {% block hero %}is-primary{% endblock %}
-{% block content %}
-    <div class="bd-hero-heading">
+{% block herobody %}
         <h1 class="title is-size-1">
             {% block title %} <p>Add a New Non-Amateur QSO for {{ event.name }}{% if selectedevents %}, also {% for sevent in selectedevents %}{{ sevent.name }}{% if not loop.last %} & {% endif %}{% endfor %}{% endif %}</p> {% endblock %}
         </h1>
         <div class="subtitle is-4 algolia-lvl1">
             <p>Enter QSO details below and press Add:</p>     
         </div>
-    </div>
-</section>
-<section class="section">
+{% endblock %}
+{% block content %}
     <div class="container">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -95,7 +93,7 @@
                         <p class="card-header-title">Key Fields</p>
                         <a class="card-header-icon" id="SOTAFields" aria-label="more options">
                             <span class="icon">
-                                <i class="fa-solid fa-mountain"></i>
+                                <i class="fa-solid fa-hat-cowboy"></i>
                             </span>
                         </a>
                     </header>
@@ -383,8 +381,8 @@
             </form>
         </div>
     </div>
-</section>
-
+{% endblock %}
+{% block bottombody %}
 <script>
     $SCRIPT_ROOT = {{ request.script_root|tojson }};
 </script>
@@ -518,11 +516,6 @@ $(document).ready(function() {
         return false;
         });
     });
-
-    setTimeout(function(){
-        $(".notification").fadeOut("slow");
-    }, 5000);
-
 });
     var diction = {
         AM: [],

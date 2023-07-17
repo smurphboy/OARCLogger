@@ -79,11 +79,6 @@ def create_app():
     @app.route("/gettingstarted")
     def gettingstarted():
         return render_template('gettingstarted.html')
-    
-    @app.route("/matt")
-    def matt():
-        '''A little easter egg for MM0MFZ'''
-        return redirect("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
 
     @app.template_filter()
     def MhzFormat(value):

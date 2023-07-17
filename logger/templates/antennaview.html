@@ -1,57 +1,58 @@
 {% extends 'base.html' %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{% endblock %}
 {% block hero %}is-warning{% endblock %}
-{% block content %}
-		<div class="bd-hero-heading">
+{% block herobody %}
 			<h1 class="title is-size-1">
 				{% block title %} <p>View an Antenna</p> {% endblock %}
 			</h1>
-		</div>
-	</div>
-</section>
-<section>
-	<div class="columns">
-		<div class="column">
-			<div class="box">
-				<nav class="level">
-					<div class="level-left">
-						<div class="level-item">
-							<div class="icon-text">
-								<span class="icon">
-									<i class="fa-regular fa-square-caret-right"></i>
-								</span>
-								<span><abbr class="has-text-weight-semibold" title="Name your antenna, for example [Sotabeams EFHW]">Name:</abbr> {{ antenna.name }}</span>
-							</div>
-						</div>
-					</div>
-					<div class="level-right">
-						<div class="level-item">
-							<div class="icon-text">
-								<span class="icon">
-									<i class="fa-regular fa-square-caret-down"></i>
-								</span>
-								<span><abbr class="has-text-weight-semibold" title="Manufacturer of the antenna">Manufacturer:</abbr> {{ antenna.manufacturer }}</span>
-							</div>
-						</div>
-					</div>
-				</nav>
-			</div>
-		</div>
-		<div class="column">
-			<div class="box">
-				<nav class="level">
-					<div class="level-left">
-						<div class="level-item">
-							<div class="icon-text">
-								<span class="icon">
-									<i class="fa-regular fa-comments"></i>
-								</span>
-								<span><abbr class="has-text-weight-semibold" title="">Comment:</abbr> {{ antenna.comment }}</span>
-							</div>
-						</div>
-					</div>
-				</nav>
-			</div>
-		</div>
-	</div>
-</section>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="columns">
+            <div class="column">
+                <div class="box">
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="fa-regular fa-square-caret-right"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="Name your antenna, for example [Sotabeams EFHW]">Name:</abbr> {{ antenna.name }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="level-right">
+                            <div class="level-item">
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="fa-regular fa-square-caret-down"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="Manufacturer of the antenna">Manufacturer:</abbr> {{ antenna.manufacturer }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+            <div class="column">
+                <div class="box">
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <div class="icon-text">
+                                    <span class="icon">
+                                        <i class="fa-regular fa-comments"></i>
+                                    </span>
+                                    <span><abbr class="has-text-weight-semibold" title="">Comment:</abbr> {{ antenna.comment }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

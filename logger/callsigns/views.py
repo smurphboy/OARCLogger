@@ -17,7 +17,7 @@ ROWS_PER_PAGE = 10
 @login_required
 def index():
     '''Callsign index. show who has what callsign'''
-    callsignlist = Callsign.query.all()
+    callsignlist = db.session.query(User.name, Callsign.name, func.count(QSO.id)).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name, Callsign.name).order_by(func.count(QSO.id).desc()).all()
     return render_template('callsignindex.html', callsigns=callsignlist)
 
 @callsigns.route("/<callsign>/qsos")

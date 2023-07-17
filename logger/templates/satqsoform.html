@@ -5,29 +5,16 @@
 <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/cr-1.6.2/fc-4.2.2/fh-3.3.2/rg-1.3.1/sb-1.4.2/sp-2.1.2/sl-1.6.2/datatables.min.js"></script>
 {% endblock %}
 {% block hero %}is-primary{% endblock %}
-{% block content %}
-    <div class="bd-hero-heading">
+{% block herobody %}
         <h1 class="title is-size-1">
             {% block title %} <p>Add a New Satellite QSO for {{ event.name }}{% if selectedevents %}, also {% for sevent in selectedevents %}{{ sevent.name }}{% if not loop.last %} & {% endif %}{% endfor %}{% endif %}</p> {% endblock %}
         </h1>
         <div class="subtitle is-4 algolia-lvl1">
             <p>Enter QSO details below and press Add:</p>     
         </div>
-    </div>
-</section>
-<section class="section">
+{% endblock %}
+{% block content %}
     <div class="container">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <div class="box notification">
-            <div class="notification is-info">
-                {% for message in messages%}
-                {{ message }}
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
-        {% endwith %}
         <div class="box">
             <h1 class="title">Existing QSOs</h1>
             <p class="subtitle">{{ event.qsos|length }} QSOs for this Event</p>
@@ -355,8 +342,8 @@
             </form>
         </div>
     </div>
-</section>
-
+{% endblock %}
+{% block bottombody %}
 <script>
     $SCRIPT_ROOT = {{ request.script_root|tojson }};
 </script>
@@ -490,11 +477,6 @@ $(document).ready(function() {
         return false;
         });
     });
-
-    setTimeout(function(){
-        $(".notification").fadeOut("slow");
-    }, 5000);
-
 });
     var diction = {
         AM: [],

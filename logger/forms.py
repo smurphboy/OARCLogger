@@ -101,8 +101,8 @@ class EventForm(FlaskForm):
 class ConfigForm(FlaskForm):
     name = StringField('Name', validators=[InputRequired(), Length(max=50)])
     comment = TextAreaField('Comment', validators=[Optional(), Length(max=255)])
-    antenna = SelectField('Antenna', coerce=int)
-    rig = SelectField('Rig', coerce=int)
+    antenna = SelectField('Antenna', validators=[InputRequired()], coerce=int)
+    rig = SelectField('Rig', validators=[InputRequired()], coerce=int)
 
 
 class RigForm(FlaskForm):

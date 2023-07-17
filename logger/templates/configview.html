@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{% endblock %}
 {% block hero %}is-warning{% endblock %}
-{% block content %}
-		<div class="bd-hero-heading">
+{% block herobody %}
 			<h1 class="title is-size-1">
 				{% block title %} <p>View a Station Configuration</p> {% endblock %}
 			</h1>
 			<div class="subtitle is-4 algolia-lvl1">
 				<p>{{ current_user.name}}'s {{ configuration.name }}</p>     
 			</div>
-		</div>
-	</div>
-</section>
-<section>
+{% endblock %}
+{% block content %}
     <div class="container">
         <div class="columns">
             <div class="column">
@@ -80,5 +80,4 @@
             </div>
         </div>
     </div>
-</section>
 {% endblock %}

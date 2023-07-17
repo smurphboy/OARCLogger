@@ -1,16 +1,17 @@
 {% extends "base.html" %}
-
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{% endblock %}
+{% block herobody %}
+<h1 class="title is-size-1">
+    Sign Up for OARC Logger
+</h1>
+<div class="subtitle is-4 algolia-lvl1">
+    <p>Use this form to signup. You will need the signup code from the OARC Discord</p>
+</div>
+{% endblock %}
 {% block content %}
-<div class="column is-4 is-offset-4">
-    <h3 class="title">Sign Up</h3>
-    <div class="box">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <div class="notification is-danger">
-            {{ messages[0] }}. Go to <a href="{{ url_for('users.login') }}">login page</a>.
-        </div>
-        {% endif %}
-        {% endwith %}
+    <div class="column is-4 is-offset-4">
         <form method="POST" action="/users/signup">
             <div class="field">
                 <div class="control">
@@ -39,5 +40,4 @@
             <button class="button is-block is-info is-large is-fullwidth">Sign Up</button>
         </form>
     </div>
-</div>
 {% endblock %}

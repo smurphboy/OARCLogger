@@ -7,7 +7,7 @@ antennas = Blueprint('antennas', __name__, template_folder='templates')
 
 ROWS_PER_PAGE = 10
 
-@antennas.route("/<username>", methods=['GET','POST'])
+@antennas.route("/list/<username>", methods=['GET','POST'])
 @login_required
 def antennalist(username):
     '''Homepage for a users antennas. We should show a table of all the antennas logged against

@@ -48,8 +48,7 @@
     });
 </script>  
 {% endblock %}
-{% block content %}
-		<div class="bd-hero-heading">
+{% block herobody %}
 			<h1 class="title algolia-lvl0">
 				{% block title %} <p>Welcome, {{ current_user.name }}</p> {% endblock %}
 			</h1>
@@ -58,22 +57,9 @@
 				<p>You have the following callsigns</p>     
 			</div>
 			{% endif %}
-		</div>
-    </div>
-</section>
-<section class="section">
+{% endblock %}
+{% block content %}
     <div class="container">
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            <div class="box notification">
-                <div class="notification is-info">
-                    {% for message in messages%}
-                    {{ message }}
-                    {% endfor %}
-                </div>
-            </div>
-            {% endif %}
-            {% endwith %}
         <div class="box">
             <h1 class="title"><a href="{{ url_for('events.eventlist', username=current_user.name) }}">Selected Events</a></h1>
             <nav class="level">
@@ -172,7 +158,6 @@
             </div>
         </div>
     </div>
-</section>
 {% endblock %}
 {% block bottombody %}
 <div id="modal-add-callsign" class="modal">

@@ -13,23 +13,22 @@
 <script src="/static/js/leaflet-providers.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {% endblock %}
+<style>
+    .level-is-shrinkable .level-left,
+    .level-is-shrinkable .level-item,
+    .level-is-shrinkable .level-right {
+      flex-shrink: 1;
+    }
+    </style>
 {% block hero %}is-primary{% endblock %}
-{% block content %}
+{% block herobody %}
 		<div class="bd-hero-heading">
 			<h1 class="title is-size-1">
 				{% block title %} <p>View a QSO</p> {% endblock %}
 			</h1>
 		</div>
-	</div>
-</section>
-<style>
-.level-is-shrinkable .level-left,
-.level-is-shrinkable .level-item,
-.level-is-shrinkable .level-right {
-  flex-shrink: 1;
-}
-</style>
-<section class="section">
+{% endblock %}
+{% block content%}
     <div class="container">
         <div class="box">
             <h3 class="title">QSO from <a href="{{ url_for('callsigns.call', callsign=qso.station_callsign | replace('/', '_')) }}">{{ qso.station_callsign }}</a> to {{ qso.call }} on {{ qso.qso_date }} at {{ qso.time_on }}</h3>
@@ -1147,7 +1146,6 @@
             </div>
         </div>
     </div>
-</section>
 {% endblock %}
 {% block bottombody %}
 {% if qso.gridsquare and qso.my_gridsquare %}

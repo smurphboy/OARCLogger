@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
-
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{% endblock %}
 {% block hero %}is-primary{% endblock %}
-{% block content %}
-		<div class="bd-hero-heading">
+{% block herobody %}
 			<h1 class="title algolia-lvl0">
 				{% block title %} <p>Welcome, {{ current_user.name }}</p> {% endblock %}
 			</h1>
@@ -12,10 +13,8 @@
 				<p>You have the following callsigns</p>     
 			</div>
 			{% endif %}
-		</div>
-    </div>
-</section>
-<section>
+{% endblock %}
+{% block content %}
     <div class="box">
         <div class="tile is-ancestor">
             <div class="tile is-4 is-vertical is-parent">
@@ -73,5 +72,4 @@
             </div>
         </div>
     </div>
-</section>
 {% endblock %}

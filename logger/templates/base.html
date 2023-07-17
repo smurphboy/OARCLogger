@@ -179,10 +179,39 @@
     </nav>
     <section class="hero {% block hero %}is-light{% endblock %}">
         <div class="hero-body">
-            {% block content %}
+            <div class="bd-hero-heading">
+            {% block herobody %}
             {% endblock %}
+            </div>
         </div>
     </section>
+    <section>
+        <div class="container">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="box notification">
+                <div class="notification is-info">
+                    {% for message in messages%}
+                    {{ message }}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            {% endwith %}
+        </div>
+    </section>
+    <section>
+            {% block content %}
+            {% endblock %}
+    </section>
+    <script>
+    $(document).ready(function() {
+        setTimeout(function(){
+            $(".notification").fadeOut("slow");
+        }, 5000);
+    
+    });
+    </script>
     {% block bottombody %}
     {% endblock %}
 </body>

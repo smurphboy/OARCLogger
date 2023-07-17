@@ -5,26 +5,12 @@
 <script src="https://cdn.datatables.net/v/bm/dt-1.13.4/cr-1.6.2/fc-4.2.2/fh-3.3.2/rg-1.3.1/sb-1.4.2/sp-2.1.2/sl-1.6.2/datatables.min.js"></script>
 {% endblock %}
 {% block hero %}is-primary is-info{% endblock %}
-{% block content %}
-		<div class="bd-hero-heading">
+{% block herobody %}
 			<p class="title is-1">{% block title %}Event: {{ event.name }} {% endblock %}</p>
             <p class="subtitle is-4">{{ event.type }}</p>
-		</div>
-	</div>
-</section>
-<section class="section">
-    <div class="container is-fluid">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <div class="box">
-            <div class="notification is-info">
-                {% for message in messages%}
-                {{ message }}
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
-        {% endwith %}
+{% endblock %}
+{% block content %}
+    <div class="container">
         <div class="box">
             <div class="columns">
                 <div class="column">
@@ -237,16 +223,9 @@
             </nav>    
         </div>
     </div>
-</section>
+{% endblock %}
+{% block bottombody %}
 <script>
-
-$(document).ready(function() {
-    setTimeout(function(){
-        $(".notification").fadeOut("slow");
-    }, 5000);
-
-});
-
 $(document).ready(function () {
     $('#qsos').DataTable({
         lengthMenu: [

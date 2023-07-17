@@ -1,51 +1,49 @@
 {% extends 'base.html' %}
-
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{% endblock %}
 {% block hero %}is-link{% endblock %}
-{% block content %}
-            <div class="bd-hero-heading">
+{% block herobody %}
                 <h1 class="title is-size-1">
                     {% block title %}All logged QSOs with {{ call }}{% endblock %}
                 </h1>
                 <div class="subtitle is-4 algolia-lvl1">
                     <p>DXCC is {{ get_adif_id(call) }}: {{ countrylookup(call) }}, ITU Zone is {{ dxccituz(call) }}, CQ Zone is {{ dxcccqz(call) }}, {{ qsos|length }} QSOs for this callsign.</p>     
                 </div>
-            </div>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="box">
+            <h1 class="title">Logged QSOs</h1>
+            <table class="table is-striped is-hoverable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Station Callsign</th>
+                        <th>Call</th>
+                        <th>Band</th>
+                        <th>Mode</th>
+                        <th>Gridsquare</th>
+                        <th>My Gridsquare</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for qso in qsos %}
+                    <tr>
+                        <td>{{ qso.qso_date }}</td>
+                        <td>{{ qso.time_on }}</td>
+                        <td>{{ qso.station_callsign }}</td>
+                        <td>{{ qso.call }}</td>
+                        <td>{{ qso.band }}</td>
+                        <td>{{ qso.mode }}</td>
+                        <td>{{ qso.gridsquare }}</td>
+                        <td>{{ qso.my_gridsquare }}</td>
+                    {% else %}
+                    No QSOs
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-    </section>
-    <section>
-        <div class="container">
-            <div class="box">
-                <h1 class="title">Logged QSOs</h1>
-                <table class="table is-striped is-hoverable">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Station Callsign</th>
-                            <th>Call</th>
-                            <th>Band</th>
-                            <th>Mode</th>
-                            <th>Gridsquare</th>
-                            <th>My Gridsquare</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for qso in qsos %}
-                        <tr>
-                            <td>{{ qso.qso_date }}</td>
-                            <td>{{ qso.time_on }}</td>
-                            <td>{{ qso.station_callsign }}</td>
-                            <td>{{ qso.call }}</td>
-                            <td>{{ qso.band }}</td>
-                            <td>{{ qso.mode }}</td>
-                            <td>{{ qso.gridsquare }}</td>
-                            <td>{{ qso.my_gridsquare }}</td>
-                        {% else %}
-                        No QSOs
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
+    </div>
 {% endblock %}

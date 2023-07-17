@@ -1,59 +1,63 @@
 {% extends 'base.html' %}
-
-{% block content %}
-    <div class="bd-hero-heading">
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{% endblock %}
+{% block herobody %}
         <h1 class="title algolia-lvl0">
             {% block title %} <p>Add a New QSO for {{ station_callsign }}</p> {% endblock %}
         </h1>
         <div class="subtitle is-4 algolia-lvl1">
             <p>Enter QSO details below and press Add:</p>     
         </div>
-    </div>
-    <form method="POST" id="qsoform">
-        {{ form.csrf_token }}
-        <div class="columns">
-            <div class="column">
-                <nav class="level">
-                    <div class="level-left">
-                        <div class="level-item">
-                            <div class="field">
-                                {{ form.qso_date.label(class_="label") }}
-                                <div class="control">
-                                {{ form.qso_date(class_="input") }}
+{% endblock %}
+{% block content %}
+    <div class="box">
+        <form method="POST" id="qsoform">
+            {{ form.csrf_token }}
+            <div class="columns">
+                <div class="column">
+                    <nav class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.qso_date.label(class_="label") }}
+                                    <div class="control">
+                                    {{ form.qso_date(class_="input") }}
+                                    </div>
                                 </div>
-                            </div>
 
-                            {% if form.qso_date.errors %}
-                                <ul class="errors">
-                                    {% for error in form.qso_date.errors %}
-                                        <li>{{ error }}</li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
+                                {% if form.qso_date.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.qso_date.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
                         </div>
-                    </div>
-                    <div class="level-right">
-                        <div class="level-item">
-                            <div class="field">
-                                {{ form.time_on.label(class_="label") }}
-                                <div class="control">
-                                    {{ form.time_on(class_="input") }}
+                        <div class="level-right">
+                            <div class="level-item">
+                                <div class="field">
+                                    {{ form.time_on.label(class_="label") }}
+                                    <div class="control">
+                                        {{ form.time_on(class_="input") }}
+                                    </div>
                                 </div>
-                            </div>
 
-                            {% if form.time_on.errors %}
-                                <ul class="errors">
-                                    {% for error in form.time_on.errors %}
-                                        <li>{{ error }}</li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
+                                {% if form.time_on.errors %}
+                                    <ul class="errors">
+                                        {% for error in form.time_on.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
                         </div>
-                    </div>
-                </nav>
+                    </nav>
+                </div>
             </div>
-        </div>
-        <button class="button is-link" name="add_qso" type="submit" form="qsoform">Add QSO</button>
-    </form>
+            <button class="button is-link" name="add_qso" type="submit" form="qsoform">Add QSO</button>
+        </form>
+    </div>
 
 {% endblock %}

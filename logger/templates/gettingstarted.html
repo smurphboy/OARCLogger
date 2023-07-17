@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
-{% block hero %}is-info{% endblock %}
-{% block content %}
-    {% block title %}<p class="title">Getting started with the OARC Logger</p>
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{% endblock %}
+{% block hero %}is-light{% endblock %}
+{% block herobody %}
+    <p class="title">Getting started with the OARC Logger</p>
     <p class="subtitle">Welcome to OARCs Logging website.</p>
     <p>This was designed to support members of the OARC to log QSOs.</p>
     <p>It allows OARC members to log all their contacts for either individually, or by importing an ADI file.</p>
-    {% endblock %}
 {% endblock %}
-{% block bottombody%}
-<section>
-    <div class="box">
-        <div class="container">
+{% block content %}
+    <div class="container">
+        <div class="box">
             <div class="content">
                 <h1>How to Get Started</h1>
                 <p>This logger can be used in a couple of modes, we will start with the most simple and build from there</p>
@@ -72,5 +73,4 @@
             </div>
         </div>
     </div>
-</section>
 {% endblock %}

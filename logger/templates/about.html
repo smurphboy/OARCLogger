@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
-
-{% block content %}
-    {% block title %}<p class="title">About the OARC Logger</p>
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{% endblock %}
+{% block herobody %}
+    <p class="title">About the OARC Logger</p>
     <p class="subtitle">Welcome to OARCs Logging website.</p>
     <p>This was designed to support the Worked All OARC Season 2 (2023).</p>
     <p>It allows OARC members to log all their contacts for 'contest' either individually, or by importing an ADI file (restrictions apply).</p>
-    {% endblock %}
 {% endblock %}

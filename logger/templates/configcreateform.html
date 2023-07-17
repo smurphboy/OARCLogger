@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         // Functions to open and close a modal
@@ -48,19 +49,17 @@
 </script>  
 {% endblock %}
 {% block hero %}is-warning{% endblock %}
-{% block content %}
-            <div class="bd-hero-heading">
+{% block herobody %}
                 <h1 class="title algolia-lvl0">
                     {% block title %} <p>Add / Edit a Station Configuration for {{ username }}</p> {% endblock %}
                 </h1>
                 <div class="subtitle is-4 algolia-lvl1">
-                    <p>Enter Station Configuration details below and press Submit:</p>     
+                    <p>Enter Station Configuration details below and press Save Changes:</p>     
                 </div>
-            </div>
-        </div>
-    </section>
-    <section class="section">
-        <div class="container is-max-desktop">
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="box">
             <form method="POST" id="configform">
                 {{ form.csrf_token }}
                 <div class="field is-horizontal">
@@ -161,7 +160,7 @@
                 </nav>
             </form>
         </div>
-    </section>
+    </div>
 {% endblock %}
 {% block bottombody %}
 <div id="modal-add-antenna" class="modal">

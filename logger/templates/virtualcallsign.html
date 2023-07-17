@@ -1,18 +1,17 @@
 {% extends 'base.html' %}
-
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{% endblock %}
 {% block hero %}is-link{% endblock %}
-{% block content %}
-            <div class="bd-hero-heading">
+{% block herobody %}
                 <h1 class="title is-size-1">
                     {% block title %}Virtual QSOs for {{ call }} {% endblock %}
                 </h1>
                 <div class="subtitle is-4 algolia-lvl1">
                     <p>DXCC is {{ get_adif_id(call) }}: {{ countrylookup(call) }}, ITU Zone is {{ dxccituz(call) }}, CQ Zone is {{ dxcccqz(call) }}, {{ qsos|length }} QSOs for this callsign.</p>     
                 </div>
-            </div>
-        </div>
-    </section>
-    <section>
+{% endblock %}
+{% block content %}
         <div class="container">
             <div class="box">
                 <h1 class="title">Virtual QSOs</h1>
@@ -47,5 +46,4 @@
                 </table>
             </div>
         </div>
-    </section>
 {% endblock %}

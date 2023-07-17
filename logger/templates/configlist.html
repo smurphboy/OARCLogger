@@ -1,87 +1,85 @@
 {% extends 'base.html' %}
-
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{% endblock %}
 {% block hero %}is-warning{% endblock %}
-{% block content %}
-            <div class="bd-hero-heading">
+{% block herobody %}
                 <h1 class="title is-size-1">
                     {% block title %} Station Configurations for {{ username }} {% endblock %}
                 </h1>
                 <div class="subtitle is-4 algolia-lvl1">
                     <p>{% if allconfigs|length == 1 %} There is 1 station configuration for this user.{% else %}There are {{ allconfigs| length }} station configurations for this user{% endif %}</p>     
                 </div>
-            </div>
-        </div>
-    </section>
-    <section>
-        <div class="container">
-            <div class="box">
-                <h1 class="title">Station Configurations</h1>
-                {% if configpage.items %}
-                <table class="table is-striped is-hoverable">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Edit</th>
-                            <th>Name</th>
-                            <th>Rig</th>
-                            <th>Antenna</th>
-                            <th>Used in QSOs</th>
-                            <th>Used in Events</th>
-                            <th>Comment</th>
-                            <th>Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for config in configpage.items %}
-                        <tr>
-                            <td>{{ config.id }}</td>
-                            <td><a class="button is-link is-small" href="{{ url_for ('configurations.configedit', id=config.id) }}"><span class="icon is-small"><i class="fa-solid fa-pen-to-square"></i></span><span>Edit</span></a></td>
-                            <td><a href="{{ url_for ('configurations.configview', id=config.id) }}" title="{{ config.name }}">{{ config.name }}</a></td>
-                            <td>{{ config.rig.name }}</td>
-                            <td>{{ config.antenna.name }}</td>
-                            <td>{% if config.qsos %}{{ config.qsos|length }}{% endif %}</td>
-                            <td>{% if config.events %}{{ config.events|length }}{% endif %}</td>
-                            <td>{{ config.comment }}</td>
-                            <td><a class="button is-danger is-small" href="{{ url_for ('configurations.configdelete', id=config.id) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                {% else %}
-                <p class="subtitle">No Station Configurations defined yet</p>
-                {% endif %}
-                <nav class="pagination" role="navigation" aria-label="pagination">
-                    <a class="pagination-previous" {% if configpage.has_prev %}href="{{ url_for('configurations.configlist', username=current_user.name, page=configlist.prev_num) }}"{% else %}disabled {% endif %} title="This is the first page">Previous</a>
-                    <a class="pagination-next" {% if configpage.has_next %}href="{{ url_for('configurations.configlist', username=current_user.name, page=configlist.next_num) }}"{% else %}disabled {% endif %}>Next page</a>
-                    <ul class="pagination-list">
-                        {% for page_num in configpage.iter_pages() %}
-                            {% if page_num %}
-                                {% if page_num != configpage.page %}
-                                <li>
-                                    <a class="pagination-link" href="{{ url_for('configurations.configlist', username=current_user.name, page=page_num) }}" aria-label="Goto page {{ page_num }}">{{ page_num }}</a>
-                                </li>
-                                {% else %}
-                                <li>
-                                    <a class="pagination-link is-current" href="{{ url_for('configurations.configlist', username=current_user.name, page=page_num) }}" aria-label="Page {{ page_num }}" aria-current="page">{{ page_num }}</a>
-                                </li>
-                                {% endif %}
+{% endblock%}
+{% block content %}
+    <div class="container">
+        <div class="box">
+            <h1 class="title">Station Configurations</h1>
+            {% if configpage.items %}
+            <table class="table is-striped is-hoverable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Edit</th>
+                        <th>Name</th>
+                        <th>Rig</th>
+                        <th>Antenna</th>
+                        <th>Used in QSOs</th>
+                        <th>Used in Events</th>
+                        <th>Comment</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for config in configpage.items %}
+                    <tr>
+                        <td>{{ config.id }}</td>
+                        <td><a class="button is-link is-small" href="{{ url_for ('configurations.configedit', id=config.id) }}"><span class="icon is-small"><i class="fa-solid fa-pen-to-square"></i></span><span>Edit</span></a></td>
+                        <td><a href="{{ url_for ('configurations.configview', id=config.id) }}" title="{{ config.name }}">{{ config.name }}</a></td>
+                        <td>{{ config.rig.name }}</td>
+                        <td>{{ config.antenna.name }}</td>
+                        <td>{% if config.qsos %}{{ config.qsos|length }}{% endif %}</td>
+                        <td>{% if config.events %}{{ config.events|length }}{% endif %}</td>
+                        <td>{{ config.comment }}</td>
+                        <td><a class="button is-danger is-small" href="{{ url_for ('configurations.configdelete', id=config.id) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="subtitle">No Station Configurations defined yet</p>
+            {% endif %}
+            <nav class="pagination" role="navigation" aria-label="pagination">
+                <a class="pagination-previous" {% if configpage.has_prev %}href="{{ url_for('configurations.configlist', username=current_user.name, page=configlist.prev_num) }}"{% else %}disabled {% endif %} title="This is the first page">Previous</a>
+                <a class="pagination-next" {% if configpage.has_next %}href="{{ url_for('configurations.configlist', username=current_user.name, page=configlist.next_num) }}"{% else %}disabled {% endif %}>Next page</a>
+                <ul class="pagination-list">
+                    {% for page_num in configpage.iter_pages() %}
+                        {% if page_num %}
+                            {% if page_num != configpage.page %}
+                            <li>
+                                <a class="pagination-link" href="{{ url_for('configurations.configlist', username=current_user.name, page=page_num) }}" aria-label="Goto page {{ page_num }}">{{ page_num }}</a>
+                            </li>
                             {% else %}
-                                <li>
-                                    <span class="pagination-ellipsis">&hellip;</span>
-                                </li>
+                            <li>
+                                <a class="pagination-link is-current" href="{{ url_for('configurations.configlist', username=current_user.name, page=page_num) }}" aria-label="Page {{ page_num }}" aria-current="page">{{ page_num }}</a>
+                            </li>
                             {% endif %}
-                        {% endfor %}
-                    </ul>
-                </nav>
-            </div>
-            <div class="box">
-                <div class="level">
-                    <div class="level-left">
-                        <p class="level-item">Click to add a new Station Configuration</p>
-                        <a class="button is-link level-item" href="{{ url_for('configurations.configcreate') }}">Add Station Configuration</a>
-                    </div>
+                        {% else %}
+                            <li>
+                                <span class="pagination-ellipsis">&hellip;</span>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
+        <div class="box">
+            <div class="level">
+                <div class="level-left">
+                    <p class="level-item">Click to add a new Station Configuration</p>
+                    <a class="button is-link level-item" href="{{ url_for('configurations.configcreate') }}">Add Station Configuration</a>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 {% endblock %}

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style type="text/css">
 .info {
@@ -28,31 +29,13 @@
 </style>
 {% endblock %}
 {% block hero %}is-primary{% endblock %}
-{% block content %}
-		<div class="bd-hero-heading">
+{% block herobody %}
 			<h1 class="title algolia-lvl0">
 				{% block title %} <p>Gridsquares Worked by all members</p> {% endblock %}
 			</h1>
             <p class="subtitle">Members have worked {{ totalgrids }} gridsquares</p>
-		</div>
-    </div>
-</section>
-<section>
-    <div class="container">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <div class="box notification">
-            <div class="notification is-info">
-                {% for message in messages%}
-                {{ message }}
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
-        {% endwith %}
-    </div>
-</section>
-<section>
+{% endblock %}
+{% block content %}
     <div class="box">
         <div class="tabs is-toggle is-fullwidth">
             <ul>
@@ -80,10 +63,10 @@
     <div class="box">
         <div style="height: 480px;" id="map"></div>
     </div>
-</section>
+{% endblock %}
+{% block bottombody %}
 <!-- Make sure you put this AFTER Leaflet's CSS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="{{ url_for('static', filename='js/Leaflet.EdgeMarker.js') }}"></script>
 <script>
 var gridsquares = {{ gridsquares|safe }}
 
@@ -171,24 +154,6 @@ function onEachFeature(feature, layer) {
         click: zoomToFeature
     });
 }
-
-//var
-{% for key, value in mlayer.items()|sort(attribute='0') %}
-{{ key }} = L.circle({{ value }}, 200){{ ", " if not loop.last else ";" }}
-{% endfor %}
-
-var centres = L.layerGroup([{% for key, value in mlayer.items()|sort(attribute='0') %}{{ key }}{{ ", " if not loop.last else "" }}{% endfor %}]).addTo(map);
-
-
-var edgeMarkerLayer = L.edgeMarker({
-    icon: L.icon({ // style markers
-        iconUrl : '{{ url_for('static', filename="js/images/edge-arrow-marker-black.png") }}',
-        clickable: true,
-        iconSize: [48,48],
-        iconAnchor: [24, 24]
-    }),
-    layerGroup: centres
-}).addTo(map);
 
 const legend = L.control({position: 'bottomright'});
 

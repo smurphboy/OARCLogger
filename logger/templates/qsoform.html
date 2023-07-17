@@ -3,29 +3,16 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {% endblock %}
 {% block hero %}is-primary{% endblock %}
-{% block content %}
-    <div class="bd-hero-heading">
+{% block herobody %}
         <h1 class="title is-size-1">
             {% block title %} <p>{% if request.endpoint == 'qsos.editqso' %}Edit{% else %}Add{% endif %} a QSO for {{ station_callsign }}</p> {% endblock %}
         </h1>
         <div class="subtitle is-4 algolia-lvl1">
             <p>Enter QSO details below and press {% if request.endpoint == 'qsos.editqso' %}Edit{% else %}Add{% endif %}:</p>     
         </div>
-    </div>
-</section>
-<section class="section">
+{% endblock %}
+{% block content %}
     <div class="container">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <div class="box notification">
-            <div class="notification is-info">
-                {% for message in messages%}
-                {{ message }}
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
-        {% endwith %}
         <div class="box">
             <h1 class="title"><a href="{{ url_for('events.eventlist', username=current_user.name) }}">Selected Events</a></h1>
             <nav class="level">
@@ -1050,8 +1037,8 @@
             </div>
         </form>
     </div>
-</section>
-
+{% endblock %}
+{% block bottombody %}
 <script>
     $SCRIPT_ROOT = {{ request.script_root|tojson }};
 </script>
@@ -1227,11 +1214,6 @@ $(document).ready(function() {
         return false;
         });
     });
-
-    setTimeout(function(){
-        $(".notification").fadeOut("slow");
-    }, 5000);
-
 });
     var diction = {
         AM: [],

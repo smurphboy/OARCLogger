@@ -2,6 +2,7 @@
 
 {% block hero %}is-warning{% endblock %}
 {% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         // Functions to open and close a modal
@@ -49,18 +50,15 @@
     });
 </script>  
 {% endblock %}
-{% block content %}
-            <div class="bd-hero-heading">
+{% block herobody %}
                 <h1 class="title is-size-1">
                     {% block title %} Antennas for {{ username }} {% endblock %}
                 </h1>
                 <div class="subtitle is-4 algolia-lvl1">
                     <p>{{ allantennas|length }} antennas for this user.</p>     
                 </div>
-            </div>
-        </div>
-    </section>
-    <section>
+{% endblock %}
+{% block content %}
         <div class="container">
             <div class="box">
                 <h1 class="title">Antennas</h1>
@@ -128,7 +126,6 @@
                 </div>
             </div>
         </div>
-    </section>
 {% endblock %}
 {% block bottombody %}
 <div id="modal-add-antenna" class="modal">

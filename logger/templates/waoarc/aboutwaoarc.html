@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
-
-{% block content %}
-<div class="bd-hero-heading">
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{% endblock %}
+{% block herobody %}
     <h1 class="title is-size-1">
         {% block title %} <p>About Worked All OARC Season 2</p> {% endblock %}
     </h1>
     <div class="subtitle is-4 algolia-lvl1">
         <p>Welcome to Logging website for WAOARC S2.</p>     
     </div>
-</div>
-</section>
-<section>
+{% endblock %}
+{% block content %}
     <div class="container">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -58,5 +58,4 @@
             </div>
         </div>
     </div>
-</section>
 {% endblock %}

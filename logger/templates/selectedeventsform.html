@@ -16,30 +16,16 @@
 ></script>
 {% endblock %}
 {% block hero %}is-primary is-info{% endblock %}
-{% block content %}
-            <div class="bd-hero-heading">
+{% block herobody %}
                 <h1 class="title is-size-1">
                     {% block title %} Selected Events for {{ username }} {% endblock %}
                 </h1>
                 <div class="subtitle is-4 algolia-lvl1">
                     <p>{{ selectedevents|length }} events selected from {{ allevents|length }} events for this user.</p>     
                 </div>
-            </div>
-        </div>
-    </section>
-    <section>
+{% endblock %}
+{% block content %}
         <div class="container">
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            <div class="box notification">
-                <div class="notification is-info">
-                    {% for message in messages%}
-                    {{ message }}
-                    {% endfor %}
-                </div>
-            </div>
-            {% endif %}
-            {% endwith %}
             <div class="box">
                 <form method="POST">
                     {{ form.csrf_token }}
@@ -123,7 +109,8 @@
                 </div>
             </div>
         </div>
-    </section>
+{% endblock %}
+{% block bottombody %}
 <script>
 $(document).ready(function()
 {
@@ -138,13 +125,5 @@ $(document).ready(function()
     items: selsafe
     });
 });
-
-$(document).ready(function() {
-    setTimeout(function(){
-        $(".notification").fadeOut("slow");
-    }, 5000);
-
-});
-
 </script>
 {% endblock %}

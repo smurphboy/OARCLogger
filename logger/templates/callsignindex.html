@@ -1,25 +1,39 @@
 {% extends 'base.html' %}
-
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{% endblock %}
+{% block hero %}is-primary{% endblock %}
+{% block herobody %}
+                <h1 class="title is-size-1">
+                    {% block title %} Callsign Index {% endblock %}
+                </h1>
+                <div class="subtitle is-4 algolia-lvl1">
+                    <p>QSOs by all Callsigns in the logger.</p>     
+                </div>
+{% endblock %}
 {% block content %}
-    <h1>{% block title %} Welcome to OARCs Autumn Portable Day Logger {% endblock %}</h1>
-    <h2>Callsigns</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Owner</th>
-                <th>Callsign</th>
-                <th><abbr title="Number of QSOs">QSOs</abbr></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for call in callsigns %}
-            <tr>
-                <td><a href="{{ url_for ('users.profile', user=call.user['name']) }}"">{{ call.user.name }}</a></td>
-                <td>{{ call.name }}</td>
-            </tr>
-            {% else %}
-            No Callsigns
-            {% endfor %}
-        </tbody>
-    </table>
-    {% endblock %}
+    <div class="container">
+        <div class="box">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Owner</th>
+                        <th>Callsign</th>
+                        <th><abbr title="Number of QSOs">QSOs</abbr></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for call in callsigns %}
+                    <tr>
+                        <td><a href="{{ url_for ('users.profile', user=call.0 ) }}"">{{ call.0 }}</a></td>
+                        <td>{{ call.1 }}</td>
+                        <td>{{ call.2 }}</td>
+                    </tr>
+                    {% else %}
+                    No Callsigns
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

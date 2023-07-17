@@ -1,49 +1,47 @@
 {% extends 'base.html' %}
-
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{% endblock %}
 {% block hero %}is-link{% endblock %}
-{% block content %}
-            <div class="bd-hero-heading">
+{% block herobody %}
                 <h1 class="title is-size-1">
                     {% block title %}Possible duplicate QSOs for {{ callsign }} {% endblock %}
                 </h1>
-            </div>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="box">
+            <h1 class="title">Possible Duplicate QSOs</h1>
+            <p class="subtitle">Duplicates detected by same callsign, within 12 hours of each other. Scored on a scale of 0 to 3 against same band, mode and submode.</p>
+            {% set fields = [('QSO Date', 'qso_date'), ('Time On', 'time_on'), ('Call', 'call'), ('Band', 'band'), ('Mode', 'mode'), ('Submode', 'submode') ] %}
+            {% for row in possdupes %}
+            <p class="has-text-weight-semibold">Duplicate Score {{ row.2 }} out of 3. Time difference of QSOs = {{ row.3 }}</p>
+            <table class="table is-striped is-hoverable">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th><a href="{{ url_for('qsos.viewqso', id=row.0.id) }}" target="_blank">QSO ID - {{ row.0.id }}</a></th>
+                        <th><a href="{{ url_for('qsos.viewqso', id=row.1.id) }}" target="_blank">QSO ID - {{ row.1.id }}</a></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for field in fields %}
+                    <tr>
+                        <td class="has-text-weight-semibold">{{ field.0 }}</td>
+                        <td>{{ row.0[field.1] }}</td>
+                        <td>{{ row.1[field.1] }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td class="has-text-weight-bold">Delete</td>
+                        <td><a class="button is-danger" href="{{ url_for('qsos.qsodelete', id=row.0.id, callsign=callsign | replace('/','_')) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete QSO {{ row.0.id }}</a></td>
+                        <td><a class="button is-danger" href="{{ url_for('qsos.qsodelete', id=row.1.id, callsign=callsign | replace('/','_')) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete QSO {{ row.1.id }}</a></td>
+                    </tr>
+                </tbody>
+            {% else %}
+            <p>No possible duplicate QSOs</p>
+            {% endfor %}
+            </table>
         </div>
-    </section>
-    <section>
-        <div class="container">
-            <div class="box">
-                <h1 class="title">Possible Duplicate QSOs</h1>
-                <p class="subtitle">Duplicates detected by same callsign, within 12 hours of each other. Scored on a scale of 0 to 3 against same band, mode and submode.</p>
-                {% set fields = [('QSO Date', 'qso_date'), ('Time On', 'time_on'), ('Call', 'call'), ('Band', 'band'), ('Mode', 'mode'), ('Submode', 'submode') ] %}
-                {% for row in possdupes %}
-                <p class="has-text-weight-semibold">Duplicate Score {{ row.2 }} out of 3. Time difference of QSOs = {{ row.3 }}</p>
-                <table class="table is-striped is-hoverable">
-                    <thead>
-                        <tr>
-                            <th>Field</th>
-                            <th><a href="{{ url_for('qsos.viewqso', id=row.0.id) }}" target="_blank">QSO ID - {{ row.0.id }}</a></th>
-                            <th><a href="{{ url_for('qsos.viewqso', id=row.1.id) }}" target="_blank">QSO ID - {{ row.1.id }}</a></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for field in fields %}
-                        <tr>
-                            <td class="has-text-weight-semibold">{{ field.0 }}</td>
-                            <td>{{ row.0[field.1] }}</td>
-                            <td>{{ row.1[field.1] }}</td>
-                        </tr>
-                        {% endfor %}
-                        <tr>
-                            <td class="has-text-weight-bold">Delete</td>
-                            <td><a class="button is-danger" href="{{ url_for('qsos.qsodelete', id=row.0.id, callsign=callsign | replace('/','_')) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete QSO {{ row.0.id }}</a></td>
-                            <td><a class="button is-danger" href="{{ url_for('qsos.qsodelete', id=row.1.id, callsign=callsign | replace('/','_')) }}" onclick="return confirm('Are you sure you want to delete this entry?')">Delete QSO {{ row.1.id }}</a></td>
-                        </tr>
-                    </tbody>
-                {% else %}
-                <p>No possible duplicate QSOs</p>
-                {% endfor %}
-                </table>
-            </div>
-        </div>
-    </section>
+    </div>
 {% endblock %}

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
-
 {% block hero %}is-warning{% endblock %}
 {% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         // Functions to open and close a modal
@@ -49,7 +49,7 @@
     });
 </script>  
 {% endblock %}
-{% block content %}
+{% block herobody %}
             <div class="bd-hero-heading">
                 <h1 class="title is-size-1">
                     {% block title %} Rigs for {{ username }} {% endblock %}
@@ -61,6 +61,8 @@
         </div>
     </section>
     <section>
+{% endblock %}
+{% block content %}
         <div class="container">
             <div class="box">
                 <h1 class="title">Rigs</h1>
@@ -128,7 +130,6 @@
                 </div>
             </div>
         </div>
-    </section>
 {% endblock %}
 {% block bottombody %}
 <div id="modal-add-rig" class="modal">
