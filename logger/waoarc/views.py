@@ -261,3 +261,15 @@ def edgetest():
     gridsquares = FeatureCollection(features)
     totalgrids = QSO.query.with_entities(func.left(QSO.gridsquare,4)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).distinct().count()
     return render_template('edgetest.html', gridsquares=gridsquares, totalgrids=totalgrids, mlayer=mlayer)
+
+
+@waoarc.route("/scoreboard")
+def scoreboard():
+    '''scores all members by rariety of modes, bands, calls, grids, SOTA, etc. Rough rule is that being the only
+    member to work something scores 24 points, two members working is 12 each, three is 8 each, four is 6,
+    five is 5, six is 4, seven and up is one point up to 24 members when zero points are scored'''
+    callsigns = QSO.query.with_entities(func.count(QSO.id), QSO.call).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.call).order_by(func.count(QSO.id).desc()).having(func.count(QSO.id) <= 24).all()
+    bands = QSO.query.with_entities(func.count(QSO.id), QSO.band).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.band).order_by(func.count(QSO.id).desc()).having(func.count(QSO.id) <= 24).all()
+    print(callsigns)
+    print(bands)
+    return render_template('scoreboard.html')
