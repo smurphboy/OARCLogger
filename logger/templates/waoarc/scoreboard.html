@@ -1,0 +1,298 @@
+{% extends 'base.html' %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<link href="https://cdn.datatables.net/v/bm/dt-1.13.4/cr-1.6.2/fc-4.2.2/fh-3.3.2/rg-1.3.1/sb-1.4.2/sp-2.1.2/sl-1.6.2/datatables.min.css" rel="stylesheet"/>
+<script src="https://cdn.datatables.net/v/bm/dt-1.13.4/cr-1.6.2/fc-4.2.2/fh-3.3.2/rg-1.3.1/sb-1.4.2/sp-2.1.2/sl-1.6.2/datatables.min.js"></script>
+{% endblock %}
+{% block hero %}is-primary{% endblock %}
+{% block herobody %}
+			<h1 class="title algolia-lvl0">
+				{% block title %} <p>New and Novel Scoreboard</p> {% endblock %}
+			</h1>
+            <p class="subtitle">QSOs are scored on rarity of Call, Band, Mode, Gridsquare and My Gridsquare</p>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="box">
+            <div class="columns">
+                <div class="column is-three-quarters">
+                    <div class="box">
+                        <h1 class="title">Callsign Scoring</h1>
+                        <table id="scores" class="table is-striped is-hoverable">
+                            <thead>
+                                <tr>
+                                    <th>Callsign</th>
+                                    <th>QSOs</th>
+                                    <th>Call</th>
+                                    <th>Band</th>
+                                    <th>Mode</th>
+                                    <th>Grid</th>
+                                    <th>My Grid</th>
+                                    <th>Total Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for callsign, callscores in callsignscores.items() %}
+                                <tr>
+                                    <td class="has-text-weight-semibold">{{ callsign }}</td>
+                                    <td>{{ callscores.qsos }}</td>
+                                    <td>{{ callscores.callsscore }}</td>
+                                    <td>{{ callscores.bandscore }}</td>
+                                    <td>{{ callscores.modescore }}</td>
+                                    <td>{{ callscores.gridscore }}</td>
+                                    <td>{{ callscores.mygridscore }}</td>
+                                    <td class="has-text-weight-bold">{{ callscores.totalscore }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="column is-one-quarter">
+                    <div class="box">
+                        <h1 class="title">Rarity Scoring</h1>
+                        <p class="subtitle">How is each QSO scored?</p>
+                        <table class="table is-striped is-hoverable">
+                            <thead>
+                                <tr>
+                                    <th>QSOs count</th>
+                                    <th>Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="has-text-weight-semibold">1</td>
+                                    <td>24</td>
+                                </tr>
+                                <tr>
+                                    <td class="has-text-weight-semibold">2</td>
+                                    <td>12</td>
+                                </tr>
+                                <tr>
+                                    <td class="has-text-weight-semibold">3</td>
+                                    <td>8</td>
+                                </tr>
+                                <tr>
+                                    <td class="has-text-weight-semibold">4</td>
+                                    <td>6</td>
+                                </tr>
+                                <tr>
+                                    <td class="has-text-weight-semibold">5</td>
+                                    <td>5</td>
+                                </tr>
+                                <tr>
+                                    <td class="has-text-weight-semibold">6</td>
+                                    <td>4</td>
+                                </tr>
+                                <tr>
+                                    <td class="has-text-weight-semibold">7 / 8</td>
+                                    <td>3</td>
+                                </tr>
+                                <tr>
+                                    <td class="has-text-weight-semibold">9 - 12</td>
+                                    <td>2</td>
+                                </tr>
+                                <tr>
+                                    <td class="has-text-weight-semibold">13-24</td>
+                                    <td>1</td>
+                                </tr>
+                                <tr>
+                                    <td class="has-text-weight-semibold">> 24</td>
+                                    <td>0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="box">
+                        <h1 class="title">Call Scores</h1>
+                        <table id="calls" class="table is-striped is-hoverable">
+                            <thead>
+                                <tr>
+                                    <th>Call</th>
+                                    <th>Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for key, value in callscore.items() %}
+                                <tr>
+                                    <td class="has-text-weight-semibold">{{ key }}</td>
+                                    <td>{{ value }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box">
+            <div class="columns">
+                <div class="column is-one-quarter">
+                    <div class="box">
+                        <h1 class="title">Band Scores</h1>
+                        <table id="band" class="table is-striped is-hoverable">
+                            <thead>
+                                <tr>
+                                    <th>Band</th>
+                                    <th>Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for key, value in bandscore.items() %}
+                                <tr>
+                                    <td class="has-text-weight-semibold">{{ key }}</td>
+                                    <td>{{ value }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="column is-one-quarter">
+                    <div class="box">
+                        <h1 class="title">Mode Scores</h1>
+                        <table id="mode" class="table is-striped is-hoverable">
+                            <thead>
+                                <tr>
+                                    <th>Mode</th>
+                                    <th>Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for key, value in modescore.items() %}
+                                <tr>
+                                    <td class="has-text-weight-semibold">{{ key }}</td>
+                                    <td>{{ value }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="column is-one-quarter">
+                    <div class="box">
+                        <h1 class="title">Grid Scores</h1>
+                        <table id="grid" class="table is-striped is-hoverable">
+                            <thead>
+                                <tr>
+                                    <th>Grid</th>
+                                    <th>Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for key, value in gridscore.items() %}
+                                <tr>
+                                    <td class="has-text-weight-semibold">{{ key }}</td>
+                                    <td>{{ value }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="column is-one-quarter">
+                    <div class="box">
+                        <h1 class="title">My Grid Scores</h1>
+                        <table id="mygrid" class="table is-striped is-hoverable">
+                            <thead>
+                                <tr>
+                                    <th>My Grid</th>
+                                    <th>Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for key, value in mygridscore.items() %}
+                                <tr>
+                                    <td class="has-text-weight-semibold">{{ key }}</td>
+                                    <td>{{ value }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block bottombody %}
+<script>
+$(document).ready(function () {
+    $('#scores').DataTable({
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        stateSave: true,
+        order: [[7, 'desc'],
+                [1, 'asc']
+            ]
+    });
+
+    $('#calls').DataTable({
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        stateSave: true,
+        scrollY: '400px',
+        scrollCollapse: true,
+        paging: false,
+        searching: false,
+        order: [[1, 'desc']]
+    });
+
+    $('#band').DataTable({
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        stateSave: true,
+        scrollY: '400px',
+        scrollCollapse: true,
+        paging: false,
+        searching: false,
+        order: [[1, 'desc']]
+    });
+
+    $('#mode').DataTable({
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        stateSave: true,
+        scrollY: '400px',
+        scrollCollapse: true,
+        paging: false,
+        searching: false,
+        order: [[1, 'desc']]
+    });
+
+    $('#grid').DataTable({
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        stateSave: true,
+        scrollY: '400px',
+        scrollCollapse: true,
+        paging: false,
+        searching: false,
+        order: [[1, 'desc']]
+    });
+
+    $('#mygrid').DataTable({
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        stateSave: true,
+        scrollY: '400px',
+        scrollCollapse: true,
+        paging: false,
+        searching: false,
+        order: [[1, 'desc']]
+    });
+});
+</script>
+{% endblock %}

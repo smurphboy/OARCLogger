@@ -7,6 +7,7 @@ from flask import (Blueprint, abort, current_app, flash, jsonify, redirect,
                    render_template, request, url_for)
 from flask_login import current_user, login_required, login_user, logout_user
 from geojson import Feature, Polygon, FeatureCollection, load as gjload
+from pprint import pprint
 from sqlalchemy import desc, func, and_
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -15,6 +16,34 @@ from logger.helpers import countrylookup
 from logger.models import QSO, Callsign, User, db
 
 waoarc = Blueprint('waoarc', __name__, template_folder='../templates/waoarc')
+
+rarity = {
+    1 : 24,
+    2 : 12,
+    3 : 8,
+    4 : 6,
+    5 : 5,
+    6 : 4,
+    7 : 3,
+    8 : 3,
+    9 : 2,
+    10 : 2,
+    11 : 2,
+    12 : 2,
+    13 : 1,
+    14 : 1,
+    15 : 1,
+    16 : 1,
+    17 : 1,
+    18 : 1,
+    19 : 1,
+    20 : 1,
+    21 : 1,
+    22 : 1,
+    23 : 1,
+    24 : 1,
+}
+
 
 @waoarc.route("/")
 def about():
@@ -268,8 +297,61 @@ def scoreboard():
     '''scores all members by rariety of modes, bands, calls, grids, SOTA, etc. Rough rule is that being the only
     member to work something scores 24 points, two members working is 12 each, three is 8 each, four is 6,
     five is 5, six is 4, seven and up is one point up to 24 members when zero points are scored'''
+    members = db.session.query(Callsign.name, User.name).join(User, Callsign.user_id == User.id).all()
     callsigns = QSO.query.with_entities(func.count(QSO.id), QSO.call).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.call).order_by(func.count(QSO.id).desc()).having(func.count(QSO.id) <= 24).all()
-    bands = QSO.query.with_entities(func.count(QSO.id), QSO.band).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.band).order_by(func.count(QSO.id).desc()).having(func.count(QSO.id) <= 24).all()
-    print(callsigns)
-    print(bands)
-    return render_template('scoreboard.html')
+    bands = QSO.query.with_entities(func.count(QSO.id), QSO.band).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.band != None).group_by(QSO.band).order_by(func.count(QSO.id).desc()).having(func.count(QSO.id) <= 24).all()
+    modes = QSO.query.with_entities(func.count(QSO.id), QSO.mode).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.mode).order_by(func.count(QSO.id).desc()).having(func.count(QSO.id) <= 24).all()
+    grids = QSO.query.with_entities(func.count(QSO.id), func.left(QSO.gridsquare,4)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(func.left(QSO.gridsquare,4)).order_by(func.count(QSO.id).desc()).having(func.count(QSO.id) <= 24).all()
+    mygrids = QSO.query.with_entities(func.count(QSO.id), func.left(QSO.my_gridsquare,4)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(func.left(QSO.my_gridsquare,4)).order_by(func.count(QSO.id).desc()).having(func.count(QSO.id) <= 24).all()
+    callscore = {}
+    for quant, callsign in callsigns:
+        callscore[callsign] = rarity[quant]
+    bandscore = {}
+    for quant, band in bands:
+        bandscore[band] = rarity[quant]    
+    modescore = {}
+    for quant, mode in modes:
+        modescore[mode] = rarity[quant]
+    gridscore = {}
+    for quant, grid in grids:
+        gridscore[grid] = rarity[quant]
+    mygridscore = {}
+    for quant, mygrid in mygrids:
+        mygridscore[mygrid] = rarity[quant]
+    userscores = {}
+    callsignscores = {}
+    for callsign, user in members:
+        # print(callsign, user)
+        callsignqsos = db.session.query(QSO.id, QSO.call, QSO.band, QSO.mode, QSO.gridsquare, QSO.my_gridsquare).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.station_callsign == callsign)
+        callsignscores[callsign] = {}
+        callsignscores[callsign]['qsos'] = callsignqsos.count()
+        cscalls = set([r[0] for r in callsignqsos.filter(QSO.call.is_not(None)).values(QSO.call)])
+        csmodes = set([r[0] for r in callsignqsos.filter(QSO.mode.is_not(None)).values(QSO.mode)])
+        csbands = set([r[0] for r in callsignqsos.filter(QSO.band.is_not(None)).values(QSO.band)])
+        csgrids = set([r[0] for r in callsignqsos.filter(QSO.gridsquare.is_not(None)).values(QSO.gridsquare)])
+        csmygrids = set([r[0] for r in callsignqsos.filter(QSO.my_gridsquare.is_not(None)).values(QSO.my_gridsquare)])
+        cascore = 0
+        for call in cscalls:
+            cascore += callscore.get(call, 0)
+        callsignscores[callsign]['callsscore'] = cascore
+        mscore = 0
+        for mode in csmodes:
+            mscore += modescore.get(mode, 0)
+        callsignscores[callsign]['modescore'] = mscore
+        bscore = 0
+        for band in csbands:
+            bscore += bandscore.get(band, 0)
+        callsignscores[callsign]['bandscore'] = bscore
+        gscore = 0
+        for grid in csgrids:
+            gscore += gridscore.get(grid, 0)
+        callsignscores[callsign]['gridscore'] = gscore
+        mgscore = 0
+        for mgrid in csmygrids:
+            mgscore += mygridscore.get(mgrid, 0)
+        callsignscores[callsign]['mygridscore'] = mgscore
+        callsignscores[callsign]['totalscore'] = cascore + mscore + bscore + gscore + mgscore
+        # pprint(callsignqsos.filter(QSO.call.in_(callsignqsos.QSO.call)).all())
+    # pprint(callsignscores)
+    return render_template('scoreboard.html', callsignscores=callsignscores, callscore=callscore, bandscore=bandscore,
+                           modescore=modescore, gridscore=gridscore, mygridscore=mygridscore)
