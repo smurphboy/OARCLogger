@@ -318,7 +318,6 @@ def scoreboard():
     mygridscore = {}
     for quant, mygrid in mygrids:
         mygridscore[mygrid] = rarity[quant]
-    userscores = {}
     callsignscores = {}
     for callsign, user in members:
         # print(callsign, user)
@@ -328,8 +327,8 @@ def scoreboard():
         cscalls = set([r[0] for r in callsignqsos.filter(QSO.call.is_not(None)).values(QSO.call)])
         csmodes = set([r[0] for r in callsignqsos.filter(QSO.mode.is_not(None)).values(QSO.mode)])
         csbands = set([r[0] for r in callsignqsos.filter(QSO.band.is_not(None)).values(QSO.band)])
-        csgrids = set([r[0] for r in callsignqsos.filter(QSO.gridsquare.is_not(None)).values(QSO.gridsquare)])
-        csmygrids = set([r[0] for r in callsignqsos.filter(QSO.my_gridsquare.is_not(None)).values(QSO.my_gridsquare)])
+        csgrids = set([r[0] for r in callsignqsos.filter(QSO.gridsquare.is_not(None)).values(func.left(QSO.gridsquare, 4))])
+        csmygrids = set([r[0] for r in callsignqsos.filter(QSO.my_gridsquare.is_not(None)).values(func.left(QSO.my_gridsquare, 4))])
         cascore = 0
         for call in cscalls:
             cascore += callscore.get(call, 0)
