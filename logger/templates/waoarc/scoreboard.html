@@ -29,6 +29,7 @@
                                     <th>Grid</th>
                                     <th>My Grid</th>
                                     <th>Total Score</th>
+                                    <th>Score per QSO</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -42,6 +43,7 @@
                                     <td>{{ callscores.gridscore }}</td>
                                     <td>{{ callscores.mygridscore }}</td>
                                     <td class="has-text-weight-bold">{{ callscores.totalscore }}</td>
+                                    <td class="has-text-weight-bold">{{ callscores.scoreperqso }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -213,6 +215,37 @@
                 </div>
             </div>
         </div>
+        <div class="box">
+            <h1 class="title">Member Scoring</h1>
+            <table id="userscores" class="table is-striped is-hoverable">
+                <thead>
+                    <tr>
+                        <th>Member</th>
+                        <th>QSOs</th>
+                        <th>Call</th>
+                        <th>Band</th>
+                        <th>Mode</th>
+                        <th>Grid</th>
+                        <th>My Grid</th>
+                        <th>Total Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for username, userscore in userscores.items() %}
+                    <tr>
+                        <td class="has-text-weight-semibold">{{ username }}</td>
+                        <td>{{ userscore.qsos }}</td>
+                        <td>{{ userscore.callsscore }}</td>
+                        <td>{{ userscore.bandscore }}</td>
+                        <td>{{ userscore.modescore }}</td>
+                        <td>{{ userscore.gridscore }}</td>
+                        <td>{{ userscore.mygridscore }}</td>
+                        <td class="has-text-weight-bold">{{ userscore.totalscore }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 {% endblock %}
 {% block bottombody %}
@@ -292,6 +325,17 @@ $(document).ready(function () {
         paging: false,
         searching: false,
         order: [[1, 'desc']]
+    });
+
+    $('#userscores').DataTable({
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        stateSave: true,
+        order: [[7, 'desc'],
+                [1, 'asc']
+            ]
     });
 });
 </script>

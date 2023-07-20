@@ -323,7 +323,8 @@ def scoreboard():
         # print(callsign, user)
         callsignqsos = db.session.query(QSO.id, QSO.call, QSO.band, QSO.mode, QSO.gridsquare, QSO.my_gridsquare).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.station_callsign == callsign)
         callsignscores[callsign] = {}
-        callsignscores[callsign]['qsos'] = callsignqsos.count()
+        qsocount = callsignqsos.count()
+        callsignscores[callsign]['qsos'] = qsocount
         cscalls = set([r[0] for r in callsignqsos.filter(QSO.call.is_not(None)).values(QSO.call)])
         csmodes = set([r[0] for r in callsignqsos.filter(QSO.mode.is_not(None)).values(QSO.mode)])
         csbands = set([r[0] for r in callsignqsos.filter(QSO.band.is_not(None)).values(QSO.band)])
@@ -350,7 +351,42 @@ def scoreboard():
             mgscore += mygridscore.get(mgrid, 0)
         callsignscores[callsign]['mygridscore'] = mgscore
         callsignscores[callsign]['totalscore'] = cascore + mscore + bscore + gscore + mgscore
+        if qsocount > 0:
+            callsignscores[callsign]['scoreperqso'] = round(((cascore + mscore + bscore + gscore + mgscore) / qsocount),2)
         # pprint(callsignqsos.filter(QSO.call.in_(callsignqsos.QSO.call)).all())
-    # pprint(callsignscores)
+    userscores = {}
+    for callsign, username in members:
+        if username not in userscores:
+            userscores[username] = {}
+        if 'callsscore' not in userscores[username]:
+            print ("Nope")
+            userscores[username]['callsscore'] = callsignscores[callsign].get('callsscore', 0)
+        else:
+            userscores[username]['callsscore'] += callsignscores[callsign].get('callsscore', 0)
+        if 'modescore' not in userscores[username]:
+            userscores[username]['modescore'] = callsignscores[callsign].get('modescore', 0)
+        else:
+            userscores[username]['modescore'] += callsignscores[callsign].get('modescore', 0)
+        if 'bandscore' not in userscores[username]:
+            userscores[username]['bandscore'] = callsignscores[callsign].get('bandscore', 0)
+        else:
+            userscores[username]['bandscore'] += callsignscores[callsign].get('bandscore', 0)
+        if 'gridscore' not in userscores[username]:
+            userscores[username]['gridscore'] = callsignscores[callsign].get('gridscore', 0)
+        else:
+            userscores[username]['gridscore'] += callsignscores[callsign].get('gridscore', 0)
+        if 'mygridscore' not in userscores[username]:
+            userscores[username]['mygridscore'] = callsignscores[callsign].get('mygridscore', 0)
+        else:
+            userscores[username]['mygridscore'] += callsignscores[callsign].get('mygridscore', 0)
+        if 'totalscore' not in userscores[username]:
+            userscores[username]['totalscore'] = callsignscores[callsign].get('totalscore', 0)
+        else:
+            userscores[username]['totalscore'] += callsignscores[callsign].get('totalscore', 0)
+        if 'qsos' not in userscores[username]:
+            userscores[username]['qsos'] = callsignscores[callsign].get('qsos', 0)
+        else:
+            userscores[username]['qsos'] += callsignscores[callsign].get('qsos', 0)
+    pprint(userscores)
     return render_template('scoreboard.html', callsignscores=callsignscores, callscore=callscore, bandscore=bandscore,
-                           modescore=modescore, gridscore=gridscore, mygridscore=mygridscore)
+                           modescore=modescore, gridscore=gridscore, mygridscore=mygridscore, userscores=userscores)
