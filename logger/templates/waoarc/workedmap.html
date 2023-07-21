@@ -61,6 +61,24 @@
           </div>
     </div>
     <div class="box">
+        <div class="tabs is-toggle is-fullwidth">
+            <ul>
+                <li {% if request.path == "/waoarc/workedmap" %}class="is-active"{% endif %}>
+                    <a href="{{ url_for('waoarc.workedmap') }}">
+                        <span class="icon is-small"><i class="fa-solid fa-person-digging"></i></span>
+                        <span>Grids Worked</span>
+                    </a>
+                </li>
+                <li {% if request.path == "/waoarc/activatedmap" %}class="is-active"{% endif %}>
+                    <a href="{{ url_for('waoarc.activatedmap') }}">
+                        <span class="icon is-small"><i class="fa-solid fa-person-walking"></i></span>
+                        <span>Grids Activated</span>
+                    </a>
+                </li>
+            </ul>
+          </div>
+    </div>
+    <div class="box">
         <div style="height: 480px;" id="map"></div>
     </div>
 {% endblock %}
@@ -86,8 +104,8 @@ L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 	};
 
 	info.update = function (props) {
-		const contents = props ? `<b>${props.name}</b><br />${props.qsos} QSOs made from this square` : 'Hover over a square';
-		this._div.innerHTML = `<h4>Gridsquares Worked</h4>${contents}`;
+		const contents = props ? `<b>${props.name}</b><br />${props.qsos} QSOs {% if request.path == "/waoarc/workedmap" %}working{% else %}made from{% endif %} this square` : 'Hover over a square';
+		this._div.innerHTML = `<h4>Gridsquares {% if request.path == "/waoarc/workedmap" %}Worked{% else %}Activated{% endif %}</h4>${contents}`;
 	};
 
 	info.addTo(map);
