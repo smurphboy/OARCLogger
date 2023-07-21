@@ -31,9 +31,9 @@
 {% block hero %}is-primary{% endblock %}
 {% block herobody %}
 			<h1 class="title algolia-lvl0">
-				{% block title %} <p>Gridsquares Worked by all members</p> {% endblock %}
+				<p>Gridsquares {% if request.path == "/waoarc/workedmap" %}Worked{% else %}Activated{% endif %} by all members</p>
 			</h1>
-            <p class="subtitle">Members have worked {{ totalgrids }} gridsquares</p>
+            <p class="subtitle">Members have {% if request.path == "/waoarc/workedmap" %}worked{% else %}activated{% endif %} {{ totalgrids }} gridsquares</p>
 {% endblock %}
 {% block content %}
     <div class="box">
