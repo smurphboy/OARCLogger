@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+{% block hero %}is-primary{% endblock %}
+{% block herobody %}
+			<h1 class="title algolia-lvl0">
+				{% block title %} <p>{{ user }}'s Gridsquares</p> {% endblock %}
+			</h1>
+            <p class="subtitle">QSOs by Gridsquare</p>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="box">
+            <div class="tabs is-toggle is-fullwidth">
+                <ul>
+                    <li>
+                        <a href="{{ url_for('waoarc.gridtable') }}">
+                            <span class="icon is-small"><i class="fa-solid fa-table"></i></span>
+                            <span>Table</span>
+                        </a>
+                    </li>
+                    <li class="is-active">
+                        <a href="{{ url_for('dashboard.mygridchart', user=user) }}">
+                            <span class="icon is-small"><i class="fa-solid fa-chart-pie"></i></span>
+                            <span>Chart</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('dashboard.myworkedmap', user=user) }}">
+                            <span class="icon is-small"><i class="fa-solid fa-map-location-dot"></i></span>
+                            <span>Map</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="tile is-ancestor">
+            <div class="tile is-vertical is-parent">
+                <div class="tile is-child box">
+                    <h1 class="title">QSOs by Gridsquare worked</h1>
+                    <div>
+                        <canvas id="grid"></canvas>
+                    </div>
+                </div>           
+            </div>
+            <div class="tile is-vertical is-parent">
+                <div class="tile is-child box">
+                    <h1 class="title">QSOs by Gridsquare activated</h1>
+                    <div>
+                        <canvas id="mygrid"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                {% for callsign, squares in squaresbycall.items() %}
+                <div class="box">
+                    <p class="title">{{ callsign }} Gridsquares Worked</p>
+                    <div>
+                        <canvas id="{{ callsign }}W"></canvas>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="column">
+                {% for callsign, squares in mysquaresbycall.items() %}
+                <div class="box">
+                    <p class="title">{{ callsign }} Gridsquares Activated</p>
+                    <div>
+                        <canvas id="{{ callsign }}A"></canvas>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block bottombody %}
+<script>
+const ctx = document.getElementById('grid');
+const ctx1 = document.getElementById('mygrid');
+{% for callsign, squares in squaresbycall.items() %}
+const {{callsign}}W = document.getElementById('{{ callsign }}W');
+const {{callsign}}A = document.getElementById('{{ callsign }}A');
+{% endfor %}
+
+
+new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: {{ gridlabels|safe }},
+        datasets: [{
+            label: 'QSOs by Gridsquares worked',
+            data: {{ gridvalues }},
+            hoverOffset: 4
+            }]
+    }
+});
+
+new Chart(ctx1, {
+    type: 'doughnut',
+    data: {
+        labels: {{ mygridlabels|safe }},
+        datasets: [{
+            label: 'QSOs by Gridsquares activated',
+            data: {{ mygridvalues }},
+            hoverOffset: 4
+            }]
+    }
+});
+
+{% for callsign, squares in squaresbycall.items() %}
+new Chart({{ callsign }}W, {
+    type: 'doughnut',
+    data: {
+        labels: [{% for square in squares %}"{{ square[0] }}"{{ ", " if not loop.last else "" }}{% endfor %}],
+        datasets: [{
+            label: 'QSOs by Gridsquares worked',
+            data: [{% for square in squares %}{{ square[1] }}{{ ", " if not loop.last else "" }}{% endfor %}],
+            hoverOffset: 4
+            }]
+    }
+});
+{% endfor %}
+
+{% for callsign, squares in mysquaresbycall.items() %}
+new Chart({{ callsign }}A, {
+    type: 'doughnut',
+    data: {
+        labels: [{% for square in squares %}"{{ square[0] }}"{{ ", " if not loop.last else "" }}{% endfor %}],
+        datasets: [{
+            label: 'QSOs by Gridsquares worked',
+            data: [{% for square in squares %}{{ square[1] }}{{ ", " if not loop.last else "" }}{% endfor %}],
+            hoverOffset: 4
+            }]
+    }
+});
+{% endfor %}
+
+</script>
+{% endblock %}

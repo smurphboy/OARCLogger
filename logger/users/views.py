@@ -114,6 +114,7 @@ def logout():
 @users.route('/home')
 @login_required
 def home():
+    user = current_user.name
     callsigns = Callsign.query.filter_by(user_id=current_user.get_id()).all()
     calls = []
     countries = {}
@@ -146,7 +147,12 @@ def home():
     totalqsos = QSO.query.filter(QSO.station_callsign.in_(calls)).count()
     #totaldxcc = QSO.query.filter(QSO.station_callsign.in_(calls)).with_entities(QSO.dxcc).distinct().count()
     qsopartycounts = db.session.query(QSO.station_callsign, QSO.call, db.func.count("QSO.id")).filter(QSO.station_callsign.in_(calls)).group_by(QSO.station_callsign, QSO.call).having(db.func.count("QSO.id")>2).order_by(db.func.count("QSO.id").desc()).limit(10).all()
-    return render_template('home.html', totalqsos=totalqsos, dxcccounts=sortedcountries, bands=bands, modes=modes, calls=calls, qsopartycounts=qsopartycounts)
+    facts = {}
+    usercalls = Callsign.query.with_entities(Callsign.name).join(User, Callsign.user_id==User.id).filter(User.name==user).all()
+    facts['grids'] = db.session.query(func.left(QSO.gridsquare,4), func.count(QSO.id)).filter(QSO.station_callsign.in_(usercalls[0]), QSO.gridsquare.isnot(None)).group_by(func.left(QSO.gridsquare,4)).count()
+    facts['mygrids'] = db.session.query(func.left(QSO.my_gridsquare,4), func.count(QSO.id)).filter(QSO.station_callsign.in_(usercalls[0]), QSO.my_gridsquare.isnot(None)).group_by(func.left(QSO.my_gridsquare,4)).count()
+    return render_template('home.html', totalqsos=totalqsos, dxcccounts=sortedcountries, bands=bands, modes=modes, calls=calls, qsopartycounts=qsopartycounts,
+                           facts = facts)
 
 
 @users.errorhandler(403)

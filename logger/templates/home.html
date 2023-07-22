@@ -66,8 +66,31 @@
                     {% endif %}
                 </div>
                 <div class="tile is-child box">
-                    <h1 class="title"><i class="fa-solid fa-map-location-dot"></i> Maps - Coming Soon</h1>
-                    <p class="subtitle">Most Recent QSOs</p>
+                    <h1 class="title"><i class="fa-solid fa-map-location-dot"></i> Grids</h1>
+                    <p class="subtitle">You have worked {{ facts.grids }} Gridsquares and activated {{ facts.mygrids }} Gridsquares across all Callsigns</p>
+
+                    <div class="tabs is-toggle is-fullwidth">
+                        <ul>
+                            <li>
+                                <a href="{{ url_for('dashboard.gridtable') }}">
+                                    <span class="icon is-small"><i class="fa-solid fa-table"></i></span>
+                                    <span>Table</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('dashboard.mygridchart', user=current_user) }}">
+                                    <span class="icon is-small"><i class="fa-solid fa-chart-pie"></i></span>
+                                    <span>Chart</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('dashboard.myworkedmap', user=current_user) }}">
+                                    <span class="icon is-small"><i class="fa-solid fa-map-location-dot"></i></span>
+                                    <span>Map</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

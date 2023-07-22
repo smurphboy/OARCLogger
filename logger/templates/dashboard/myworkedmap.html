@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style type="text/css">
+.info {
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+}
+.info h4 {
+    margin: 0 0 5px;
+    color: #777;
+}
+    .legend {
+    line-height: 18px;
+    color: #555;
+}
+.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+}
+</style>
+{% endblock %}
+{% block hero %}is-primary{% endblock %}
+{% block herobody %}
+			<h1 class="title algolia-lvl0">
+				<p>Gridsquares {% if request.path.startswith("/dashboard/myworkedmap/") %}Worked{% else %}Activated{% endif %} by {{ user }}</p>
+			</h1>
+            <p class="subtitle">{{ user }} has {% if request.path.startswith("/dashboard/myworkedmap/") %}worked{% else %}activated{% endif %} {{ totalgrids }} gridsquares</p>
+{% endblock %}
+{% block content %}
+    <div class="box">
+        <div class="tabs is-toggle is-fullwidth">
+            <ul>
+                <li>
+                    <a href="{{ url_for('dashboard.gridtable') }}">
+                        <span class="icon is-small"><i class="fa-solid fa-table"></i></span>
+                        <span>Table</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('dashboard.mygridchart', user=user) }}">
+                        <span class="icon is-small"><i class="fa-solid fa-chart-pie"></i></span>
+                        <span>Chart</span>
+                    </a>
+                </li>
+                <li class="is-active">
+                    <a href="{{ url_for('dashboard.myworkedmap', user=user) }}">
+                        <span class="icon is-small"><i class="fa-solid fa-map-location-dot"></i></span>
+                        <span>Map</span>
+                    </a>
+                </li>
+            </ul>
+          </div>
+    </div>
+    <div class="box">
+        <div class="tabs is-toggle is-fullwidth">
+            <ul>
+                <li {% if request.path.startswith("/dashboard/myworkedmap/") %}class="is-active"{% endif %}>
+                    <a href="{{ url_for('dashboard.myworkedmap', user=user) }}">
+                        <span class="icon is-small"><i class="fa-solid fa-person-digging"></i></span>
+                        <span>Grids Worked</span>
+                    </a>
+                </li>
+                <li {% if request.path.startswith("/dashboard/myactivatedmap/") %}class="is-active"{% endif %}>
+                    <a href="{{ url_for('dashboard.myactivatedmap', user=user) }}">
+                        <span class="icon is-small"><i class="fa-solid fa-person-walking"></i></span>
+                        <span>Grids Activated</span>
+                    </a>
+                </li>
+            </ul>
+          </div>
+    </div>
+    <div class="box">
+        <div style="height: 480px;" id="map"></div>
+    </div>
+{% endblock %}
+{% block bottombody %}
+<!-- Make sure you put this AFTER Leaflet's CSS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+var gridsquares = {{ gridsquares|safe }}
+
+var map = L.map('map').setView([51.505, -0.09], 4);
+
+L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+	// control that shows state info on hover
+	const info = L.control();
+
+	info.onAdd = function (map) {
+		this._div = L.DomUtil.create('div', 'info');
+		this.update();
+		return this._div;
+	};
+
+	info.update = function (props) {
+		const contents = props ? `<b>${props.name}</b><br />${props.qsos} QSOs {% if request.path == "/waoarc/workedmap" %}working{% else %}made from{% endif %} this square` : 'Hover over a square';
+		this._div.innerHTML = `<h4>Gridsquares {% if request.path == "/waoarc/workedmap" %}Worked{% else %}Activated{% endif %}</h4>${contents}`;
+	};
+
+	info.addTo(map);
+
+function getColor(d) {
+    return d > 250 ? '#7f2704' :
+           d > 100 ? '#a63603' :
+           d > 50  ? '#d94801' :
+           d > 20  ? '#f16913' :
+           d > 10  ? '#fd8d3c' :
+           d > 5   ? '#fdae6b' :
+           d > 2   ? '#fdd0a2' :
+           d > 1   ? '#fee6ce' :
+                     '#fff5eb'
+}
+
+function style(feature) {
+    return {
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.7,
+        fillColor: getColor(feature.properties.qsos)
+    };
+}
+
+function highlightFeature(e) {
+    var layer = e.target;
+
+    layer.setStyle({
+        weight: 5,
+        color: '#666',
+        dashArray: '',
+        fillOpacity: 0.7
+    });
+
+    layer.bringToFront();
+    info.update(layer.feature.properties);
+}
+
+
+/* global statesData */
+var geojson = L.geoJson(gridsquares, {
+    style : style,
+    onEachFeature : onEachFeature
+}).addTo(map);
+
+// map.fitBounds(geojson.getBounds());
+
+function resetHighlight(e) {
+    geojson.resetStyle(e.target);
+    info.update();
+}
+
+function zoomToFeature(e) {
+    map.fitBounds(e.target.getBounds());
+}
+
+function onEachFeature(feature, layer) {
+    layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlight,
+        click: zoomToFeature
+    });
+}
+
+const legend = L.control({position: 'bottomright'});
+
+legend.onAdd = function (map) {
+
+    const div = L.DomUtil.create('div', 'info legend');
+    const grades = [0, 1, 2, 5, 10, 20, 50, 100, 250];
+    const labels = [];
+    let from, to;
+
+    for (let i = 0; i < grades.length; i++) {
+        from = grades[i];
+        to = grades[i + 1];
+
+        labels.push(`<i style="background:${getColor(from + 1)}"></i> ${from}${to ? `&ndash;${to}` : '+'}`);
+    }
+
+    div.innerHTML = labels.join('<br>');
+    return div;
+};
+
+legend.addTo(map);
+
+</script>
+{% endblock %}
