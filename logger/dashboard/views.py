@@ -245,13 +245,28 @@ def mygridchart(user):
                            mysquaresbycall=mysquaresbycall, user=user)
 
 
-@dashboard.route("/gridtable")
-def gridtable():
-    gridmembers = db.session.query(User.name, func.string_agg(db.distinct(Callsign.name), ', '), db.func.count(db.distinct(func.left(QSO.gridsquare,4)))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(func.left(QSO.gridsquare,4))).desc()).all()
-    mygridmembers = db.session.query(User.name, func.string_agg(db.distinct(Callsign.name), ', '), db.func.count(db.distinct(func.left(QSO.my_gridsquare,4)))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(func.left(QSO.my_gridsquare,4))).desc()).all()
-    gridqsos = db.session.query(func.left(QSO.gridsquare, 4), func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(func.left(QSO.gridsquare,4)).order_by(func.left(QSO.gridsquare,4).desc()).all()
-    mygridqsos = db.session.query(func.left(QSO.my_gridsquare, 4), func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(func.left(QSO.my_gridsquare,4)).order_by(func.left(QSO.my_gridsquare,4).desc()).all()
-    return render_template('gridtable.html', gridmembers=gridmembers, mygridmembers=mygridmembers, gridqsos=gridqsos, mygridqsos=mygridqsos)
+@dashboard.route("/mygridtable/<user>")
+def mygridtable(user):
+    usercalls = Callsign.query.with_entities(Callsign.name).join(User, Callsign.user_id==User.id).filter(User.name==user).all()
+    squares = db.session.query(func.left(QSO.gridsquare,4), func.count(QSO.id)).filter(QSO.station_callsign.in_([lis[0] for lis in usercalls])).group_by(func.left(QSO.gridsquare,4)).all()
+    labels = list(map(list, zip(*squares)))[0]
+    gridlabels = ['None' if v is None else v for v in labels]
+    gridvalues = list(map(list, zip(*squares)))[1]
+    mysquares = db.session.query(func.left(QSO.my_gridsquare,4), func.count(QSO.id)).filter(QSO.station_callsign.in_([lis[0] for lis in usercalls])).group_by(func.left(QSO.my_gridsquare,4)).all()
+    labels = list(map(list, zip(*mysquares)))[0]
+    mygridlabels = ['None' if v is None else v for v in labels]
+    mygridvalues = list(map(list, zip(*mysquares)))[1]
+    squaresbycall = {}
+    for call in usercalls:
+        if db.session.query(func.left(QSO.gridsquare,4), func.count(QSO.id)).filter(QSO.station_callsign==call[0]).group_by(func.left(QSO.gridsquare,4)).count() >0:
+            squaresbycall[call[0]] = db.session.query(func.left(QSO.gridsquare,4), func.count(QSO.id)).filter(QSO.station_callsign==call[0]).group_by(func.left(QSO.gridsquare,4)).all()
+    mysquaresbycall = {}
+    for call in usercalls:
+        if db.session.query(func.left(QSO.my_gridsquare,4), func.count(QSO.id)).filter(QSO.station_callsign==call[0]).group_by(func.left(QSO.my_gridsquare,4)).count() >0:
+            mysquaresbycall[call[0]] = db.session.query(func.left(QSO.my_gridsquare,4), func.count(QSO.id)).filter(QSO.station_callsign==call[0]).group_by(func.left(QSO.my_gridsquare,4)).all()  
+    return render_template('mygridtable.html', gridlabels=gridlabels, gridvalues=gridvalues, mygridlabels=mygridlabels,
+                           mygridvalues=mygridvalues, squares=squares, mysquares=mysquares, squaresbycall=squaresbycall,
+                           mysquaresbycall=mysquaresbycall, user=user)
 
 
 @dashboard.route("/myworkedmap/<user>")

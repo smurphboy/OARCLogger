@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<link href="https://cdn.datatables.net/v/bm/dt-1.13.4/cr-1.6.2/fc-4.2.2/fh-3.3.2/rg-1.3.1/sb-1.4.2/sp-2.1.2/sl-1.6.2/datatables.min.css" rel="stylesheet"/>
+<script src="https://cdn.datatables.net/v/bm/dt-1.13.4/cr-1.6.2/fc-4.2.2/fh-3.3.2/rg-1.3.1/sb-1.4.2/sp-2.1.2/sl-1.6.2/datatables.min.js"></script>
+{% endblock %}
+{% block hero %}is-primary{% endblock %}
+{% block herobody %}
+			<h1 class="title algolia-lvl0">
+				{% block title %} <p>Gridsquares</p> {% endblock %}
+			</h1>
+            <p class="subtitle">QSOs by Gridsquare</p>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="box">
+            <div class="tabs is-toggle is-fullwidth">
+                <ul>
+                    <li class="is-active">
+                        <a href="{{ url_for('dashboard.mygridtable', user=user) }}">
+                            <span class="icon is-small"><i class="fa-solid fa-table"></i></span>
+                            <span>Table</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('dashboard.mygridchart', user=user) }}">
+                            <span class="icon is-small"><i class="fa-solid fa-chart-pie"></i></span>
+                            <span>Chart</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('dashboard.myworkedmap', user=user) }}">
+                            <span class="icon is-small"><i class="fa-solid fa-map-location-dot"></i></span>
+                            <span>Map</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="tile is-ancestor">
+            <div class="tile is-vertical is-parent">
+                <div class="tile is-child box">
+                    <h1 class="title">QSOs by Gridsquare Worked</h1>
+                    <table id="memberw" class="table is-striped is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>Gridsquare</th>
+                                <th>QSOs</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for square in squares %}
+                            <tr>
+                                <td>{{ square[0] }}</td>
+                                <td>{{ square[1] }}</td>
+                            </tr>
+                            {% else %}
+                            No Gridsquare data
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% for callsign, squares in squaresbycall.items() %}
+                <div class="tile is-child box">
+                    <h1 class="title">{{ callsign }} QSOs by Gridsquare Worked</h1>
+                    <table id="{{ callsign }}w" class="table is-striped is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>Gridsquare</th>
+                                <th>QSOs</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for square in squares %}
+                            <tr>
+                                <td>{{ square[0] }}</td>
+                                <td>{{ square[1] }}</td>
+                            </tr>
+                            {% else %}
+                            No Gridsquare data
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="tile is-vertical is-parent">
+                <div class="tile is-child box">
+                    <h1 class="title">QSOs by Gridsquare Activated</h1>
+                    <table id="membera" class="table is-striped is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>Gridsquare</th>
+                                <th>QSOs</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for square in mysquares %}
+                            <tr>
+                                <td>{{ square[0] }}</td>
+                                <td>{{ square[1] }}</td>
+                            </tr>
+                            {% else %}
+                            No Gridsquare data
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% for callsign, squares in mysquaresbycall.items() %}
+                <div class="tile is-child box">
+                    <h1 class="title">{{ callsign }} QSOs by Gridsquare Activated</h1>
+                    <table id="{{ callsign }}a" class="table is-striped is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>Gridsquare</th>
+                                <th>QSOs</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for square in squares %}
+                            <tr>
+                                <td>{{ square[0] }}</td>
+                                <td>{{ square[1] }}</td>
+                            </tr>
+                            {% else %}
+                            No Gridsquare data
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block bottombody %}
+<script>
+$(document).ready(function () {
+    $('#memberw').DataTable({
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        stateSave: true,
+        order: [[1, 'desc']]
+    });
+
+    $('#membera').DataTable({
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        stateSave: true,
+        order: [[1, 'desc']]
+    });
+
+{% for callsign, squares in squaresbycall.items() %}
+
+$('#{{ callsign }}w').DataTable({
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        stateSave: true,
+        order: [[1, 'desc']]
+    });
+
+    $('#{{ callsign }}a').DataTable({
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        stateSave: true,
+        order: [[1, 'desc']]
+    });
+
+{% endfor %}
+});
+</script>
+{% endblock %}
