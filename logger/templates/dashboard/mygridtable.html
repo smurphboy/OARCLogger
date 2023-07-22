@@ -156,7 +156,7 @@ $(document).ready(function () {
 
 {% for callsign, squares in squaresbycall.items() %}
 
-$('#{{ callsign }}w').DataTable({
+    $('#{{ callsign }}w').DataTable({
         lengthMenu: [
             [10, 25, 50, -1],
             [10, 25, 50, 'All'],
@@ -165,7 +165,7 @@ $('#{{ callsign }}w').DataTable({
         order: [[1, 'desc']]
     });
 
-    $('#{{ callsign }}').DataTable({
+    $('#{{ callsign }}a').DataTable({
         lengthMenu: [
             [10, 25, 50, -1],
             [10, 25, 50, 'All'],
