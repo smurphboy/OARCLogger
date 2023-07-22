@@ -83,8 +83,8 @@
 const ctx = document.getElementById('grid');
 const ctx1 = document.getElementById('mygrid');
 {% for callsign, squares in squaresbycall.items() %}
-const {{callsign}}W = document.getElementById('{{ callsign }}W');
-const {{callsign}}A = document.getElementById('{{ callsign }}A');
+const c{{ callsign|replace('/', '_') }}W = document.getElementById('{{ callsign }}W');
+const c{{ callsign|replace('/', '_') }}A = document.getElementById('{{ callsign }}A');
 {% endfor %}
 
 
@@ -113,7 +113,7 @@ new Chart(ctx1, {
 });
 
 {% for callsign, squares in squaresbycall.items() %}
-new Chart({{ callsign }}W, {
+new Chart(c{{ callsign|replace('/', '_') }}W, {
     type: 'doughnut',
     data: {
         labels: [{% for square in squares %}"{{ square[0] }}"{{ ", " if not loop.last else "" }}{% endfor %}],
@@ -127,7 +127,7 @@ new Chart({{ callsign }}W, {
 {% endfor %}
 
 {% for callsign, squares in mysquaresbycall.items() %}
-new Chart({{ callsign }}A, {
+new Chart(c{{ callsign|replace('/', '_') }}A, {
     type: 'doughnut',
     data: {
         labels: [{% for square in squares %}"{{ square[0] }}"{{ ", " if not loop.last else "" }}{% endfor %}],

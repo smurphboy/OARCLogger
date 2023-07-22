@@ -272,7 +272,7 @@ def mygridtable(user):
 @dashboard.route("/myworkedmap/<user>")
 def myworkedmap(user):
     usercalls = Callsign.query.with_entities(Callsign.name).join(User, Callsign.user_id==User.id).filter(User.name==user).all()
-    squares = db.session.query(func.left(QSO.gridsquare,4), func.count(QSO.id)).filter(QSO.station_callsign.in_(usercalls[0])).group_by(func.left(QSO.gridsquare,4)).all()
+    squares = db.session.query(func.left(QSO.gridsquare,4), func.count(QSO.id)).filter(QSO.station_callsign.in_([lis[0] for lis in usercalls])).group_by(func.left(QSO.gridsquare,4)).all()
     features = []
     mlayer = {}
     for square in squares:
@@ -290,7 +290,7 @@ def myworkedmap(user):
 @dashboard.route("/myactivatedmap/<user>")
 def myactivatedmap(user):
     usercalls = Callsign.query.with_entities(Callsign.name).join(User, Callsign.user_id==User.id).filter(User.name==user).all()
-    squares = db.session.query(func.left(QSO.my_gridsquare,4), func.count(QSO.id)).filter(QSO.station_callsign.in_(usercalls[0])).group_by(func.left(QSO.my_gridsquare,4)).all()
+    squares = db.session.query(func.left(QSO.my_gridsquare,4), func.count(QSO.id)).filter(QSO.station_callsign.in_([lis[0] for lis in usercalls])).group_by(func.left(QSO.my_gridsquare,4)).all()
     features = []
     mlayer = {}
     for square in squares:
