@@ -224,7 +224,7 @@ def dxccmap():
         # print(feature['properties']['dxcc_entity_code'])
         if dxcccount.get(feature['properties']['dxcc_entity_code'], 0) != 0:
             feature['properties']['count'] = dxcccount.get(feature['properties']['dxcc_entity_code'], 0)
-            print(dxcccount.get(feature['properties']['dxcc_entity_code'], 0), feature['properties']['dxcc_name'])
+            # print(dxcccount.get(feature['properties']['dxcc_entity_code'], 0), feature['properties']['dxcc_name'])
     return render_template('dxccmap.html', totaldxcc=totaldxcc, dxccsquares=gj)
 
 @waoarc.route("/gridchart")
