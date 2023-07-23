@@ -42,6 +42,24 @@
                 <div class="tile is-child box">
                     <h1 class="title"><i class="fa-solid fa-tower-broadcast"></i> Bands and Modes</h1>
                     <p>You have worked {{ bands|length }} Bands and {{ modes|length }} Modes across all your Callsigns</p>
+                    <div class="box">
+                        <div class="tabs is-toggle is-fullwidth">
+                            <ul>
+                                <li>
+                                    <a href="{{ url_for('dashboard.mybandstable', user=current_user) }}">
+                                        <span class="icon is-small"><i class="fa-solid fa-table"></i></span>
+                                        <span>Table</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ url_for('dashboard.mybandschart', user=current_user) }}">
+                                        <span class="icon is-small"><i class="fa-solid fa-chart-pie"></i></span>
+                                        <span>Chart</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 <div class="tile is-child box">
                     <h1 class="title"><i class="fa-regular fa-calendar"></i> Time and Date</h1>
