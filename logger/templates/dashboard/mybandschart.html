@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<link href="https://cdn.datatables.net/v/bm/dt-1.13.4/cr-1.6.2/fc-4.2.2/fh-3.3.2/rg-1.3.1/sb-1.4.2/sp-2.1.2/sl-1.6.2/datatables.min.css" rel="stylesheet"/>
+<script src="https://cdn.datatables.net/v/bm/dt-1.13.4/cr-1.6.2/fc-4.2.2/fh-3.3.2/rg-1.3.1/sb-1.4.2/sp-2.1.2/sl-1.6.2/datatables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+{% block hero %}is-primary{% endblock %}
+{% block herobody %}
+			<h1 class="title algolia-lvl0">
+				<p>{{ user }}'s QSOs by Bands & Modes</p>
+			</h1>
+            <p class="subtitle">QSOs by Band and Mode</p>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="box">
+            <div class="tabs is-toggle is-fullwidth">
+                <ul>
+                    <li>
+                        <a href="{{ url_for('dashboard.mybandstable', user=user) }}">
+                            <span class="icon is-small"><i class="fa-solid fa-table"></i></span>
+                            <span>Table</span>
+                        </a>
+                    </li>
+                    <li class="is-active">
+                        <a href="{{ url_for('dashboard.mybandschart', user=user) }}">
+                            <span class="icon is-small"><i class="fa-solid fa-chart-pie"></i></span>
+                            <span>Chart</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <div class="box">
+                    <h1 class="title">All QSOs</h1>
+                    <p class="subtitle">Bands</p>
+                    <div>
+                        <canvas id="allbands"></canvas>
+                    </div>
+                </div>
+                {% for callsign, band in bandsbycall.items() %}
+                <div class="box">
+                    <h1 class="title">{{ callsign }} QSOs</h1>
+                    <p class="subtitle">Bands</p>
+                    <div>
+                        <canvas id="c{{ callsign }}bands"></canvas>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="column">
+                <div class="box">
+                    <h1 class="title">All QSOs</h1>
+                    <p class="subtitle">Modes</p>
+                    <div>
+                        <canvas id="allmodes"></canvas>
+                    </div>
+                </div>
+                {% for callsign, mode in modesbycall.items() %}
+                <div class="box">
+                    <h1 class="title">{{ callsign }} QSOs</h1>
+                    <p class="subtitle">Modes</p>
+                    <div>
+                        <canvas id="c{{ callsign }}modes"></canvas>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="column">
+                <div class="box">
+                    <h1 class="title">All QSOs</h1>
+                    <p class="subtitle">Propagation Mode</p>
+                    <div>
+                        <canvas id="allprop"></canvas>
+                    </div>
+                </div>
+                {% for callsign, pmode in pmodesbycall.items() %}
+                <div class="box">
+                    <h1 class="title">{{ callsign }} QSOs</h1>
+                    <p class="subtitle">Propagation Modes</p>
+                    <div>
+                        <canvas id="c{{ callsign }}pmodes"></canvas>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block bottombody %}
+<script>
+const ctx = document.getElementById('allbands');
+const ctx1 = document.getElementById('allmodes');
+const ctx2 = document.getElementById('allprop');
+{% for callsign, mode in modesbycall.items() %}
+const c{{ callsign|replace('/', '_')  }}bands = document.getElementById('c{{ callsign }}bands');
+const c{{ callsign|replace('/', '_')  }}modes = document.getElementById('c{{ callsign }}modes');
+const c{{ callsign|replace('/', '_')  }}pmodess = document.getElementById('c{{ callsign }}pmodes');
+{% endfor %}
+
+
+new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: {{ bandlabels|safe }},
+        datasets: [{
+            label: 'QSOs by Band',
+            data: {{ bandvalues }},
+            hoverOffset: 4
+            }]
+    }
+});
+
+new Chart(ctx1, {
+    type: 'doughnut',
+    data: {
+        labels: {{ modelabels|safe }},
+        datasets: [{
+            label: 'QSOs by Mode',
+            data: {{ modevalues }},
+            hoverOffset: 4
+            }]
+    }
+});
+
+new Chart(ctx2, {
+    type: 'doughnut',
+    data: {
+        labels: {{ propmodelabels|safe }},
+        datasets: [{
+            label: 'QSOs by Propogation Mode',
+            data: {{ propmodevalues }},
+            hoverOffset: 4
+            }]
+    }
+});
+
+{% for callsign, bands in bandsbycall.items() %}
+new Chart(c{{callsign|replace('/', '_') }}bands, {
+    type: 'doughnut',
+    data: {
+        labels: [{% for band in bands %}"{{ band[0] }}"{{ ", " if not loop.last else "" }}{% endfor %}],
+        datasets: [{
+            label: 'QSOs by Band',
+            data: [{% for band in bands %}"{{ band[1] }}"{{ ", " if not loop.last else "" }}{% endfor %}],
+            hoverOffset: 4
+            }]
+    }
+});
+{% endfor %}
+{% for callsign, modes in modesbycall.items() %}
+new Chart(c{{callsign|replace('/', '_') }}modes, {
+    type: 'doughnut',
+    data: {
+        labels: [{% for mode in modes %}"{{ mode[0] }}"{{ ", " if not loop.last else "" }}{% endfor %}],
+        datasets: [{
+            label: 'QSOs by Mode',
+            data: [{% for mode in modes %}"{{ mode[1] }}"{{ ", " if not loop.last else "" }}{% endfor %}],
+            hoverOffset: 4
+            }]
+    }
+});
+{% endfor %}
+{% for callsign, pmodes in pmodesbycall.items() %}
+new Chart(c{{callsign|replace('/', '_') }}pmodes, {
+    type: 'doughnut',
+    data: {
+        labels: [{% for pmode in pmodes %}"{{ pmode[0] }}"{{ ", " if not loop.last else "" }}{% endfor %}],
+        datasets: [{
+            label: 'QSOs by Propogation Mode',
+            data: [{% for pmode in pmodes %}"{{ pmode[1] }}"{{ ", " if not loop.last else "" }}{% endfor %}],
+            hoverOffset: 4
+            }]
+    }
+});
+{% endfor %}
+</script>
+{% endblock %}

@@ -150,22 +150,57 @@ def dates():
     return render_template('dates.html', qsobyday=qsobyday, daylabels=daydates, dayvalues=dayvalues, weeklabels=weekdates,
                            weekvalues=weekvalues, usersbyday=usersbyday, qsobyweek=qsobyweek, usersbyweek=usersbyweek, facts=facts)
 
-@dashboard.route("/bands")
-def bands():
-    qsobybands = db.session.query(QSO.band, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.band).order_by(func.count(QSO.id).desc()).all()
+@dashboard.route("/mybandschart/<user>")
+def mybandschart(user):
+    usercalls = Callsign.query.with_entities(Callsign.name).join(User, Callsign.user_id==User.id).filter(User.name==user).all()
+    qsobybands = db.session.query(QSO.band, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.station_callsign.in_([lis[0] for lis in usercalls])).group_by(QSO.band).order_by(func.count(QSO.id).desc()).all()
     labels = list(map(list, zip(*qsobybands)))[0]
     bandlabels = ['None' if v is None else v for v in labels]
     bandvalues = list(map(list, zip(*qsobybands)))[1]
-    qsobymodes = db.session.query(QSO.mode, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.mode).order_by(func.count(QSO.id).desc()).all()
+    qsobymodes = db.session.query(QSO.mode, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.station_callsign.in_([lis[0] for lis in usercalls])).group_by(QSO.mode).order_by(func.count(QSO.id).desc()).all()
     labels = list(map(list, zip(*qsobymodes)))[0]
     modelabels = ['None' if v is None else v for v in labels]
     modevalues = list(map(list, zip(*qsobymodes)))[1]
-    qsobypropmodes = db.session.query(QSO.prop_mode, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.prop_mode).order_by(func.count(QSO.id).desc()).all()
+    qsobypropmodes = db.session.query(QSO.prop_mode, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.station_callsign.in_([lis[0] for lis in usercalls])).group_by(QSO.prop_mode).order_by(func.count(QSO.id).desc()).all()
     labels = list(map(list, zip(*qsobypropmodes)))[0]
     propmodelabels = ['None' if v is None else v for v in labels]
     propmodevalues = list(map(list, zip(*qsobypropmodes)))[1]
-    return render_template('bands.html', bandlabels=bandlabels, bandvalues=bandvalues, modelabels=modelabels, modevalues=modevalues, propmodelabels=propmodelabels,
-                           propmodevalues=propmodevalues)
+    bandsbycall = {}
+    for call in usercalls:
+        if db.session.query(QSO.band, func.count(QSO.id)).filter(QSO.station_callsign==call[0]).group_by(QSO.band).count() >0:
+            bandsbycall[call[0]] = db.session.query(QSO.band, func.count(QSO.id)).filter(QSO.station_callsign==call[0]).group_by(QSO.band).all()
+    modesbycall = {}
+    for call in usercalls:
+        if db.session.query(QSO.mode, func.count(QSO.id)).filter(QSO.station_callsign==call[0]).group_by(QSO.mode).count() >0:
+            modesbycall[call[0]] = db.session.query(QSO.mode, func.count(QSO.id)).filter(QSO.station_callsign==call[0]).group_by(QSO.mode).all()
+    pmodesbycall = {}
+    for call in usercalls:
+        if db.session.query(QSO.prop_mode, func.count(QSO.id)).filter(QSO.station_callsign==call[0]).group_by(QSO.prop_mode).count() >0:
+            pmodesbycall[call[0]] = db.session.query(QSO.prop_mode, func.count(QSO.id)).filter(QSO.station_callsign==call[0]).group_by(QSO.prop_mode).all()
+    return render_template('mybandschart.html', bandlabels=bandlabels, bandvalues=bandvalues, modelabels=modelabels, modevalues=modevalues, propmodelabels=propmodelabels,
+                           propmodevalues=propmodevalues, user=user, bandsbycall=bandsbycall, modesbycall=modesbycall, pmodesbycall=pmodesbycall)
+
+
+@dashboard.route("/mybandstable/<user>")
+def mybandstable(user):
+    usercalls = Callsign.query.with_entities(Callsign.name).join(User, Callsign.user_id==User.id).filter(User.name==user).all()
+    bands = db.session.query(QSO.band, func.count(QSO.id)).filter(QSO.station_callsign.in_([lis[0] for lis in usercalls])).group_by(QSO.band).all()
+    modes = db.session.query(QSO.mode, func.count(QSO.id)).filter(QSO.station_callsign.in_([lis[0] for lis in usercalls])).group_by(QSO.mode).all()
+    pmodes = db.session.query(QSO.prop_mode, func.count(QSO.id)).filter(QSO.station_callsign.in_([lis[0] for lis in usercalls])).group_by(QSO.prop_mode).all()
+    bandsbycall = {}
+    for call in usercalls:
+        if db.session.query(QSO.band, func.count(QSO.id)).filter(QSO.station_callsign==call[0]).group_by(QSO.band).count() >0:
+            bandsbycall[call[0]] = db.session.query(QSO.band, func.count(QSO.id)).filter(QSO.station_callsign==call[0]).group_by(QSO.band).all()
+    modesbycall = {}
+    for call in usercalls:
+        if db.session.query(QSO.mode, func.count(QSO.id)).filter(QSO.station_callsign==call[0]).group_by(QSO.mode).count() >0:
+            modesbycall[call[0]] = db.session.query(QSO.mode, func.count(QSO.id)).filter(QSO.station_callsign==call[0]).group_by(QSO.mode).all()  
+    pmodesbycall = {}
+    for call in usercalls:
+        if db.session.query(QSO.prop_mode, func.count(QSO.id)).filter(QSO.station_callsign==call[0]).group_by(QSO.prop_mode).count() >0:
+            pmodesbycall[call[0]] = db.session.query(QSO.prop_mode, func.count(QSO.id)).filter(QSO.station_callsign==call[0]).group_by(QSO.prop_mode).all()  
+    return render_template('mybandstable.html', bands=bands, modes=modes, pmodes=pmodes, user=user, bandsbycall=bandsbycall,
+                           modesbycall=modesbycall, pmodesbycall=pmodesbycall)
 
 
 @dashboard.route("/dxccchart")

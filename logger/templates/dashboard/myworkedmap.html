@@ -31,7 +31,7 @@
 {% block hero %}is-primary{% endblock %}
 {% block herobody %}
 			<h1 class="title algolia-lvl0">
-				<p>Gridsquares {% if request.path.startswith("/dashboard/myworkedmap/") %}Worked{% else %}Activated{% endif %} by {{ user }}</p>
+				<p>{{ user }}'s Gridsquares {% if request.path.startswith("/dashboard/myworkedmap/") %}Worked{% else %}Activated{% endif %}</p>
 			</h1>
             <p class="subtitle">{{ user }} has {% if request.path.startswith("/dashboard/myworkedmap/") %}worked{% else %}activated{% endif %} {{ totalgrids }} gridsquares</p>
 {% endblock %}
