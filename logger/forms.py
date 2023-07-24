@@ -73,7 +73,7 @@ class QSOForm(FlaskForm):
     tx_pwr = IntegerField('TX Power')
     gridsquare = StringField('Gridsquare', validators=[Length(max=10)])
     my_gridsquare = StringField('My Gridsquare', validators=[Length(max=10)])
-    comment = StringField('Comment', validators=[Length(max=255)])
+    comment = TextAreaField('Comment', validators=[Length(max=255)])
 
 class QSOUploadForm(FlaskForm):
     file = FileField('File')
