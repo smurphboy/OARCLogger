@@ -40,6 +40,15 @@
             </div>
             <div class="tile is-parent is-vertical">
                 <div class="tile is-child box">
+                    <h1 class="title"><i class="fa-regular fa-calendar"></i><a href="{{ url_for('dashboard.mydates', user=current_user) }}"> Time and Date</a></h1>
+                    <p class="subtitle">Last QSOs for each callsign</p>
+                    <ul>
+                        {% for call in calls %}
+                        <li><span class="has-text-weight-semibold">{{ call }}</span>: {{ latestqso(call) }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="tile is-child box">
                     <h1 class="title"><i class="fa-solid fa-tower-broadcast"></i> Bands and Modes</h1>
                     <p>You have worked {{ bands|length }} Bands and {{ modes|length }} Modes across all your Callsigns</p>
                     <div class="box">
@@ -60,15 +69,6 @@
                             </ul>
                         </div>
                     </div>
-                </div>
-                <div class="tile is-child box">
-                    <h1 class="title"><i class="fa-regular fa-calendar"></i> Time and Date</h1>
-                    <p class="subtitle">Last QSOs for each callsign</p>
-                    <ul>
-                        {% for call in calls %}
-                        <li><span class="has-text-weight-semibold">{{ call }}</span>: {{ latestqso(call) }}</li>
-                        {% endfor %}
-                    </ul>
                 </div>
             </div>
             <div class="tile is-parent is-vertical">

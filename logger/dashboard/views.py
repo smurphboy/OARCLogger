@@ -8,7 +8,7 @@ from flask import (Blueprint, abort, current_app, flash, jsonify, redirect,
 from flask_login import current_user, login_required, login_user, logout_user
 from geojson import Feature, Polygon, FeatureCollection, load as gjload
 from pprint import pprint
-from sqlalchemy import desc, func, and_
+from sqlalchemy import desc, func, and_, column
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from logger.forms import CallsignForm
@@ -128,27 +128,30 @@ def userchart():
                            callsignvalues=callsignvalues, unclaimedlabels=unclaimedlabels, unclaimedvalues=unclaimedvalues)
 
 
-@dashboard.route("/dates")
-def dates():
-    '''All the date and time related info for the Leaderboard Dates detail page'''
-    facts={}
-    facts['totalusers'] = User.query.count()
-    qsobyday = db.session.query(QSO.qso_date, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.qso_date).order_by(QSO.qso_date).all()
-    daylabels = list(map(list, zip(*qsobyday)))[0]
+@dashboard.route("/mydates/<user>")
+def mydates(user):
+    '''All the date and time related info for the Dashboard Dates detail page'''
+    usercalls = Callsign.query.with_entities(Callsign.name).join(User, Callsign.user_id==User.id).filter(User.name==user).all()
+    userfirstqso = QSO.query.with_entities(QSO.qso_date).filter(QSO.station_callsign.in_([lis[0] for lis in usercalls])).order_by(QSO.qso_date).first()
+    userlastqso = QSO.query.with_entities(QSO.qso_date).filter(QSO.station_callsign.in_([lis[0] for lis in usercalls])).order_by(QSO.qso_date.desc()).first()
+    date_list = func.generate_series(userfirstqso[0], userlastqso[0], '1 day').alias('day')
+    day = column('day')
+    userqsosbyday = db.session.query(day, func.count(QSO.id)).select_from(date_list).outerjoin(QSO, and_((func.date_trunc('day', QSO.qso_date) == day), QSO.station_callsign.in_([lis[0] for lis in usercalls]))).group_by(day).order_by(day).all()
+    daylabels = list(map(list, zip(*userqsosbyday)))[0]
     daydates = []
     for label in daylabels:
         daydates.append(label.strftime('%Y-%m-%d'))
-    dayvalues = list(map(list, zip(*qsobyday)))[1]
-    usersbyday = db.session.query(QSO.qso_date, User.name, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(QSO.qso_date, User.name).order_by(QSO.qso_date.desc()).order_by(func.count(QSO.id).desc()).all()
-    qsobyweek = db.session.query(func.date_part('week',QSO.qso_date), func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(func.date_part('week',QSO.qso_date)).order_by(func.date_part('week',QSO.qso_date)).all()
-    weeklabels = list(map(list, zip(*qsobyweek)))[0]
+    dayvalues = list(map(list, zip(*userqsosbyday)))[1]
+    userqsosbyweek = db.session.query(func.to_char(day, 'WW'), func.count(QSO.id)).select_from(date_list).outerjoin(QSO, and_((func.date_trunc('day', QSO.qso_date) == day), QSO.station_callsign.in_([lis[0] for lis in usercalls]))).group_by(func.to_char(day, 'WW')).order_by(func.to_char(day, 'WW')).all()
+    print(userqsosbyweek)
+    qsobyweek = db.session.query(func.date_part('week',QSO.qso_date), func.count(QSO.id)).filter(QSO.station_callsign.in_([lis[0] for lis in usercalls])).group_by(func.date_part('week',QSO.qso_date)).order_by(func.date_part('week',QSO.qso_date)).all()
+    weeklabels = list(map(list, zip(*userqsosbyweek)))[0]
     weekdates = []
     for label in weeklabels:
-        weekdates.append(label - 25)
-    weekvalues = list(map(list, zip(*qsobyweek)))[1]
-    usersbyweek = db.session.query(func.date_part('week',QSO.qso_date), User.name, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(func.date_part('week',QSO.qso_date), User.name).order_by(func.date_part('week',QSO.qso_date).desc()).order_by(func.count(QSO.id).desc()).all()
-    return render_template('dates.html', qsobyday=qsobyday, daylabels=daydates, dayvalues=dayvalues, weeklabels=weekdates,
-                           weekvalues=weekvalues, usersbyday=usersbyday, qsobyweek=qsobyweek, usersbyweek=usersbyweek, facts=facts)
+        weekdates.append(label)
+    weekvalues = list(map(list, zip(*userqsosbyweek)))[1]
+    return render_template('mydates.html', qsobyday=userqsosbyday, user=user, daylabels=daydates, dayvalues=dayvalues, weeklabels=weekdates,
+                           weekvalues=weekvalues, qsobyweek=userqsosbyweek)
 
 @dashboard.route("/mybandschart/<user>")
 def mybandschart(user):
