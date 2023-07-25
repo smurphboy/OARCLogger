@@ -404,6 +404,5 @@ def scoreboard():
             userscores[username]['qsos'] = callsignscores[callsign].get('qsos', 0)
         else:
             userscores[username]['qsos'] += callsignscores[callsign].get('qsos', 0)
-    pprint(userscores)
     return render_template('scoreboard.html', callsignscores=callsignscores, callscore=callscore, bandscore=bandscore,
                            modescore=modescore, gridscore=gridscore, mygridscore=mygridscore, userscores=userscores)
