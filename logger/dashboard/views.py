@@ -143,7 +143,6 @@ def mydates(user):
         daydates.append(label.strftime('%Y-%m-%d'))
     dayvalues = list(map(list, zip(*userqsosbyday)))[1]
     userqsosbyweek = db.session.query(func.to_char(day, 'WW'), func.count(QSO.id)).select_from(date_list).outerjoin(QSO, and_((func.date_trunc('day', QSO.qso_date) == day), QSO.station_callsign.in_([lis[0] for lis in usercalls]))).group_by(func.to_char(day, 'WW')).order_by(func.to_char(day, 'WW')).all()
-    print(userqsosbyweek)
     qsobyweek = db.session.query(func.date_part('week',QSO.qso_date), func.count(QSO.id)).filter(QSO.station_callsign.in_([lis[0] for lis in usercalls])).group_by(func.date_part('week',QSO.qso_date)).order_by(func.date_part('week',QSO.qso_date)).all()
     weeklabels = list(map(list, zip(*userqsosbyweek)))[0]
     weekdates = []

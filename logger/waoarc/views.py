@@ -376,7 +376,6 @@ def scoreboard():
         if username not in userscores:
             userscores[username] = {}
         if 'callsscore' not in userscores[username]:
-            print ("Nope")
             userscores[username]['callsscore'] = callsignscores[callsign].get('callsscore', 0)
         else:
             userscores[username]['callsscore'] += callsignscores[callsign].get('callsscore', 0)
