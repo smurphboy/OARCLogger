@@ -456,3 +456,16 @@ def scoreboard():
     pprint(userscores)
     return render_template('scoreboard.html', callsignscores=callsignscores, callscore=callscore, bandscore=bandscore,
                            modescore=modescore, gridscore=gridscore, mygridscore=mygridscore, userscores=userscores)
+
+
+@dashboard.route("network")
+def network():
+    nodes = []
+    edges = []
+    qsos = QSO.query.with_entities(func.count(QSO.id), QSO.call, QSO.station_callsign).group_by(QSO.call, QSO.station_callsign).all()
+    for qso in qsos:
+        edges.append({'from': qso[1].replace('/', '_'), 'to': qso[2].replace('/', '_'), 'value': qso[0], 'title': str(qso[1]) + '-' + str(qso[2])})
+    stations = Callsign.query.all()
+    for station in stations:
+        nodes.append({'id': str(station).replace('/', '_'), 'label': str(station)})
+    return render_template('network.html', nodes=nodes, edges=edges)

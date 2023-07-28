@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block scripts %}
+<script src="https://visjs.github.io/vis-network/standalone/umd/vis-network.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{% endblock %}
+{% block hero %}is-primary{% endblock %}
+{% block herobody %}
+			<h1 class="title algolia-lvl0">
+				<p>Network Chart of all QSOs logged to date</p>
+			</h1>
+            <p class="subtitle">QSOs and Callsigns</p>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="box">
+                <div id="mynetwork" style="width: 900px; height: 600px"></div>
+        </div>
+    </div>
+{% endblock %}
+{% block bottombody %}
+<script>
+    var nodes = null;
+var edges = null;
+var network = null;
+
+function draw() {
+  // create people.
+  // value corresponds with the age of the person
+  nodes = {{ nodes|safe }};
+
+  // create connections between people
+  // value corresponds with the amount of contact between two people
+  edges = {{ edges|safe }};
+
+  // Instantiate our network object.
+  var container = document.getElementById("mynetwork");
+  var data = {
+    nodes: nodes,
+    edges: edges,
+  };
+  var options = {
+    nodes: {
+      shape: "dot",
+    },
+  };
+  network = new vis.Network(container, data, options);
+}
+
+window.addEventListener("load", () => {
+  draw();
+});
+
+</script>
+{% endblock %}
