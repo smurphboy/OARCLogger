@@ -8,7 +8,7 @@ from flask import (Blueprint, abort, current_app, flash, jsonify, redirect,
 from flask_login import current_user, login_required, login_user, logout_user
 from geojson import Feature, Polygon, FeatureCollection, load as gjload
 from pprint import pprint
-from sqlalchemy import desc, func, and_, column
+from sqlalchemy import desc, func, and_, column, or_
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from logger.forms import CallsignForm
@@ -465,7 +465,7 @@ def network():
     qsos = QSO.query.with_entities(func.count(QSO.id), QSO.call, QSO.station_callsign).group_by(QSO.call, QSO.station_callsign).all()
     for qso in qsos:
         edges.append({'from': qso[1].replace('/', '_'), 'to': qso[2].replace('/', '_'), 'value': qso[0], 'title': str(qso[1]) + '-' + str(qso[2])})
-    stations = Callsign.query.all()
+    stations = db.session.query(Callsign.name, func.count(QSO.id)).join(QSO, or_(Callsign.name==QSO.call, Callsign.name==QSO.station_callsign)).group_by(Callsign.name).all()
     for station in stations:
-        nodes.append({'id': str(station).replace('/', '_'), 'label': str(station)})
+        nodes.append({'id': str(station[0]).replace('/', '_'), 'value': station[1], 'label': str(station[0])})
     return render_template('network.html', nodes=nodes, edges=edges)
