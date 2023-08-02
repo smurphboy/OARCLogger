@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+crossorigin=""/>
+<style>
+.info {
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+}
+.info h4 {
+    margin: 0 0 5px;
+    color: #777;
+}
+    .legend {
+    line-height: 18px;
+    color: #555;
+}
+.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+}
+</style>
+ <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+{% endblock %}
+{% block hero %}is-primary{% endblock %}
+{% block herobody %}
+			<h1 class="title algolia-lvl0">
+				 <p>SOTA summites Worked by all members</p>
+			</h1>
+            <p class="subtitle">Members have worked {{ summitcount }} summits in {{ regioncount }} regions of {{ associationcount }} associations</p>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="box">
+        <div class="tabs is-toggle is-fullwidth">
+            <ul>
+                <li>
+                    <a href="{{ url_for('waoarc.sotatable') }}">
+                        <span class="icon is-small"><i class="fa-solid fa-table"></i></span>
+                        <span>Table</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('waoarc.sotachart') }}">
+                        <span class="icon is-small"><i class="fa-solid fa-chart-pie"></i></span>
+                        <span>Chart</span>
+                    </a>
+                </li>
+                <li class="is-active">
+                    <a href="{{ url_for('waoarc.sotamap') }}">
+                        <span class="icon is-small"><i class="fa-solid fa-map-location-dot"></i></span>
+                        <span>Map</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="box">
+        <div style="height: 480px;" id="map"></div>
+    </div>
+</div>
+{% endblock %}
+{% block bottombody %}
+<script>
+
+var map = L.map('map');
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+var group = new L.featureGroup();
+
+{% for marker in markers %}
+L.marker([{{ marker['lat'] }}, {{ marker['lon'] }}]).addTo(group)
+.bindPopup("{{ marker['popup'] | safe }}")
+.openPopup();
+{% endfor %}
+
+group.addTo(map);
+map.fitBounds(group.getBounds());
+
+</script>
+{% endblock %}

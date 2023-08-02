@@ -443,4 +443,30 @@ def sotachart():
 
 @waoarc.route("/sotamap")
 def sotamap():
-    return render_template('sotamap.html')
+    sotaactivations = db.session.query(QSO.sota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.sota_ref != None)
+    sotachases = db.session.query(QSO.my_sota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.sota_ref != None)
+    sotasummits = sotaactivations.union_all(sotachases).all()
+    regioncount = 0
+    associationcount = 0
+    summits = []
+    for summit in sotasummits:
+        if summit[0]:
+            url = ("https://api2.sota.org.uk/api/summits/" + summit[0])
+            sotasummit = requests.request("GET", url)
+            if sotasummit.status_code == 200:
+                slice = next((i for i, item in enumerate(summits) if item["summitCode"] == sotasummit.json()['summitCode']), None)
+                if not slice:
+                    summits.append({ "summitCode" : sotasummit.json()['summitCode'], 'count' : 1, 'name' : sotasummit.json()['name'], 'lat' : sotasummit.json()['latitude'], 'lon' : sotasummit.json()['longitude'],
+                                                                'points' : sotasummit.json()['points'], 'regionName' : sotasummit.json()['regionName'], 'regionCode' : sotasummit.json()['regionCode'],
+                                                                'associationName' : sotasummit.json()['associationName'], 'associationCode' : sotasummit.json()['associationCode'] })
+                else:
+                    summits[slice]['count'] += 1
+    
+    pprint(summits)
+    regions = set()
+    assoc = set()
+    for summit in summits:
+        regions.add(summit['regionCode'])
+        assoc.add(summit['associationCode'])
+        summit['popup'] = (summit['summitCode'] + " : " + summit['name'] + " in " + summit['regionName'] + " of " + summit['associationName'] + ".</br> Worth " + str(summit['points']) + " points. Activated " + str(summit['count']) + " times.")
+    return render_template('sotamap.html', summitcount=len(summits), regioncount=len(regions), associationcount=len(assoc), markers=summits)
