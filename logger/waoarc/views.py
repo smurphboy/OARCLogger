@@ -1,14 +1,17 @@
 import datetime
+import json
 import operator
 import os
 
 import maidenhead as mh
+import requests
+
 from flask import (Blueprint, abort, current_app, flash, jsonify, redirect,
                    render_template, request, url_for)
 from flask_login import current_user, login_required, login_user, logout_user
 from geojson import Feature, Polygon, FeatureCollection, load as gjload
 from pprint import pprint
-from sqlalchemy import desc, func, and_
+from sqlalchemy import desc, func, and_, or_
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from logger.forms import CallsignForm
@@ -405,3 +408,39 @@ def scoreboard():
             userscores[username]['qsos'] += callsignscores[callsign].get('qsos', 0)
     return render_template('scoreboard.html', callsignscores=callsignscores, callscore=callscore, bandscore=bandscore,
                            modescore=modescore, gridscore=gridscore, mygridscore=mygridscore, userscores=userscores)
+
+
+@waoarc.route("/sotatable")
+def sotatable():
+    '''Find all SOTA QSOs and plot them on a map'''
+    summitqsos = QSO.query.with_entities(QSO.qso_date, QSO.time_on, QSO.station_callsign, QSO.my_sota_ref, QSO.call, QSO.gridsquare, QSO.lat, QSO.lon).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.my_sota_ref != None, QSO.sota_ref == None).all()
+    s2sqsos = QSO.query.with_entities(QSO.qso_date, QSO.time_on, QSO.station_callsign, QSO.my_sota_ref, QSO.call, QSO.sota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.my_sota_ref != None, QSO.sota_ref != None).all()
+    chaserqsos = QSO.query.with_entities(QSO.qso_date, QSO.time_on, QSO.station_callsign, QSO.my_gridsquare, QSO.my_lat, QSO.my_lon, QSO.call, QSO.sota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.my_sota_ref != None, QSO.sota_ref != None).all()
+    return render_template('sotatable.html', summitqsos=summitqsos, s2sqsos=s2sqsos, chaserqsos=chaserqsos)
+
+
+@waoarc.route("/sotachart")
+def sotachart():
+    sotaactivations = db.session.query(QSO.sota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.sota_ref != None)
+    sotachases = db.session.query(QSO.my_sota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.sota_ref != None)
+    sotasummits = sotaactivations.union_all(sotachases).all()
+    summits = []
+    for summit in sotasummits:
+        if summit[0]:
+            url = ("https://api2.sota.org.uk/api/summits/" + summit[0])
+            sotasummit = requests.request("GET", url)
+            if sotasummit.status_code == 200:
+                slice = next((i for i, item in enumerate(summits) if item["summitCode"] == sotasummit.json()['summitCode']), None)
+                if not slice:
+                    summits.append({ "summitCode" : sotasummit.json()['summitCode'], 'count' : 1, 'name' : sotasummit.json()['name'], 'lat' : sotasummit.json()['latitude'], 'lon' : sotasummit.json()['longitude'],
+                                                                'points' : sotasummit.json()['points'], 'regionName' : sotasummit.json()['regionName'], 'regionCode' : sotasummit.json()['regionCode'],
+                                                                'associationName' : sotasummit.json()['associationName'], 'associationCode' : sotasummit.json()['associationCode']})
+                else:
+                    summits[slice]['count'] += 1
+    # pprint(summits)
+    return render_template('sotachart.html', summits=json.dumps(summits))
+
+
+@waoarc.route("/sotamap")
+def sotamap():
+    return render_template('sotamap.html')

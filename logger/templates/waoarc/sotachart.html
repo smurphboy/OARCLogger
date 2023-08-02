@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@0.2.3"></script>
+{% endblock %}
+{% block hero %}is-primary{% endblock %}
+{% block herobody %}
+			<h1 class="title algolia-lvl0">
+				<p>SOTA QSOs by Association / Region / Summit</p>
+			</h1>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="box">
+            <div class="tabs is-toggle is-fullwidth">
+                <ul>
+                    <li>
+                        <a href="{{ url_for('waoarc.sotatable') }}">
+                            <span class="icon is-small"><i class="fa-solid fa-table"></i></span>
+                            <span>Table</span>
+                        </a>
+                    </li>
+                    <li class="is-active">
+                        <a href="{{ url_for('waoarc.sotachart') }}">
+                            <span class="icon is-small"><i class="fa-solid fa-chart-pie"></i></span>
+                            <span>Chart</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('waoarc.sotamap') }}">
+                            <span class="icon is-small"><i class="fa-solid fa-map-location-dot"></i></span>
+                            <span>Map</span>
+                        </a>
+                    </li>
+                </ul>
+              </div>
+        </div>
+        <div class="box">
+            <canvas id="chart-area2" width="800" height="400"></canvas>
+        </div>
+    </div>
+{% endblock %}
+{% block bottombody %}
+<script>
+    function colorFromValue(value, border) {
+  var alpha = (1 + Math.log(value)) / 5;
+  var color = "purple";
+  if (border) {
+    alpha += 0.01;
+  }
+  return Chart.helpers.color(color)
+    .alpha(alpha)
+    .rgbString();
+}
+
+var summits = {{ summits | safe }}
+
+var ctx = document.getElementById("chart-area2").getContext("2d");
+window.chart2 = new Chart(ctx, {
+  type: "treemap",
+  data: {
+    datasets: [
+      {
+        tree: summits,
+        key: "count",
+        groups: ["associationName", "regionName", "name"],
+        fontFamily: "Verdana",
+        fontColor: function(ctx) {
+          var item = ctx.dataset.data[ctx.dataIndex];
+          switch(item.l) {
+            case 0: return "#DDD";
+            case 1: return "#000";
+            case 2: return "#DD4";
+            default: return "#FFF";
+          }
+        },
+        fontSize: 20,
+        fontWeight: "bold",
+        backgroundColor: function(ctx) {
+          var item = ctx.dataset.data[ctx.dataIndex];
+          if (!item) {
+            return;
+          }
+          var a = item.v / (item.gs || item.s) / 2 + 0.5;
+          switch (item.l) {
+            case 0:
+              switch (item.g) {
+                case "Scotland":
+                  return "#4363d8";
+                case "Ireland":
+                  return "#469990";
+                case "England":
+                  return "#9A6324";
+                case "Wales":
+                  return "#f58231";
+                default:
+                  return "#e6beff";
+              }
+            case 1:
+              return Chart.helpers.color("white")
+                .alpha(0.3)
+                .rgbString();
+            default:
+              return Chart.helpers.color("green")
+                .alpha(a)
+                .rgbString();
+          }
+        },
+        spacing: 2,
+        borderWidth: 0.5,
+        borderColor: "rgba(160,160,160,0.5)"
+      }
+    ]
+  },
+  options: {
+    maintainAspectRatio: false,
+    title: {
+      display: false,
+      text: "SOTA Activations by Association / Region / Summit"
+    },
+    legend: {
+      display: false
+    },
+    tooltips: {
+      callbacks: {
+        title: function(item, data) {
+          return data.datasets[item[0].datasetIndex].key;
+        },
+        label: function(item, data) {
+          var dataset = data.datasets[item.datasetIndex];
+          var dataItem = dataset.data[item.index];
+          var obj = dataItem._data;
+          var label = obj.name || obj.regionName || obj.associationName;
+          return label + ': ' + dataItem.v;
+        }
+      }  
+    }
+  }
+});
+</script>
+{% endblock %}
