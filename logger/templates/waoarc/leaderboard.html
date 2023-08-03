@@ -180,15 +180,33 @@
             </div>
             <div class="tile is-parent is-vertical">
                 <div class="tile is-child box">
-                    <h1 class="title"><i class="fa-solid fa-headset"></i> Most Worked</h1>
-                    <p class="subtitle">Most worked callsigns (Top 10)</p>
-                    {% if workedcallsigns %}
-                        {% for entry in workedcallsigns %}
-                        <p><span class="has-text-weight-semibold">{{ entry.0 }}</span> worked as <span class="has-text-weight-semibold">{{ entry.1 }}</span> {{ entry.2 }} time{% if entry.2 > 1 %}s{% endif %}</p>
-                        {% endfor %}
-                    {% else %}
-                        <p>Not enough QSOs loaded yet</p>
-                    {% endif %}
+                    <h1 class="title"><i class="fa-solid fa-headset"></i> Events</h1>
+                    <p class="subtitle">SOTA Event QSOs</p>
+                    <div class="tabs is-toggle is-fullwidth">
+                        <ul>
+                            <li>
+                                <a href="{{ url_for('waoarc.sotatable') }}">
+                                    <span class="icon is-small"><i class="fa-solid fa-table"></i></span>
+                                    <span>Table</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('waoarc.sotachart') }}">
+                                    <span class="icon is-small"><i class="fa-solid fa-chart-pie"></i></span>
+                                    <span>Chart</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('waoarc.sotamap') }}">
+                                    <span class="icon is-small"><i class="fa-solid fa-map-location-dot"></i></span>
+                                    <span>Map</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <p class="subtitle">SOTA Activations / Summit to Summits and Chases between OARC members.</p>
+                    <p class="subtitle">POTA to come soon...</p>
+                    <p class="subtitle">Most Worked and Most Members Worked will return...</p>
                 </div>
                 <div class="tile is-child box">
                     <h1 class="title"><i class="fa-solid fa-map-location-dot"></i> Grids</h1>
