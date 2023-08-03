@@ -11,6 +11,7 @@ from flask import (Blueprint, abort, current_app, flash, jsonify, redirect,
 from flask_login import current_user, login_required, login_user, logout_user
 from geojson import Feature, Polygon, FeatureCollection, load as gjload
 from pprint import pprint
+from requests_cache import CachedSession
 from sqlalchemy import desc, func, and_, or_
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -421,6 +422,7 @@ def sotatable():
 
 @waoarc.route("/sotachart")
 def sotachart():
+    session = CachedSession()
     sotaactivations = db.session.query(QSO.sota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.sota_ref != None)
     sotachases = db.session.query(QSO.my_sota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.sota_ref != None)
     sotasummits = sotaactivations.union_all(sotachases).all()
@@ -428,7 +430,7 @@ def sotachart():
     for summit in sotasummits:
         if summit[0]:
             url = ("https://api2.sota.org.uk/api/summits/" + summit[0])
-            sotasummit = requests.request("GET", url)
+            sotasummit = session.request("GET", url)
             if sotasummit.status_code == 200:
                 slice = next((i for i, item in enumerate(summits) if item["summitCode"] == sotasummit.json()['summitCode']), None)
                 if not slice:
@@ -443,6 +445,7 @@ def sotachart():
 
 @waoarc.route("/sotamap")
 def sotamap():
+    session = CachedSession()
     sotaactivations = db.session.query(QSO.sota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.sota_ref != None)
     sotachases = db.session.query(QSO.my_sota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.sota_ref != None)
     sotasummits = sotaactivations.union_all(sotachases).all()
@@ -452,7 +455,7 @@ def sotamap():
     for summit in sotasummits:
         if summit[0]:
             url = ("https://api2.sota.org.uk/api/summits/" + summit[0])
-            sotasummit = requests.request("GET", url)
+            sotasummit = session.request("GET", url)
             if sotasummit.status_code == 200:
                 slice = next((i for i, item in enumerate(summits) if item["summitCode"] == sotasummit.json()['summitCode']), None)
                 if not slice:
@@ -461,8 +464,7 @@ def sotamap():
                                                                 'associationName' : sotasummit.json()['associationName'], 'associationCode' : sotasummit.json()['associationCode'] })
                 else:
                     summits[slice]['count'] += 1
-    
-    pprint(summits)
+    # pprint(summits)
     regions = set()
     assoc = set()
     for summit in summits:
