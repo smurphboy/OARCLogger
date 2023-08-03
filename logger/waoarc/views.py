@@ -48,6 +48,7 @@ rarity = {
     24 : 1,
 }
 
+sotasession = CachedSession(expire_after=datetime.timedelta(days=1))
 
 @waoarc.route("/")
 def about():
@@ -422,7 +423,6 @@ def sotatable():
 
 @waoarc.route("/sotachart")
 def sotachart():
-    session = CachedSession()
     sotaactivations = db.session.query(QSO.sota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.sota_ref != None)
     sotachases = db.session.query(QSO.my_sota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.sota_ref != None)
     sotasummits = sotaactivations.union_all(sotachases).all()
@@ -430,7 +430,7 @@ def sotachart():
     for summit in sotasummits:
         if summit[0]:
             url = ("https://api2.sota.org.uk/api/summits/" + summit[0])
-            sotasummit = session.request("GET", url)
+            sotasummit = sotasession.request("GET", url)
             if sotasummit.status_code == 200:
                 slice = next((i for i, item in enumerate(summits) if item["summitCode"] == sotasummit.json()['summitCode']), None)
                 if not slice:
@@ -445,7 +445,6 @@ def sotachart():
 
 @waoarc.route("/sotamap")
 def sotamap():
-    session = CachedSession()
     sotaactivations = db.session.query(QSO.sota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.sota_ref != None)
     sotachases = db.session.query(QSO.my_sota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.sota_ref != None)
     sotasummits = sotaactivations.union_all(sotachases).all()
@@ -455,7 +454,7 @@ def sotamap():
     for summit in sotasummits:
         if summit[0]:
             url = ("https://api2.sota.org.uk/api/summits/" + summit[0])
-            sotasummit = session.request("GET", url)
+            sotasummit = sotasession.request("GET", url)
             if sotasummit.status_code == 200:
                 slice = next((i for i, item in enumerate(summits) if item["summitCode"] == sotasummit.json()['summitCode']), None)
                 if not slice:
