@@ -9,3 +9,4 @@ maidenhead
 psycopg2
 python-dotenv
 pyhamtools
+requests-cache

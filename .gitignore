@@ -133,3 +133,4 @@ dmypy.json
 #Logger specific
 logger/static/adi/
 logger/static/adi/1.adi
+http_cache.sqlite
