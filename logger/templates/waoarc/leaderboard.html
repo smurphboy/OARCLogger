@@ -207,8 +207,34 @@
                     <p class="subtitle">SOTA Activations / Summit to Summits and Chases between OARC members.</p>
                     <div class="block">
                         <p>Overall there have been <span class="has-text-weight-semibold">{{ facts.totalsummit }}</span> summits activated across <span class="has-text-weight-semibold">{{ facts.totalregion }}</span> regions, in <span class="has-text-weight-semibold">{{ facts.totalassoc }}</span> Associations.</p>
-                    </div>                    
-                    <p class="subtitle">POTA to come soon...</p>
+                    </div>
+                    <p class="subtitle">POTA Event QSOs</p>                   
+                    <div class="tabs is-toggle is-fullwidth">
+                        <ul>
+                            <li>
+                                <a href="{{ url_for('waoarc.potatable') }}">
+                                    <span class="icon is-small"><i class="fa-solid fa-table"></i></span>
+                                    <span>Table</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('waoarc.potachart') }}">
+                                    <span class="icon is-small"><i class="fa-solid fa-chart-pie"></i></span>
+                                    <span>Chart</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('waoarc.potamap') }}">
+                                    <span class="icon is-small"><i class="fa-solid fa-map-location-dot"></i></span>
+                                    <span>Map</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <p class="subtitle">POTA Activations / Park to Park and Chases between OARC members.</p>
+                    <div class="block">
+                        <p>Overall there have been <span class="has-text-weight-semibold">{{ facts.totalpsummit }}</span> sites activated across <span class="has-text-weight-semibold">{{ facts.totalpregion }}</span> regions, in <span class="has-text-weight-semibold">{{ facts.totalpassoc }}</span> Associations.</p>
+                    </div>
                     <p class="subtitle">Most Worked and Most Members Worked will return...</p>
                 </div>
                 <div class="tile is-child box">

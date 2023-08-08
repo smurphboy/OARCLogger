@@ -97,6 +97,15 @@ def leaderboards():
     sotasummits = db.session.query(QSO.sota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.sota_ref != None).group_by(QSO.sota_ref)
     sotaact = db.session.query(QSO.my_sota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.my_sota_ref != None).group_by(QSO.my_sota_ref)
     facts['totalsummit'] = sotasummits.union(sotaact).count()
+    potasummits = db.session.query(func.split_part(QSO.pota_ref, '/', 1)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.pota_ref != None).group_by(func.split_part(QSO.pota_ref, '/', 1))
+    potaact = db.session.query(func.split_part(QSO.my_pota_ref, '/', 1)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.my_pota_ref != None).group_by(func.split_part(QSO.my_pota_ref, '/', 1))
+    facts['totalpassoc'] = potasummits.union(potaact).count()
+    potasummits = db.session.query(func.split_part(func.split_part(QSO.pota_ref, '/', 2), '-', 1)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.pota_ref != None).group_by(func.split_part(func.split_part(QSO.pota_ref, '/', 2), '-', 1))
+    potaact = db.session.query(func.split_part(func.split_part(QSO.my_pota_ref, '/', 2), '-', 1)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.my_pota_ref != None).group_by(func.split_part(func.split_part(QSO.my_pota_ref, '/', 2), '-', 1))
+    facts['totalpregion'] = potasummits.union(potaact).count()
+    potasummits = db.session.query(QSO.pota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.pota_ref != None).group_by(QSO.pota_ref)
+    potaact = db.session.query(QSO.my_pota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.my_pota_ref != None).group_by(QSO.my_pota_ref)
+    facts['totalpsummit'] = potasummits.union(potaact).count()
     return render_template('leaderboard.html', facts=facts, unclaimed=unclaimed, qsobyday=qsobyday, qsobyweek=qsobyweek, workedcallsigns=workedcallsigns)
 
 
