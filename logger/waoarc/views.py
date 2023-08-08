@@ -88,6 +88,15 @@ def leaderboards():
     qsobyday = db.session.query(QSO.qso_date, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.qso_date).order_by(QSO.qso_date.desc()).all()
     qsobyweek = db.session.query(func.date_part('week',QSO.qso_date), func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(func.date_part('week',QSO.qso_date)).order_by(func.date_part('week',QSO.qso_date).desc()).all()
     workedcallsigns = db.session.query(User.name, QSO.call, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.call == Callsign.name).join(User, Callsign.user_id == User.id).group_by(QSO.call, User.name).order_by(func.count(QSO.id).desc()).limit(10).all()
+    sotasummits = db.session.query(func.split_part(QSO.sota_ref, '/', 1)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.sota_ref != None).group_by(func.split_part(QSO.sota_ref, '/', 1))
+    sotaact = db.session.query(func.split_part(QSO.my_sota_ref, '/', 1)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.my_sota_ref != None).group_by(func.split_part(QSO.my_sota_ref, '/', 1))
+    facts['totalassoc'] = sotasummits.union(sotaact).count()
+    sotasummits = db.session.query(func.split_part(func.split_part(QSO.sota_ref, '/', 2), '-', 1)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.sota_ref != None).group_by(func.split_part(func.split_part(QSO.sota_ref, '/', 2), '-', 1))
+    sotaact = db.session.query(func.split_part(func.split_part(QSO.my_sota_ref, '/', 2), '-', 1)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.my_sota_ref != None).group_by(func.split_part(func.split_part(QSO.my_sota_ref, '/', 2), '-', 1))
+    facts['totalregion'] = sotasummits.union(sotaact).count()
+    sotasummits = db.session.query(QSO.sota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.sota_ref != None).group_by(QSO.sota_ref)
+    sotaact = db.session.query(QSO.my_sota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.my_sota_ref != None).group_by(QSO.my_sota_ref)
+    facts['totalsummit'] = sotasummits.union(sotaact).count()
     return render_template('leaderboard.html', facts=facts, unclaimed=unclaimed, qsobyday=qsobyday, qsobyweek=qsobyweek, workedcallsigns=workedcallsigns)
 
 
@@ -424,7 +433,7 @@ def sotatable():
 @waoarc.route("/sotachart")
 def sotachart():
     sotaactivations = db.session.query(QSO.sota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.sota_ref != None)
-    sotachases = db.session.query(QSO.my_sota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.sota_ref != None)
+    sotachases = db.session.query(QSO.my_sota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.my_sota_ref != None)
     sotasummits = sotaactivations.union_all(sotachases).all()
     summits = []
     for summit in sotasummits:
@@ -433,7 +442,7 @@ def sotachart():
             sotasummit = sotasession.request("GET", url)
             if sotasummit.status_code == 200:
                 slice = next((i for i, item in enumerate(summits) if item["summitCode"] == sotasummit.json()['summitCode']), None)
-                if not slice:
+                if (not slice) and (slice != 0):
                     summits.append({ "summitCode" : sotasummit.json()['summitCode'], 'count' : 1, 'name' : sotasummit.json()['name'], 'lat' : sotasummit.json()['latitude'], 'lon' : sotasummit.json()['longitude'],
                                                                 'points' : sotasummit.json()['points'], 'regionName' : sotasummit.json()['regionName'], 'regionCode' : sotasummit.json()['regionCode'],
                                                                 'associationName' : sotasummit.json()['associationName'], 'associationCode' : sotasummit.json()['associationCode']})
@@ -446,10 +455,8 @@ def sotachart():
 @waoarc.route("/sotamap")
 def sotamap():
     sotaactivations = db.session.query(QSO.sota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.sota_ref != None)
-    sotachases = db.session.query(QSO.my_sota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.sota_ref != None)
+    sotachases = db.session.query(QSO.my_sota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.my_sota_ref != None)
     sotasummits = sotaactivations.union_all(sotachases).all()
-    regioncount = 0
-    associationcount = 0
     summits = []
     for summit in sotasummits:
         if summit[0]:
@@ -457,17 +464,81 @@ def sotamap():
             sotasummit = sotasession.request("GET", url)
             if sotasummit.status_code == 200:
                 slice = next((i for i, item in enumerate(summits) if item["summitCode"] == sotasummit.json()['summitCode']), None)
-                if not slice:
+                # print(summit[0], '---000', slice)
+                if (not slice) and (slice != 0):
                     summits.append({ "summitCode" : sotasummit.json()['summitCode'], 'count' : 1, 'name' : sotasummit.json()['name'], 'lat' : sotasummit.json()['latitude'], 'lon' : sotasummit.json()['longitude'],
                                                                 'points' : sotasummit.json()['points'], 'regionName' : sotasummit.json()['regionName'], 'regionCode' : sotasummit.json()['regionCode'],
                                                                 'associationName' : sotasummit.json()['associationName'], 'associationCode' : sotasummit.json()['associationCode'] })
                 else:
                     summits[slice]['count'] += 1
-    # pprint(summits)
     regions = set()
     assoc = set()
     for summit in summits:
         regions.add(summit['regionCode'])
         assoc.add(summit['associationCode'])
-        summit['popup'] = (summit['summitCode'] + " : " + summit['name'] + " in " + summit['regionName'] + " of " + summit['associationName'] + ".</br> Worth " + str(summit['points']) + " points. Activated " + str(summit['count']) + " times.")
+        summit['popup'] = ("<p>" + summit['summitCode'] + " : " + summit['name'] + " in " + summit['regionName'] + " of " + summit['associationName'] + ".</br> Worth "
+                           + str(summit['points']) + " points. Activated " + str(summit['count']) + " times.</p></br><a target='_blank' href='https://sotl.as/summits/" + summit['summitCode'] + "'>Click to view on SOTLAS</a>") 
     return render_template('sotamap.html', summitcount=len(summits), regioncount=len(regions), associationcount=len(assoc), markers=summits)
+
+
+@waoarc.route("/potatable")
+def potatable():
+    '''Find all SOTA QSOs and plot them on a map'''
+    summitqsos = QSO.query.with_entities(QSO.qso_date, QSO.time_on, QSO.station_callsign, QSO.my_pota_ref, QSO.call, QSO.gridsquare, QSO.lat, QSO.lon).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.my_pota_ref != None, QSO.pota_ref == None).all()
+    s2sqsos = QSO.query.with_entities(QSO.qso_date, QSO.time_on, QSO.station_callsign, QSO.my_pota_ref, QSO.call, QSO.pota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.my_pota_ref != None, QSO.pota_ref != None).all()
+    chaserqsos = QSO.query.with_entities(QSO.qso_date, QSO.time_on, QSO.station_callsign, QSO.my_gridsquare, QSO.my_lat, QSO.my_lon, QSO.call, QSO.pota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.my_pota_ref != None, QSO.pota_ref != None).all()
+    return render_template('potatable.html', summitqsos=summitqsos, s2sqsos=s2sqsos, chaserqsos=chaserqsos)
+
+
+@waoarc.route("/potachart")
+def potachart():
+    potaactivations = db.session.query(QSO.pota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.pota_ref != None)
+    potachases = db.session.query(QSO.my_pota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.my_pota_ref != None)
+    potasummits = potaactivations.union_all(potachases).all()
+    pprint(potasummits)
+    summits = []
+    for summit in potasummits:
+        if summit[0]:
+            url = ("https://api.pota.app/park/" + summit[0])
+            potasummit = sotasession.request("GET", url)
+            print(potasummit.json())
+            if potasummit.status_code == 200:
+                slice = next((i for i, item in enumerate(summits) if item["reference"] == potasummit.json()['reference']), None)
+                if (not slice) and (slice != 0):
+                    summits.append({ "reference" : potasummit.json()['reference'], 'count' : 1, 'name' : potasummit.json()['name'], 'lat' : potasummit.json()['latitude'], 'lon' : potasummit.json()['longitude'],
+                                                                'locationName' : potasummit.json()['locationName'], 'locationDesc' : potasummit.json()['locationDesc'],
+                                                                'entityName' : potasummit.json()['entityName']})
+                else:
+                    summits[slice]['count'] += 1
+    # pprint(summits)
+    return render_template('potachart.html', summits=json.dumps(summits))
+
+
+@waoarc.route("/potamap")
+def potamap():
+    potaactivations = db.session.query(QSO.pota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.pota_ref != None)
+    potachases = db.session.query(QSO.my_pota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.my_pota_ref != None)
+    potasummits = potaactivations.union_all(potachases).all()
+    summits = []
+    for summit in potasummits:
+        if summit[0]:
+            url = ("https://api.pota.app/park/" + summit[0])
+            potasummit = sotasession.request("GET", url)
+            if potasummit.status_code == 200:
+                slice = next((i for i, item in enumerate(summits) if item["reference"] == potasummit.json()['reference']), None)
+                # print(summit[0], '---000', slice)
+                if (not slice) and (slice != 0):
+                    summits.append({ "reference" : potasummit.json()['reference'], 'count' : 1, 'name' : potasummit.json()['name'], 'lat' : potasummit.json()['latitude'], 'lon' : potasummit.json()['longitude'],
+                                                                'locationName' : potasummit.json()['locationName'], 'locationDesc' : potasummit.json()['locationDesc'],
+                                                                'entityName' : potasummit.json()['entityName']})
+                else:
+                    summits[slice]['count'] += 1
+    regions = set()
+    assoc = set()
+    for summit in summits:
+        regions.add(summit['locationDesc'])
+        assoc.add(summit['entityName'])
+        summit['popup'] = ("<p>" + summit['reference'] + " : " + summit['name'] + " in " + summit['locationName'] + " of " + summit['entityName'] + ".</br>Activated " + str(summit['count'])
+                           + " times.</p></br><a target='_blank' href='https://pota.app/#/park/" + summit['reference'] + "'>Click to view on POTA Site</a>")
+    pprint(summits)
+    return render_template('potamap.html', summitcount=len(summits), regioncount=len(regions), associationcount=len(assoc), markers=summits)
