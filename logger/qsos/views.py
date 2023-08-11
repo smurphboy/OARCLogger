@@ -11,7 +11,7 @@ from flask_login import current_user, login_required
 from werkzeug.utils import secure_filename
 
 from logger.forms import (NonAmQSOForm, QSOForm, QSOUploadForm, SATQSOForm,
-                          SOTAQSOForm)
+                          SOTAQSOForm, ClubCallQSOForm)
 from logger.models import QSO, Callsign, Event, User, db
 
 qsos = Blueprint('qsos', __name__, template_folder='templates')
@@ -512,7 +512,7 @@ def nonam(event):
         db.session.add(newqso)
         db.session.commit()
         flash('New QSO added to the event', 'info')
-        return redirect(url_for('qsos.sota', event=event))
+        return redirect(url_for('qsos.nonam', event=event))
     sotaevent = Event.query.filter_by(id=event).first()
     print(sotaevent.name)
     form = NonAmQSOForm()
@@ -530,3 +530,91 @@ def nonam(event):
     form.station_callsign.data = callsigns[0].name
     form.station_callsign.choices = [callsign.name for callsign in Callsign.query.filter_by(user_id=current_user.get_id()).all()]
     return render_template('nonamqsoform.html', form=form, selectedevents=selectedevents, callsigns=callsigns, event=sotaevent)
+
+
+@qsos.route('clubcall/<int:event>/new', methods=['GET', 'POST'])
+@login_required
+def clubcall(event):
+    if request.method == 'POST':
+        qso_date = datetime.datetime.strptime(request.form['qso_date'], '%Y-%m-%d').date()
+        time_on = datetime.datetime.strptime(request.form['time_on'], '%H:%M').time()
+        call = request.form.get('call', '').upper() or None
+        station_callsign = request.form.get('station_callsign', '').upper() or None
+        operator = request.form.get('operator', '').upper() or None
+        band = request.form.get('band', '') or None
+        freq = request.form.get('freq', '') or None
+        rst_rcvd = request.form.get('rst_rcvd', '') or None
+        rst_sent = request.form.get('rst_sent', '') or None
+        sota_ref = request.form.get('sota_ref', '').upper() or None
+        my_sota_ref = request.form.get('my_sota_ref', '').upper() or None
+        pota_ref = request.form.get('pota_ref', '').upper() or None
+        my_pota_ref = request.form.get('my_pota_ref', '').upper() or None
+        tx_pwr = request.form.get('tx_pwr', '') or None
+        mode = request.form.get('mode', '') or None
+        submode = request.form.get('submode', '') or None
+        newqso = QSO(qso_date=qso_date, time_on=time_on, call=call, station_callsign=station_callsign,
+                     band=band, freq=freq, sota_ref=sota_ref, my_sota_ref=my_sota_ref, mode=mode,
+                     submode=submode, pota_ref=pota_ref, my_pota_ref=my_pota_ref, rst_sent=rst_sent,
+                     rst_rcvd=rst_rcvd, tx_pwr=tx_pwr, operator=operator)
+        if sota_ref:
+            url = ("https://api2.sota.org.uk/api/summits/" + sota_ref)
+            sotasummit = requests.request("GET", url)
+            if sotasummit.status_code == 200:
+                summit = sotasummit.json()
+                newqso.lat = str(summit['latitude'])[:11]
+                newqso.lon = str(summit['longitude'])[:11]
+                newqso.gridsquare = summit['locator']
+                newqso.country = summit['associationName']
+                db.session.commit()
+        if my_sota_ref:
+            url = ("https://api2.sota.org.uk/api/summits/" + my_sota_ref)
+            sotasummit = requests.request("GET", url)
+            if sotasummit.status_code == 200:
+                summit = sotasummit.json()
+                newqso.my_lat = str(summit['latitude'])[:11]
+                newqso.my_lon = str(summit['longitude'])[:11]
+                newqso.my_gridsquare = summit['locator']
+                newqso.my_country = summit['associationName']
+                db.session.commit()
+        if station_callsign:
+            info = dxcclookup(station_callsign)
+            newqso.my_dxcc = info['dxcc']
+            newqso.my_country = info['country']
+            newqso.my_itu_zone = info['ituz']
+            newqso.my_cq_zone = info['cqz']
+        if call:
+            info = dxcclookup(call)
+            newqso.dxcc = info['dxcc']
+            newqso.country = info['country']
+            newqso.ituz = info['ituz']
+            newqso.cqz = info['cqz']
+        user = User.query.filter_by(id=current_user.get_id()).first()
+        selectedevents=[]
+        for ev in user.selected_events:
+            selectedevents.append(ev.id)
+        if event not in selectedevents:
+            selectedevents.append(event)
+        newqso.events[:] = Event.query.filter(Event.id.in_(selectedevents))
+        db.session.add(newqso)
+        db.session.commit()
+        flash('New QSO added to the event', 'info')
+        return redirect(url_for('qsos.clubcall', event=event))
+    sotaevent = Event.query.filter_by(id=event).first()
+    print(sotaevent.name)
+    form = ClubCallQSOForm()
+    if sotaevent.sota_ref:
+        form.my_sota_ref.data = sotaevent.sota_ref
+    if sotaevent.pota_ref:
+        form.my_pota_ref.data = sotaevent.pota_ref
+    user = User.query.filter_by(id=current_user.get_id()).first()
+    selev = user.selected_events
+    selectedevents = []
+    for ev in selev:
+        if ev.id != sotaevent.id:
+            selectedevents.append(ev)
+    callsigns = Callsign.query.filter_by(user_id=current_user.get_id()).all()
+    print(sotaevent.clubcall)
+    form.station_callsign.data = sotaevent.clubcall
+    form.operator.data = callsigns[0].name
+    form.operator.choices = [callsign.name for callsign in Callsign.query.filter_by(user_id=current_user.get_id()).all()]
+    return render_template('clubcallqsoform.html', form=form, selectedevents=selectedevents, callsigns=callsigns, event=sotaevent)

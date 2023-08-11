@@ -82,7 +82,7 @@ class QSOUploadForm(FlaskForm):
 class EventForm(FlaskForm):
     name = StringField('Name', validators=[InputRequired(), Length(max=50)])
     type = SelectField('Type',
-                        choices=['SOTA', 'POTA', 'SOTA-POTA', 'Non-Amateur', 'Contest', 'Satellite', 'WWFF', 'Portable Day',
+                        choices=['SOTA', 'POTA', 'SOTA-POTA', 'Non-Amateur', 'ClubCall', 'Contest', 'Satellite', 'WWFF', 'Portable Day',
                         'Net', 'Other'])
     sota_ref = StringField('SOTA Reference', validators=[Optional(), Length(max=25)])
     pota_ref = StringField('POTA References', validators=[Optional(), Length(max=255)])
@@ -90,6 +90,7 @@ class EventForm(FlaskForm):
     iota_ref = StringField('IOTA Reference', validators=[Optional(), Length(max=255)])
     sat_name = StringField('Satellite Name', validators=[Optional(), Length(max=255)])
     sat_mode = StringField('Satellite Mode', validators=[Optional(), Length(max=255)])
+    clubcall = StringField('Club Callsign')
     my_gridsquare = StringField('My Gridsquare', validators=[Length(max=10)])
     start_date = DateField('Start Date', validators=[InputRequired()], default=datetime.date.today)
     start_time = TimeField('Start Time', validators=[InputRequired()], default=datetime.datetime.now)
@@ -259,6 +260,38 @@ class NonAmQSOForm(FlaskForm):
                                             Length(max=50)])
     station_callsign = RadioField('Station Callsign')
     operator = StringField('Operator')
+    freq = StringField('Freq')
+    rst_rcvd = StringField('RST Received')
+    rst_sent = StringField('RST Sent')
+    sota_ref = StringField('SOTA Reference')
+    my_sota_ref = StringField('My SOTA Reference')
+    pota_ref = StringField('POTA Reference')
+    my_pota_ref = StringField('My POTA Reference')
+    tx_pwr = DecimalField('TX Power', places = 1)
+    gridsquare = StringField('Gridsquare', validators=[Length(max=10)])
+    my_gridsquare = StringField('My Gridsquare', validators=[Length(max=10)])
+    band = SelectField('Band',
+                       choices=['', '2190m', '630m', '560m', '160m', '80m', '60m', '40m', '30m', '20m', '17m', '15m',
+                                '12m', '10m', '8m', '6m', '5m', '4m', '2m', '1.25m', '70cm', '33cm', '23cm', '13cm',
+                                '9cm', '6cm', '3cm', '1.25cm', '6mm', '4mm', '2.5mm', '2mm', '1mm', 'submm', 'Discord', 'Internet', 'Post', 'Other']) # convert this to look at the config selected and bands on the rig
+    mode = SelectField('Mode',
+                       choices=['AM', 'ATV', 'CW', 'DIGITALVOICE', 'FM', 'FT8', 'HELL', 'MFSK', 'OLIVIA', 'PKT', 'PSK', 'RTTY',
+                                'RTTYM', 'SSB', 'SSTV', 'ARDOP', 'CHIP', 'CLO', 'CONTESTI', 'DOMINO', 'DYNAMIC', 'FAX', 'FSK441',
+                                'ISCAT', 'JT4', 'JT6M', 'JT9', 'JT44', 'JT65', 'MSK144', 'MT63', 'OPERA', 'PAC', 'PAX', 'PSK2K',
+                                'Q15', 'QRA64', 'ROS', 'T10', 'THOR', 'THRB', 'TOR', 'V4', 'VOI', 'WINMOR', 'WSPR', 'Other']) # convert this to look at the config selected and the modes available
+    submode = SelectField('Sub Mode')
+    comment = StringField('Comment', validators=[Length(max=255)])
+
+
+class ClubCallQSOForm(FlaskForm):
+    qso_date = DateField('QSO Date', validators=[InputRequired()], default=datetime.datetime.utcnow().date())
+    time_on = TimeField('QSO On Time', validators=[InputRequired()], default=datetime.datetime.utcnow())
+    qso_date_off = DateField('QSO Date Off')
+    time_off = TimeField('QSO Off Time')
+    call = StringField('Call', validators=[InputRequired(),
+                                            Length(max=50)])
+    station_callsign = StringField('Station Callsign')
+    operator = RadioField('Operator')
     freq = StringField('Freq')
     rst_rcvd = StringField('RST Received')
     rst_sent = StringField('RST Sent')

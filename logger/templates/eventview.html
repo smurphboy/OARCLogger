@@ -72,7 +72,7 @@
                             </div>
                         </div>
                     </div>
-                    {% if event.type in (['SOTA', 'POTA', 'SOTA-POTA', 'Satellite']) %}
+                    {% if event.type in (['SOTA', 'POTA', 'SOTA-POTA', 'Satellite', 'ClubCall']) %}
                     <div class="card">
                         <header class="card-header">
                             <p class="card-header-title">Event Specifics</p>
@@ -95,6 +95,8 @@
                                                     <i class="fa-solid fa-tree"></i>
                                                 {% elif event.sat_name %}
                                                     <i class="fa-solid fa-satellite"></i>
+                                                {% elif event.clubcall %}
+                                                    <i class="fa-solid fa-house-flag"></i>
                                                 {% endif %}
                                                 </span>
                                                 {% if event.sota_ref and event.pota_ref %}
@@ -115,6 +117,8 @@
                                                 <p>SOTA Reference: {{ event.sota_ref }}</p>
                                                 {% elif event.sat_name %}
                                                 <p>Sat Name: {{ event.sat_name }}</p>
+                                                {% elif event.clubcall %}
+                                                <p>Club Callsign: {{ event.clubcall }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -207,13 +211,19 @@
                 {% if event.type == "Non-Amateur" %}
                 <div class="level-left">
                     <p class="level-item">Add a Non-Amateur QSO to this event</p>
-                    <a class="button is-link level-item" href="{{ url_for ('qsos.nonam', event=event.id )  }}"><span class="icon"><i class="fa-solid fa-hat-cowboy"></i></i></span></a>
+                    <a class="button is-link level-item" href="{{ url_for ('qsos.nonam', event=event.id )  }}"><span class="icon"><i class="fa-solid fa-hat-cowboy"></i></span></a>
                 </div>
                 {% endif %}
                 {% if event.type == "Other" %}
                 <div class="level-left">
                     <p class="level-item">Add a QSO to this event</p>
-                    <a class="button is-link level-item" href="{{ url_for ('qsos.nonam', event=event.id )  }}"><span class="icon"><i class="fa-solid fa-tower-cell"></i></i></i></span></a>
+                    <a class="button is-link level-item" href="{{ url_for ('qsos.nonam', event=event.id )  }}"><span class="icon"><i class="fa-solid fa-tower-cell"></i></span></a>
+                </div>
+                {% endif %}
+                {% if event.type == "ClubCall" %}
+                <div class="level-left">
+                    <p class="level-item">Add a Club Callsign QSO to this event</p>
+                    <a class="button is-link level-item" href="{{ url_for ('qsos.clubcall', event=event.id )  }}"><span class="icon"><i class="fa-solid fa-house-flag"></i></span></a>
                 </div>
                 {% endif %}
                 <div class="level-right">

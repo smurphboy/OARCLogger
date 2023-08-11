@@ -66,6 +66,7 @@ class Event(db.Model):
     iota_ref = db.Column(db.String(255))
     sat_name = db.Column(db.String(255))
     sat_mode = db.Column(db.String(10))
+    clubcall = db.Column(db.String(50))
     my_gridsquare = db.Column(db.String(10))
     square = db.Column(db.String(4))
     configs = db.relationship('Configuration', secondary='event_config', back_populates="events")

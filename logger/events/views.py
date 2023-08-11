@@ -80,6 +80,7 @@ def save_changes(event, form, new):
         event.sat_mode = request.form.get('sat_mode', '') or None
         event.my_gridsquare = request.form.get('my_gridsquare', '') or None
         event.comment = request.form['comment']
+        event.clubcall = request.form.get('clubcall', '') or None
         event.user_id=current_user.get_id()
         if new:
             db.session.add(event)
