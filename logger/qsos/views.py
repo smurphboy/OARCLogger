@@ -79,6 +79,7 @@ def save_changes(qso, form, new):
     qso.my_iota = request.form.get('my_iota', '') or None
     qso.comment = request.form.get('comment', '') or None
     qso.prop_mode = request.form.get('prop_mode', '') or None
+    qso.tx_pwr = request.form.get('tx_pwr', '') or None
     qso.station_callsign = request.form.get('station_callsign', '') or qso.station_callsign
     if qso.sota_ref:
         url = ("https://api2.sota.org.uk/api/summits/" + qso.sota_ref)
@@ -310,12 +311,13 @@ def sota(event):
         my_sota_ref = request.form.get('my_sota_ref', '').upper() or None
         pota_ref = request.form.get('pota_ref', '').upper() or None
         my_pota_ref = request.form.get('my_pota_ref', '').upper() or None
+        tx_pwr = request.form.get('tx_pwr', '') or None
         mode = request.form.get('mode', '') or None
         submode = request.form.get('submode', '') or None
         newqso = QSO(qso_date=qso_date, time_on=time_on, call=call, station_callsign=station_callsign,
                      band=band, freq=freq, sota_ref=sota_ref, my_sota_ref=my_sota_ref, mode=mode,
                      submode=submode, pota_ref=pota_ref, my_pota_ref=my_pota_ref, rst_sent=rst_sent,
-                     rst_rcvd=rst_rcvd)
+                     rst_rcvd=rst_rcvd, tx_pwr=tx_pwr)
         if sota_ref:
             url = ("https://api2.sota.org.uk/api/summits/" + sota_ref)
             sotasummit = requests.request("GET", url)
@@ -389,6 +391,7 @@ def sat(event):
         freq = request.form.get('freq', '') or None
         sat_name = request.form.get('sat_name', '').upper() or None
         sat_mode = request.form.get('sat_mode', '').upper() or None
+        tx_pwr = request.form.get('tx_pwr', '') or None
         gridsquare = request.form.get('gridsquare', '').lstrip() or None
         if gridsquare:
             gridsquare = gridsquare[:2].upper() + gridsquare[2:4] + gridsquare[4:].lower()
@@ -400,7 +403,8 @@ def sat(event):
         prop_mode = "SAT"
         newqso = QSO(qso_date=qso_date, time_on=time_on, call=call, station_callsign=station_callsign,
                      band=band, freq=freq, sat_name=sat_name, sat_mode=sat_mode, mode=mode,
-                     submode=submode, gridsquare=gridsquare, my_gridsquare=my_gridsquare, prop_mode=prop_mode)
+                     submode=submode, gridsquare=gridsquare, my_gridsquare=my_gridsquare, prop_mode=prop_mode,
+                     tx_pwr=tx_pwr)
         if station_callsign:
             info = dxcclookup(station_callsign)
             newqso.my_dxcc = info['dxcc']
@@ -459,12 +463,13 @@ def nonam(event):
         my_sota_ref = request.form.get('my_sota_ref', '').upper() or None
         pota_ref = request.form.get('pota_ref', '').upper() or None
         my_pota_ref = request.form.get('my_pota_ref', '').upper() or None
+        tx_pwr = request.form.get('tx_pwr', '') or None
         mode = request.form.get('mode', '') or None
         submode = request.form.get('submode', '') or None
         newqso = QSO(qso_date=qso_date, time_on=time_on, call=call, station_callsign=station_callsign,
                      band=band, freq=freq, sota_ref=sota_ref, my_sota_ref=my_sota_ref, mode=mode,
                      submode=submode, pota_ref=pota_ref, my_pota_ref=my_pota_ref, rst_sent=rst_sent,
-                     rst_rcvd=rst_rcvd)
+                     rst_rcvd=rst_rcvd, tx_pwr=tx_pwr)
         if sota_ref:
             url = ("https://api2.sota.org.uk/api/summits/" + sota_ref)
             sotasummit = requests.request("GET", url)
