@@ -333,6 +333,34 @@
                             </a>
                         </header>
                         <div class="card-content" id="stationinfo-content">
+                            {% if qso.operator or qso.station_callsign %}
+                            <nav class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        {% if qso.operator %}
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-user-pen"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the logging station's operator's callsign">Operator:</abbr> {{ qso.operator }}</span>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if qso.station_callsign %}
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <div class="icon-text">
+                                            <span class="icon">
+                                                <i class="fa-solid fa-tower-cell"></i>
+                                            </span>
+                                            <span><abbr class="has-text-weight-semibold" title="the logging station's callsign">Station Callsign:</abbr> {{ qso.station_callsign }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </nav>
+                            {% endif %}
                             {% if qso.rig or qso.my_rig %}
                             <nav class="level">
                                 <div class="level-left">

@@ -92,6 +92,19 @@ def virtual(call):
     print(call)
     return render_template('virtualcallsign.html', call=call, qsos=virtualcall, callsign=callsign, matches=matches)
 
+@callsigns.route("/<call>/clubcalls")
+@login_required
+def operator(call):
+    '''list all qsos where the callsign appears as the <operator> not the station_callsign'''
+    call = call.replace('_', '/')
+    calls = Callsign.query.filter_by(user_id=current_user.get_id()).all()
+    callsigns = []
+    for vircall in calls:
+        callsigns.append(str(vircall))
+    opcalls = QSO.query.filter(QSO.operator == call, QSO.station_callsign != call).order_by(QSO.qso_date.desc(), QSO.time_on.desc()).all()
+    callsign = Callsign.query.filter_by(name=call).first()
+    return render_template('virtualcallsign.html', call=call, qsos=opcalls, callsign=callsign)
+
 
 @callsigns.route("/<call>/search")
 @login_required

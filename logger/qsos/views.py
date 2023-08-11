@@ -13,6 +13,7 @@ from werkzeug.utils import secure_filename
 from logger.forms import (NonAmQSOForm, QSOForm, QSOUploadForm, SATQSOForm,
                           SOTAQSOForm, ClubCallQSOForm)
 from logger.models import QSO, Callsign, Event, User, db
+from sqlalchemy import and_, or_
 
 qsos = Blueprint('qsos', __name__, template_folder='templates')
 
@@ -167,7 +168,7 @@ def postnewqso(station_callsign):
 @login_required
 def editqso(id):
     qso = QSO.query.get_or_404(id)
-    if Callsign.query.filter(Callsign.name==qso.station_callsign, Callsign.user_id==current_user.get_id()).count(): # is the callsign ours?
+    if Callsign.query.filter(or_(Callsign.name==qso.station_callsign, Callsign.name==qso.operator), Callsign.user_id==current_user.get_id()).count(): # is the callsign ours?
         form = QSOForm(formdata=request.form, obj=qso)
         if request.method == 'POST':
             save_changes(qso, form, new=False)
@@ -219,7 +220,7 @@ def uploadqsos(user):
 def viewqso(id):
     qso = QSO.query.filter_by(id=id).first()
     print(qso.station_callsign)
-    if Callsign.query.filter(Callsign.name==qso.station_callsign, Callsign.user_id==current_user.get_id()).count(): # is the callsign ours?
+    if Callsign.query.filter(or_(Callsign.name==qso.station_callsign, Callsign.name==qso.operator), Callsign.user_id==current_user.get_id()).count(): # is the callsign ours?
         for key in qso.__dict__.keys():
             if qso.__dict__[key]:
                 pass

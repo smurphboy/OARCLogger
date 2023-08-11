@@ -92,7 +92,7 @@ class EventForm(FlaskForm):
     sat_mode = StringField('Satellite Mode', validators=[Optional(), Length(max=255)])
     clubcall = StringField('Club Callsign')
     my_gridsquare = StringField('My Gridsquare', validators=[Length(max=10)])
-    start_date = DateField('Start Date', validators=[InputRequired()], default=datetime.date.today)
+    start_date = DateField('Start Date', validators=[InputRequired()], default=datetime.datetime.utcnow().date())
     start_time = TimeField('Start Time', validators=[InputRequired()], default=datetime.datetime.now)
     end_date  = DateField('End Date', validators=[Optional()], default=datetime.date.today)
     end_time = TimeField('End Time', validators=[Optional()], default=datetime.datetime.now)

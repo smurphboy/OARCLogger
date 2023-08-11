@@ -38,7 +38,9 @@ def profile(user):
         for call in calls:
             callsigns.append(str(call))
         virtualcall = QSO.query.filter(QSO.call.in_(callsigns)).all()
-        return render_template('profile.html', user=current_user.name, form=form, callsigns=callsigns, virtualcall=virtualcall)
+        operatorcall = QSO.query.filter(QSO.operator.in_(callsigns), QSO.station_callsign.not_in(callsigns)).all()
+        return render_template('profile.html', user=current_user.name, form=form, callsigns=callsigns, virtualcall=virtualcall,
+                               operatorcall=operatorcall)
     else:
         abort(403)
 

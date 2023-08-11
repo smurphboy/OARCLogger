@@ -145,6 +145,30 @@
             </table>
         </div>
         {% endif %}
+        {% if operatorcall %}
+        <div class="box">
+            <h1 class="title">Club Callsigns Operated</h1>
+            <p class="submit">QSOs on the system where you appear as the Operator of another Callsign.</p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Callsign</th>
+                        <th>DXCC</th>
+                        <th>QSOs</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                {% for callsign, calls in operatorcall|groupby('operator') %}
+                    <tr>
+                        <td><a href="{{ url_for('callsigns.operator', call=callsign | replace('/','_') ) }}">{{ callsign }}</a></td>
+                        <td>{{ countrylookup(callsign) }}</td>
+                        <td>{{ calls|length }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
         <div class="box">
             <div class="level">
                 <div class="level-left">
