@@ -44,14 +44,18 @@
                         <p>Top Member is <span class="has-text-weight-semibold">{{ facts.topusers[0][0] }}</span> with <span class="has-text-weight-semibold">{{ facts.topusers[0][1] }}</span> QSOs</p>
                         <p>Top Callsign is <span class="has-text-weight-semibold">{{ facts.topcalls[0][1] }}</span>, owned by <span class="has-text-weight-semibold">{{ facts.topcalls[0][0] }}</span> with <span class="has-text-weight-semibold">{{ facts.topcalls[0][2] }}</span> QSOs</p>
                     </div>
-                    <p><span class="has-text-weight-semibold">{{ facts.unclaimedcallsigns }}</span> callsign{% if unclaimed|length == 1 %} is{% else %}s are{% endif %} identified in QSOs but unclaimed:</p>
-                    <!-- {% if unclaimed %}
-                    <ul>
-                        {% for call in unclaimed %}
-                        <li class="has-text-weight-semibold">{{ call[0] }}</li>
+                    {% if worked %}
+                    <p class="subtitle">Worked and worked by:</p>
+                    <ul class="block">
+                        {% for key, value in worked.items() %}
+                            {% if loop.index <= 5 %}
+                                <li><span class="has-text-weight-semibold">{{ key }}</span> worked {{ value.0 }} members and by {{ value.1 }} members.</li>
+                            {% endif %}
                         {% endfor %}
                     </ul>
-                    {% endif %} -->
+                    {% endif %}
+                    <p class="subtitle">Unclaimed:</p>
+                    <p><span class="has-text-weight-semibold">{{ facts.unclaimedcallsigns }}</span> callsign{% if unclaimed|length == 1 %} is{% else %}s are{% endif %} identified in QSOs but unclaimed:</p>
                 </div>
                 <div class="tile is-child box">
                     <h1 class="title"><i class="fas fa-flag-usa" aria-hidden="true"></i> DXCC</h1>
@@ -235,7 +239,6 @@
                     <div class="block">
                         <p>Overall there have been <span class="has-text-weight-semibold">{{ facts.totalpsummit }}</span> sites activated across <span class="has-text-weight-semibold">{{ facts.totalpregion }}</span> regions, in <span class="has-text-weight-semibold">{{ facts.totalpassoc }}</span> Associations.</p>
                     </div>
-                    <p class="subtitle">Most Worked and Most Members Worked will return...</p>
                 </div>
                 <div class="tile is-child box">
                     <h1 class="title"><i class="fa-solid fa-map-location-dot"></i> Grids</h1>

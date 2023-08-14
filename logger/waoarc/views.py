@@ -106,7 +106,14 @@ def leaderboards():
     potasummits = db.session.query(QSO.pota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.pota_ref != None).group_by(QSO.pota_ref)
     potaact = db.session.query(QSO.my_pota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.my_pota_ref != None).group_by(QSO.my_pota_ref)
     facts['totalpsummit'] = potasummits.union(potaact).count()
-    return render_template('leaderboard.html', facts=facts, unclaimed=unclaimed, qsobyday=qsobyday, qsobyweek=qsobyweek, workedcallsigns=workedcallsigns)
+    facts['timesworkedtable'] = db.session.query(User.name, db.func.count(db.distinct(QSO.station_callsign))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.call == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(QSO.station_callsign)).desc()).all()
+    facts['callsworkedtable'] = db.session.query(User.name, db.func.count(db.distinct(QSO.call))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(QSO.call)).desc()).all()
+    worked = { x : y for x,y in facts['callsworkedtable']}
+    for call in facts['timesworkedtable']:
+        new = {call[0] : [worked.get(call[0], 0) , call[1]]}
+        worked.update(new)
+    pprint(worked)
+    return render_template('leaderboard.html', facts=facts, unclaimed=unclaimed, qsobyday=qsobyday, qsobyweek=qsobyweek, workedcallsigns=workedcallsigns, worked=worked)
 
 
 @waoarc.route("/gettingstarted")
@@ -128,7 +135,14 @@ def usertable():
         line.append(call[0])
         line.append(QSO.query.filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.call == call[0]).count())
         unclaimedtable.append(line)
-    return render_template('usertable.html', calls=calls, unclaimedcalls=unclaimedcalls, unclaimedtable=unclaimedtable, users=users)
+    facts = {}
+    facts['timesworkedtable'] = db.session.query(User.name, db.func.count(db.distinct(QSO.station_callsign))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.call == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(QSO.station_callsign)).desc()).all()
+    facts['callsworkedtable'] = db.session.query(User.name, db.func.count(db.distinct(QSO.call))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(QSO.call)).desc()).all()
+    worked = { x : y for x,y in facts['callsworkedtable']}
+    for call in facts['timesworkedtable']:
+        new = {call[0] : [worked.get(call[0], 0) , call[1]]}
+        worked.update(new)
+    return render_template('usertable.html', calls=calls, unclaimedcalls=unclaimedcalls, unclaimedtable=unclaimedtable, users=users, facts=facts, worked=worked)
 
 
 @waoarc.route("/userchart")
@@ -153,8 +167,16 @@ def userchart():
     labels = list(map(list, zip(*unclaimedtable)))[0]
     unclaimedlabels = ['None' if v is None else v for v in labels]
     unclaimedvalues = list(map(list, zip(*unclaimedtable)))[1]
+    facts = {}
+    facts['timesworkedtable'] = db.session.query(User.name, db.func.count(db.distinct(QSO.station_callsign))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.call == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(QSO.station_callsign)).desc()).all()
+    facts['callsworkedtable'] = db.session.query(User.name, db.func.count(db.distinct(QSO.call))).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(User.name).order_by(db.func.count(db.distinct(QSO.call)).desc()).all()
+    worked = { x : y for x,y in facts['callsworkedtable']}
+    for call in facts['timesworkedtable']:
+        new = {call[0] : [worked.get(call[0], 0) , call[1]]}
+        worked.update(new)
     return render_template('userchart.html', memberlabels=memberlabels, membervalues=membervalues, callsignlabels=callsignlabels,
-                           callsignvalues=callsignvalues, unclaimedlabels=unclaimedlabels, unclaimedvalues=unclaimedvalues)
+                           callsignvalues=callsignvalues, unclaimedlabels=unclaimedlabels, unclaimedvalues=unclaimedvalues, facts=facts,
+                           worked=worked)
 
 
 @waoarc.route("/dates")

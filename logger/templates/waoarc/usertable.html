@@ -76,6 +76,48 @@
             </table>
         </div>
         <div class="box">
+            <h1 class="title">Members Worked</h1>
+            <table id="worked" class="table is-striped is-hoverable">
+                <thead>
+                    <tr>
+                        <th>Member</th>
+                        <th>Members Worked</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for call in facts.callsworkedtable %}
+                    <tr>
+                        <td>{{ call[0] }}</td>
+                        <td>{{ call[1] }}</td>
+                    </tr>
+                    {% else %}
+                    No members worked
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="box">
+            <h1 class="title">Worked by members</h1>
+            <table id="workedby" class="table is-striped is-hoverable">
+                <thead>
+                    <tr>
+                        <th>Member</th>
+                        <th>Worked by Members</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for call in facts.timesworkedtable %}
+                    <tr>
+                        <td>{{ call[0] }}</td>
+                        <td>{{ call[1] }}</td>
+                    </tr>
+                    {% else %}
+                    No members worked
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="box">
             <h1 class="title">Unclaimed Callsigns</h1>
             {% if unclaimedtable %}
             <table id="unclaimed" class="table is-striped is-hoverable">
@@ -122,6 +164,24 @@ $(document).ready(function () {
     });
 
     $('#unclaimed').DataTable({
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        stateSave: true,
+        order: [[1, 'desc']]
+    });
+
+    $('#worked').DataTable({
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        stateSave: true,
+        order: [[1, 'desc']]
+    });
+
+    $('#workedby').DataTable({
         lengthMenu: [
             [10, 25, 50, -1],
             [10, 25, 50, 'All'],

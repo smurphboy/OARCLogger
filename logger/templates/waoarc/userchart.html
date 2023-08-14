@@ -46,8 +46,21 @@
                 </div>               
                 <div class="tile is-child box">
                     <h1 class="title">QSOs by Unclaimed Callsigns</h1>
-                    <div>
+                    <div style="position: relative">
                         <canvas id="unclaimed"></canvas>
+                    </div>
+                </div>
+
+                <div class="tile is-child box">
+                    <h1 class="title">Members Worked</h1>
+                    <div>
+                        <canvas id="worked"></canvas>
+                    </div>
+                </div>               
+                <div class="tile is-child box">
+                    <h1 class="title">Worked by Members</h1>
+                    <div>
+                        <canvas id="workedby"></canvas>
                     </div>
                 </div>
             </div>
@@ -59,6 +72,8 @@
 const ctx = document.getElementById('member');
 const ctx1 = document.getElementById('callsign');
 const ctx2 = document.getElementById('unclaimed');
+const ctx3 = document.getElementById('worked');
+const ctx4 = document.getElementById('workedby');
 
 new Chart(ctx, {
     type: 'doughnut',
@@ -94,7 +109,42 @@ new Chart(ctx2, {
             hoverOffset: 4
             }]
     }
-    
+});  
+    new Chart(ctx3, {
+    type: 'bar',
+    data: {
+        labels: [{% for key, value in worked.items() %}"{{ key|safe }}"{% if not loop.last %},{% endif %}{% endfor %}],
+        datasets: [{
+            label: 'Members Worked',
+            data: [{% for key, value in worked.items() %}{{ value.0|safe }}{% if not loop.last %},{% endif %}{% endfor %}],
+            hoverOffset: 4
+            }]
+        },
+    options: {
+        indexAxis: 'y',
+        responsive: true,
+    }
 });
+    new Chart(ctx4, {
+    type: 'bar',
+    data: {
+        labels: [{% for key, value in worked.items() %}"{{ key|safe }}"{% if not loop.last %},{% endif %}{% endfor %}],
+        datasets: [{
+            label: 'Worked by Members',
+            data: [{% for key, value in worked.items() %}{{ value.1|safe }}{% if not loop.last %},{% endif %}{% endfor %}],
+            hoverOffset: 4
+            }]
+        },
+    options: {
+        indexAxis: 'y',
+        responsive: true,
+    }
+});
+
+function beforePrintHandler () {
+    for (let id in Chart.instances) {
+        Chart.instances[id].resize();
+    }
+}
 </script>
 {% endblock %}
