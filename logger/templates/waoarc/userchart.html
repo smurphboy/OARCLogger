@@ -125,11 +125,11 @@ new Chart(ctx2, {
         responsive: true,
         scaleShowValues: true,
         scales: {
-            xAxes: [{
+            y: {
             ticks: {
                 autoSkip: false
                 }
-            }]
+            }
         }
     }
 });
@@ -148,19 +148,19 @@ new Chart(ctx2, {
         responsive: true,
         scaleShowValues: true,
         scales: {
-            xAxes: [{
+            y: {
             ticks: {
                 autoSkip: false
                 }
-            }]
+            }
         }
     }
 });
 
-function beforePrintHandler () {
-    for (let id in Chart.instances) {
-        Chart.instances[id].resize();
-    }
-}
+// function beforePrintHandler () {
+//     for (let id in Chart.instances) {
+//         Chart.instances[id].resize();
+//     }
+// }
 </script>
 {% endblock %}
