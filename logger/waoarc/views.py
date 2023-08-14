@@ -174,6 +174,11 @@ def userchart():
     for call in facts['timesworkedtable']:
         new = {call[0] : [worked.get(call[0], 0) , call[1]]}
         worked.update(new)
+    for call in worked:
+        if type(worked.get(call)) == int:
+            new = {call : [worked.get(call) , 0]}
+            worked.update(new)
+    pprint(worked)
     sortedwork = sorted(worked.items(), key=lambda x:x[1][1], reverse=True)
     return render_template('userchart.html', memberlabels=memberlabels, membervalues=membervalues, callsignlabels=callsignlabels,
                            callsignvalues=callsignvalues, unclaimedlabels=unclaimedlabels, unclaimedvalues=unclaimedvalues, facts=facts,
