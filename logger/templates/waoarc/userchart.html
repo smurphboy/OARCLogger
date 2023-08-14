@@ -136,10 +136,10 @@ new Chart(ctx2, {
     new Chart(ctx4, {
     type: 'bar',
     data: {
-        labels: [{% for key, value in worked.items() %}"{{ key|safe }}"{% if not loop.last %},{% endif %}{% endfor %}],
+        labels: [{% for key, value in sortedwork.items() %}"{{ key|safe }}"{% if not loop.last %},{% endif %}{% endfor %}],
         datasets: [{
             label: 'Worked by Members',
-            data: [{% for key, value in worked.items() %}{{ value.1|safe }}{% if not loop.last %},{% endif %}{% endfor %}],
+            data: [{% for key, value in sortedwork.items() %}{{ value.1|safe }}{% if not loop.last %},{% endif %}{% endfor %}],
             hoverOffset: 4
             }]
         },

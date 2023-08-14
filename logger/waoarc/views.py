@@ -174,9 +174,10 @@ def userchart():
     for call in facts['timesworkedtable']:
         new = {call[0] : [worked.get(call[0], 0) , call[1]]}
         worked.update(new)
+    sortedwork = sorted(worked.items(), key=lambda x:x[1][1], reverse=True)
     return render_template('userchart.html', memberlabels=memberlabels, membervalues=membervalues, callsignlabels=callsignlabels,
                            callsignvalues=callsignvalues, unclaimedlabels=unclaimedlabels, unclaimedvalues=unclaimedvalues, facts=facts,
-                           worked=worked)
+                           worked=worked, sortedwork=dict(sortedwork))
 
 
 @waoarc.route("/dates")
