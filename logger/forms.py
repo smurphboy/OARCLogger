@@ -49,7 +49,7 @@ class QSOForm(FlaskForm):
     my_sig_info = StringField('My SIG Information')
     iota = StringField('Islands on the Air', validators=[Length(max=6)])
     my_iota = StringField('My IOTA', validators=[Length(max=6)])
-    prop_mode = SelectField('Propagation Mode',
+    prop_mode = SelectField('Propogation Mode',
                             choices=[('', '----'), ('AS', 'Aircraft Scatter'), ('AUE', 'Aurora-E'), ('AE', 'Aurora'), ('BS', 'Backscatter'), ('ECH', 'Echolink'), ('EME', 'Earth-Moon-Earth'),
                                      ('ES', 'Sporadic-E'), ('F2', 'F2 Reflection'), ('FAI', 'Field Aligned Irregularities'), ('GWAVE', 'Ground Wave'), ('INTERNET', 'Internet-assisted'),
                                      ('ION', 'Ionoscatter'), ('IRL', 'IRLP'), ('LOS', 'Line of Sight'), ('MS', 'Meteor Scatter'), ('RPT', 'Repeater'), ('RS', 'Rain Scatter'),
