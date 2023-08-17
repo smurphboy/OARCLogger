@@ -112,7 +112,6 @@ def leaderboards():
     for call in facts['timesworkedtable']:
         new = {call[0] : [worked.get(call[0], 0) , call[1]]}
         worked.update(new)
-    pprint(worked)
     return render_template('leaderboard.html', facts=facts, unclaimed=unclaimed, qsobyday=qsobyday, qsobyweek=qsobyweek, workedcallsigns=workedcallsigns, worked=worked)
 
 

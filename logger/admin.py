@@ -17,7 +17,7 @@ class LoggerModelView(MyAdminModelView):
 
     column_hide_backrefs = False
     column_display_pk = True
-
+    column_searchable_list = ('call', 'station_callsign', 'band', 'mode', 'gridsquare', 'my_gridsquare', 'sota_ref', 'my_sota_ref')
 
 class LoggerEventModelView(MyAdminModelView):
 
