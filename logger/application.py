@@ -182,7 +182,7 @@ def create_app():
             return ret
         
         def bandsortorder(band):
-            if band:
+            if band and (band not in ['Discord', 'Internet', 'Post', 'Other']):
                 return bandorder[band]
             else:
                 return 0
