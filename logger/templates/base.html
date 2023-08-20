@@ -56,6 +56,26 @@
                 </a>
                 {% if current_user.is_authenticated %}
                 <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link" href="{{ url_for('events.eventlist', username=current_user.name) }}">
+                    {{ current_user.name }}'s Events
+                    </a>
+                    <div class="navbar-dropdown">
+                    {% if current_user.events|count > 0 %}
+                        {% for event in current_user.events %}
+                            <a class="navbar-item" href="{{ url_for('events.eventview', id=event.id) }}">
+                                {{ event.name }}
+                            </a>
+                        {% endfor %}
+                    {% else %}
+                            <a class="navbar-item" href="{{ url_for('events.eventlist', username=current_user.name) }}">
+                                You have no events.
+                            </a>
+                    {% endif %}                             
+                    </div>
+                </div>
+                {% endif %}
+                {% if current_user.is_authenticated %}
+                <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link" href="{{ url_for('users.profile', user=current_user.name) }}">
                     {{ current_user.name }}'s Logbooks
                     </a>
@@ -98,26 +118,7 @@
                 </div>
                 {% endif %}
  -->            
-                {% if current_user.is_authenticated %}
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link" href="{{ url_for('events.eventlist', username=current_user.name) }}">
-                    {{ current_user.name }}'s Events
-                    </a>
-                    <div class="navbar-dropdown">
-                    {% if current_user.events|count > 0 %}
-                        {% for event in current_user.events %}
-                            <a class="navbar-item" href="{{ url_for('events.eventview', id=event.id) }}">
-                                {{ event.name }}
-                            </a>
-                        {% endfor %}
-                    {% else %}
-                            <a class="navbar-item" href="{{ url_for('events.eventlist', username=current_user.name) }}">
-                                You have no events.
-                            </a>
-                    {% endif %}                             
-                    </div>
-                </div>
-                {% endif %}
+
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">
                     More
@@ -195,7 +196,7 @@
             {% if messages %}
             <div class="box notification">
                 <div class="notification is-info">
-                    {% for message in messages%}
+                    {% for message in messages %}
                     {{ message }}
                     {% endfor %}
                 </div>
