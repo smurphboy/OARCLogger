@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+{% block hero %}is-primary{% endblock %}
+{% block herobody %}
+			<h1 class="title algolia-lvl0">
+				{% block title %} <p>Dates & Times</p> {% endblock %}
+			</h1>
+            <p class="subtitle">QSOs by Date and Time</p>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="box">
+            <div class="tabs is-toggle is-fullwidth">
+                <ul>
+                    <li>
+                        <a href="{{ url_for('waoarc.datestable') }}">
+                            <span class="icon is-small"><i class="fa-solid fa-table"></i></span>
+                            <span>Table</span>
+                        </a>
+                    </li>
+                    <li class="is-active">
+                        <a href="{{ url_for('waoarc.dateschart') }}">
+                            <span class="icon is-small"><i class="fa-solid fa-chart-pie"></i></span>
+                            <span>Chart</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="tile is-ancestor">
+            <div class="tile is-parent is-vertical">
+                <div class="box tile is-child">
+                    <h1 class="title">QSOs by Day Chart</h1>
+                    <canvas id="dayChart"></canvas>
+                </div>
+                <div class="box tile is-child">
+                    <h1 class="title">QSOs by Week Chart</h1>
+                    <canvas id="weekChart"></canvas>
+                </div>
+                <div class="tile is-child box">
+                    <h1 class="title">Members QSOs by Day</h1>
+                    <p class="subtitle">Coming soon</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block bottombody %}
+<script>
+const ctx1 = document.getElementById('dayChart');
+const ctx2 = document.getElementById('weekChart');
+
+new Chart(ctx1, {
+    type: 'bar',
+    data: {
+        labels: {{ daylabels|safe }},
+        datasets: [{
+        label: 'Count by Day',
+        data: {{ dayvalues }},
+        borderWidth: 1
+        }]
+    },
+    options: {
+        indexAxis: 'y',
+        responsive: true,
+        scaleShowValues: true,
+        scales: {
+            y: {
+            ticks: {
+                autoSkip: false
+                }
+            }
+        }
+    }
+});
+
+new Chart(ctx2, {
+    type: 'bar',
+    data: {
+        labels: {{ weeklabels|safe }},
+        datasets: [{
+        label: 'Count by Week',
+        data: {{ weekvalues }},
+        borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true,
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

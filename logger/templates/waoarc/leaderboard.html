@@ -117,12 +117,27 @@
             </div>
             <div class="tile is-parent is-vertical">
                 <div class="tile is-child box">
-                    <h1 class="title"><i class="fa-regular fa-calendar"></i><a href="{{ url_for('waoarc.dates') }}"> Dates & Times</a></h1>
-                    <p class="subtitle">QSOs by Date and Time</p>
+                    <h1 class="title"><i class="fa-regular fa-calendar"></i> Dates & Times</h1>
+                    <div class="tabs is-toggle is-fullwidth">
+                        <ul>
+                            <li>
+                                <a href="{{ url_for('waoarc.datestable') }}">
+                                    <span class="icon is-small"><i class="fa-solid fa-table"></i></span>
+                                    <span>Table</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('waoarc.dateschart') }}">
+                                    <span class="icon is-small"><i class="fa-solid fa-chart-pie"></i></span>
+                                    <span>Chart</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                     <div class="block">
                         <p>Overall there have been <span class="has-text-weight-semibold">{{ facts.totalqsos }}</span> QSOs. Today there have been <span class="has-text-weight-semibold">{{ facts.qsostoday }}</span> QSOs. Yesterday there were <span class="has-text-weight-semibold">{{ facts.qsosyesterday }}</span> QSOs.</p>
                     </div>
-                    <h4 class="subtitle">QSOs by Day</h1>
+                    <h4 class="subtitle">QSOs by Day</h4>
                     <table id="qsoday" class="table is-striped is-hoverable">
                         <thead>
                             <tr>
@@ -141,7 +156,8 @@
                             {% endfor %}
                         </tbody>
                     </table>
-                    <h4 class="subtitle">QSOs by Week</h1>
+                    </br>
+                    <h4 class="subtitle">QSOs by Week</h4>
                         <table id="qsoweek" class="table is-striped is-hoverable">
                             <thead>
                                 <tr>

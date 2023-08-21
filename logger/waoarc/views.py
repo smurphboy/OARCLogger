@@ -184,27 +184,35 @@ def userchart():
                            worked=worked, sortedwork=dict(sortedwork))
 
 
-@waoarc.route("/dates")
-def dates():
+@waoarc.route("/datestable")
+def datestable():
     '''All the date and time related info for the Leaderboard Dates detail page'''
     facts={}
     facts['totalusers'] = User.query.count()
+    qsobyday = db.session.query(QSO.qso_date, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.qso_date).order_by(QSO.qso_date).all()
+    usersbyday = db.session.query(QSO.qso_date, User.name, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(QSO.qso_date, User.name).order_by(QSO.qso_date.desc()).order_by(func.count(QSO.id).desc()).all()
+    qsobyweek = db.session.query(func.date_part('week',QSO.qso_date), func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(func.date_part('week',QSO.qso_date)).order_by(func.date_part('week',QSO.qso_date)).all()
+    usersbyweek = db.session.query(func.date_part('week',QSO.qso_date), User.name, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(func.date_part('week',QSO.qso_date), User.name).order_by(func.date_part('week',QSO.qso_date).desc()).order_by(func.count(QSO.id).desc()).all()
+    return render_template('datestable.html', qsobyday=qsobyday, usersbyday=usersbyday, qsobyweek=qsobyweek, usersbyweek=usersbyweek, facts=facts)
+
+
+@waoarc.route("/dateschart")
+def dateschart():
+    '''All the date and time related info for the Leaderboard Dates detail page'''
     qsobyday = db.session.query(QSO.qso_date, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(QSO.qso_date).order_by(QSO.qso_date).all()
     daylabels = list(map(list, zip(*qsobyday)))[0]
     daydates = []
     for label in daylabels:
         daydates.append(label.strftime('%Y-%m-%d'))
     dayvalues = list(map(list, zip(*qsobyday)))[1]
-    usersbyday = db.session.query(QSO.qso_date, User.name, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(QSO.qso_date, User.name).order_by(QSO.qso_date.desc()).order_by(func.count(QSO.id).desc()).all()
     qsobyweek = db.session.query(func.date_part('week',QSO.qso_date), func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(func.date_part('week',QSO.qso_date)).order_by(func.date_part('week',QSO.qso_date)).all()
     weeklabels = list(map(list, zip(*qsobyweek)))[0]
     weekdates = []
     for label in weeklabels:
         weekdates.append(label - 25)
     weekvalues = list(map(list, zip(*qsobyweek)))[1]
-    usersbyweek = db.session.query(func.date_part('week',QSO.qso_date), User.name, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(func.date_part('week',QSO.qso_date), User.name).order_by(func.date_part('week',QSO.qso_date).desc()).order_by(func.count(QSO.id).desc()).all()
-    return render_template('dates.html', qsobyday=qsobyday, daylabels=daydates, dayvalues=dayvalues, weeklabels=weekdates,
-                           weekvalues=weekvalues, usersbyday=usersbyday, qsobyweek=qsobyweek, usersbyweek=usersbyweek, facts=facts)
+    return render_template('dateschart.html', daylabels=daydates, dayvalues=dayvalues, weeklabels=weekdates,
+                           weekvalues=weekvalues)
 
 @waoarc.route("/bands")
 def bands():
