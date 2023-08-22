@@ -1,4 +1,5 @@
 import flask_login as login
+from applicationinsights.flask.ext import AppInsights
 from flask import Flask, current_app, render_template, redirect
 from flask_admin import Admin
 from flask_login import LoginManager
@@ -66,6 +67,8 @@ def create_app():
     app.config.from_object(Config)
     app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
     app.jinja_env.add_extension('jinja2.ext.loopcontrols')
+    app.config['APPINSIGHTS_INSTRUMENTATIONKEY'] = '3bca194e-b3e1-42b2-9e75-0e4530778bcf'
+    appinsights = AppInsights(app)
     db.init_app(app)
     migrate = Migrate(app, db, render_as_batch=True)
 
@@ -105,6 +108,11 @@ def create_app():
     app.register_blueprint(rigs, url_prefix='/rigs')
     app.register_blueprint(waoarc, url_prefix='/waoarc')
     app.register_blueprint(dashboard, url_prefix='/dashboard')
+
+    @app.after_request
+    def after_request(response):
+        appinsights.flush()
+        return response
 
     @app.route("/")
     def index():
