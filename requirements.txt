@@ -1,4 +1,5 @@
 adif_io
+applicationinsights
 flask
 flask-login
 flask-migrate
