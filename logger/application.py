@@ -67,7 +67,6 @@ def create_app():
     app.config.from_object(Config)
     app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
     app.jinja_env.add_extension('jinja2.ext.loopcontrols')
-    app.config['APPINSIGHTS_INSTRUMENTATIONKEY'] = '3bca194e-b3e1-42b2-9e75-0e4530778bcf'
     appinsights = AppInsights(app)
     db.init_app(app)
     migrate = Migrate(app, db, render_as_batch=True)
