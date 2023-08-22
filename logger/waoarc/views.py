@@ -530,7 +530,7 @@ def potatable():
     '''Find all SOTA QSOs and plot them on a map'''
     summitqsos = QSO.query.with_entities(QSO.qso_date, QSO.time_on, QSO.station_callsign, QSO.my_pota_ref, QSO.call, QSO.gridsquare, QSO.lat, QSO.lon).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.my_pota_ref != None, QSO.pota_ref == None).all()
     s2sqsos = QSO.query.with_entities(QSO.qso_date, QSO.time_on, QSO.station_callsign, QSO.my_pota_ref, QSO.call, QSO.pota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.my_pota_ref != None, QSO.pota_ref != None).all()
-    chaserqsos = QSO.query.with_entities(QSO.qso_date, QSO.time_on, QSO.station_callsign, QSO.my_gridsquare, QSO.my_lat, QSO.my_lon, QSO.call, QSO.pota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.my_pota_ref != None, QSO.pota_ref != None).all()
+    chaserqsos = QSO.query.with_entities(QSO.qso_date, QSO.time_on, QSO.station_callsign, QSO.my_gridsquare, QSO.my_lat, QSO.my_lon, QSO.call, QSO.pota_ref).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31'), QSO.my_pota_ref == None, QSO.pota_ref != None).all()
     return render_template('potatable.html', summitqsos=summitqsos, s2sqsos=s2sqsos, chaserqsos=chaserqsos)
 
 

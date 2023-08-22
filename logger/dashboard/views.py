@@ -1,6 +1,7 @@
 import datetime
 import operator
 import os
+import math
 
 import maidenhead as mh
 from flask import (Blueprint, abort, current_app, flash, jsonify, redirect,
@@ -464,7 +465,7 @@ def network():
     edges = []
     qsos = QSO.query.with_entities(func.count(QSO.id), QSO.call, QSO.station_callsign).group_by(QSO.call, QSO.station_callsign).all()
     for qso in qsos:
-        edges.append({'from': qso[1].replace('/', '_'), 'to': qso[2].replace('/', '_'), 'value': qso[0], 'title': str(qso[1]) + '-' + str(qso[2])})
+        edges.append({'from': qso[1].replace('/', '_'), 'to': qso[2].replace('/', '_'), 'value': min(math.log10(qso[0]),2)+1, 'title': str(qso[1]) + '-' + str(qso[2]) + ' : ' + str(qso[0]) + ', ' + str(min(math.log10(qso[0]),2)+1)})
     stations = db.session.query(Callsign.name, func.count(QSO.id)).join(QSO, or_(Callsign.name==QSO.call, Callsign.name==QSO.station_callsign)).group_by(Callsign.name).all()
     for station in stations:
         nodes.append({'id': str(station[0]).replace('/', '_'), 'value': station[1], 'label': str(station[0])})
