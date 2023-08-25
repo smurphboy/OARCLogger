@@ -110,18 +110,56 @@ new Chart(ctx3, {
         label: 'QSO by Hour of Day',
         data: [{% for hour in hourcount %}{{hour.1}}{% if not loop.last %},{% endif %}{% endfor %}],
         }],
-    }
+    },
+    options: {
+    responsive: true,
+    scales: {
+        r: {
+            pointLabels: {
+            display: true,
+            centerPointLabels: true,
+            font: {
+                size: 18
+                }
+            }
+        }
+    },
+    plugins: {
+        legend: {
+            position: 'top',
+            },
+        }
+    },
 });
 
 new Chart(ctx4, {
-  type: 'polarArea',
-  data: {
-    labels: [{% for dow in dowcount %}"{{dow.0}}"{% if not loop.last %},{% endif %}{% endfor %}],
-    datasets: [{
-        label: 'QSO by Day of Week',
-        data: [{% for dow in dowcount %}{{dow.1}}{% if not loop.last %},{% endif %}{% endfor %}],
+    type: 'polarArea',
+    data: {
+        labels: [{% for dow in dowcount %}"{{dow.0}}"{% if not loop.last %},{% endif %}{% endfor %}],
+        datasets: [{
+            label: 'QSO by Day of Week',
+            data: [{% for dow in dowcount %}{{dow.1}}{% if not loop.last %},{% endif %}{% endfor %}],
         }],
-    }
+    },
+    options: {
+    responsive: true,
+    scales: {
+        r: {
+            pointLabels: {
+            display: true,
+            centerPointLabels: true,
+            font: {
+                size: 18
+                }
+            }
+        }
+    },
+    plugins: {
+        legend: {
+            position: 'top',
+            },
+        }
+    },
 });
 
 </script>
