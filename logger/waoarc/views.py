@@ -203,11 +203,11 @@ def datestable():
     usersbyday = db.session.query(QSO.qso_date, User.name, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(QSO.qso_date, User.name).order_by(QSO.qso_date.desc()).order_by(func.count(QSO.id).desc()).all()
     qsobyweek = db.session.query(func.date_part('week',QSO.qso_date), func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).group_by(func.date_part('week',QSO.qso_date)).order_by(func.date_part('week',QSO.qso_date)).all()
     usersbyweek = db.session.query(func.date_part('week',QSO.qso_date), User.name, func.count(QSO.id)).filter(and_(func.date(QSO.qso_date) >= '2023-07-01'),(func.date(QSO.qso_date) <= '2023-08-31')).join(Callsign, QSO.station_callsign == Callsign.name).join(User, Callsign.user_id == User.id).group_by(func.date_part('week',QSO.qso_date), User.name).order_by(func.date_part('week',QSO.qso_date).desc()).order_by(func.count(QSO.id).desc()).all()
-    hourcount = db.engine.execute('Select h.h as hour, coalesce(count(r.*), 0) as count from generate_series(0, 23) as h LEFT JOIN qso as r on extract(hour from r.time_on) = h.h group by h.h order by h.h')
+    hourcount = db.session.execute('Select h.h as hour, coalesce(count(r.*), 0) as count from generate_series(0, 23) as h LEFT JOIN qso as r on extract(hour from r.time_on) = h.h group by h.h order by h.h')
     hc = []
     for hour in hourcount:
         hc.append((hour[0],hour[1]))
-    dowcount = db.engine.execute('Select d.d as dow, coalesce(count(r.*), 0) as count from generate_series(0, 6) as d LEFT JOIN qso as r on extract(dow from r.qso_date) = d.d group by d.d order by d.d')
+    dowcount = db.session.execute('Select d.d as dow, coalesce(count(r.*), 0) as count from generate_series(0, 6) as d LEFT JOIN qso as r on extract(dow from r.qso_date) = d.d group by d.d order by d.d')
     dc = []
     for d in dowcount:
         dc.append((DOW[d[0]], d[1], d[0]))
@@ -229,11 +229,11 @@ def dateschart():
     for label in weeklabels:
         weekdates.append(label - 25)
     weekvalues = list(map(list, zip(*qsobyweek)))[1]
-    hourcount = db.engine.execute('Select h.h as hour, coalesce(count(r.*), 0) as count from generate_series(0, 23) as h LEFT JOIN qso as r on extract(hour from r.time_on) = h.h group by h.h order by h.h')
+    hourcount = db.session.execute('Select h.h as hour, coalesce(count(r.*), 0) as count from generate_series(0, 23) as h LEFT JOIN qso as r on extract(hour from r.time_on) = h.h group by h.h order by h.h')
     hc = []
     for hour in hourcount:
         hc.append((hour[0],hour[1]))
-    dowcount = db.engine.execute('Select d.d as dow, coalesce(count(r.*), 0) as count from generate_series(0, 6) as d LEFT JOIN qso as r on extract(dow from r.qso_date) = d.d group by d.d order by d.d')
+    dowcount = db.session.execute('Select d.d as dow, coalesce(count(r.*), 0) as count from generate_series(0, 6) as d LEFT JOIN qso as r on extract(dow from r.qso_date) = d.d group by d.d order by d.d')
     dc = []
     for d in dowcount:
         dc.append((DOW[d[0]], d[1]))
