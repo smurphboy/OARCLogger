@@ -41,8 +41,12 @@
                     <canvas id="weekChart"></canvas>
                 </div>
                 <div class="tile is-child box">
-                    <h1 class="title">Members QSOs by Day</h1>
-                    <p class="subtitle">Coming soon</p>
+                    <h1 class="title">QSO by Hour</h1>
+                    <canvas id="hourChart"></canvas>
+                </div>
+                <div class="tile is-child box">
+                    <h1 class="title">QSO by Day of Week</h1>
+                    <canvas id="dowChart"></canvas>
                 </div>
             </div>
         </div>
@@ -52,6 +56,8 @@
 <script>
 const ctx1 = document.getElementById('dayChart');
 const ctx2 = document.getElementById('weekChart');
+const ctx3 = document.getElementById('hourChart');
+const ctx4 = document.getElementById('dowChart');
 
 new Chart(ctx1, {
     type: 'bar',
@@ -95,5 +101,28 @@ new Chart(ctx2, {
         }
     }
 });
+
+new Chart(ctx3, {
+  type: 'polarArea',
+  data: {
+    labels: [{% for hour in hourcount %}{{hour.0}}{% if not loop.last %},{% endif %}{% endfor %}],
+    datasets: [{
+        label: 'QSO by Hour of Day',
+        data: [{% for hour in hourcount %}{{hour.1}}{% if not loop.last %},{% endif %}{% endfor %}],
+        }],
+    }
+});
+
+new Chart(ctx4, {
+  type: 'polarArea',
+  data: {
+    labels: [{% for dow in dowcount %}"{{dow.0}}"{% if not loop.last %},{% endif %}{% endfor %}],
+    datasets: [{
+        label: 'QSO by Day of Week',
+        data: [{% for dow in dowcount %}{{dow.1}}{% if not loop.last %},{% endif %}{% endfor %}],
+        }],
+    }
+});
+
 </script>
 {% endblock %}

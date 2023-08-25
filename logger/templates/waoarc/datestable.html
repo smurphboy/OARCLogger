@@ -98,6 +98,48 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="box tile is-child">
+                    <h1 class="title">QSOs by Hour of Day</h1>
+                    <table id="qsobyhour" class="table is-striped is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>Hour of Day</th>
+                                <th>Total QSOs</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for hour in hourcount %}
+                            <tr>
+                                <td>{{ hour[0] }}</td>
+                                <td>{{ hour[1] }}</td>
+                            </tr>
+                            {% else %}
+                            No QSOs
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="box tile is-child">
+                    <h1 class="title">QSOs by Day of Week</h1>
+                    <table id="qsobydow" class="table is-striped is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>Day of Week</th>
+                                <th>Total QSOs</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for dow in dowcount %}
+                            <tr>
+                                <td data-order="{{ dow[2] }}"">{{ dow[0] }}</td>
+                                <td>{{ dow[1] }}</td>
+                            </tr>
+                            {% else %}
+                            No QSOs
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -130,6 +172,16 @@ $(document).ready(function () {
         ],
         stateSave: true,
         order: [[0, 'desc'],[2, 'desc']]
+    });
+
+
+    $('#qsobyhour').DataTable({
+        stateSave: true,
+        order: [0, 'desc']
+    });
+
+
+    $('#qsobydow').DataTable({
     });
 });
 </script>
