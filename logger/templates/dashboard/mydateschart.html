@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+{% block hero %}is-primary{% endblock %}
+{% block herobody %}
+			<h1 class="title algolia-lvl0">
+				<p>Dates & Times</p>
+			</h1>
+            <p class="subtitle">{{ user }}'s QSOs by Date and Time</p>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="box">
+            <div class="tabs is-toggle is-fullwidth">
+                <ul>
+                    <li>
+                        <a href="{{ url_for('dashboard.mydatestable', user=user) }}">
+                            <span class="icon is-small"><i class="fa-solid fa-table"></i></span>
+                            <span>Table</span>
+                        </a>
+                    </li>
+                    <li class="is-active">
+                        <a href="{{ url_for('dashboard.mydateschart', user=user) }}">
+                            <span class="icon is-small"><i class="fa-solid fa-chart-pie"></i></span>
+                            <span>Chart</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="tile is-ancestor">
+            <div class="tile is-parent is-vertical">
+                <div class="box tile is-child">
+                    <h1 class="title">{{ user }}'s QSOs by Day Chart</h1>
+                    <canvas id="dayChart"></canvas>
+                </div>
+                <div class="box tile is-child">
+                    <h1 class="title">{{ user }}'s QSOs by Week Chart</h1>
+                    <canvas id="weekChart"></canvas>
+                </div>
+                <div class="box tile is-child">
+                    <h1 class="title">{{ user }}'s QSOs by Day of Week Chart</h1>
+                    <canvas id="DOWChart"></canvas>
+                </div>
+                <div class="box tile is-child">
+                    <h1 class="title">{{ user }}'s QSOs by Hour of Day Chart</h1>
+                    <canvas id="hourChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block bottombody %}
+<script>
+const ctx1 = document.getElementById('dayChart');
+const ctx2 = document.getElementById('weekChart');
+const ctx3 = document.getElementById('DOWChart');
+const ctx4 = document.getElementById('hourChart');
+
+
+new Chart(ctx1, {
+    type: 'bar',
+    data: {
+        labels: {{ daylabels|safe }},
+        datasets: [{
+        label: 'Count by Day',
+        data: {{ dayvalues }},
+        borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true,
+            }
+        }
+    }
+});
+
+new Chart(ctx2, {
+    type: 'bar',
+    data: {
+        labels: {{ weeklabels|safe }},
+        datasets: [{
+        label: 'Count by Week',
+        data: {{ weekvalues }},
+        borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true,
+            }
+        }
+    }
+});
+
+new Chart(ctx4, {
+  type: 'polarArea',
+  data: {
+    labels: [{% for hour in hc %}{{hour.0}}{% if not loop.last %},{% endif %}{% endfor %}],
+    datasets: [{
+        label: 'QSO by Hour of Day',
+        data: [{% for hour in hc %}{{hour.1}}{% if not loop.last %},{% endif %}{% endfor %}],
+        }],
+    },
+    options: {
+    responsive: true,
+    scales: {
+        r: {
+            pointLabels: {
+            display: true,
+            centerPointLabels: true,
+            font: {
+                size: 18
+                }
+            }
+        }
+    },
+    plugins: {
+        legend: {
+            position: 'top',
+            },
+        }
+    },
+});
+
+new Chart(ctx3, {
+    type: 'polarArea',
+    data: {
+        labels: [{% for dow in dc %}"{{dow.0}}"{% if not loop.last %},{% endif %}{% endfor %}],
+        datasets: [{
+            label: 'QSO by Day of Week',
+            data: [{% for dow in dc %}{{dow.1}}{% if not loop.last %},{% endif %}{% endfor %}],
+        }],
+    },
+    options: {
+    responsive: true,
+    scales: {
+        r: {
+            pointLabels: {
+            display: true,
+            centerPointLabels: true,
+            font: {
+                size: 18
+                }
+            }
+        }
+    },
+    plugins: {
+        legend: {
+            position: 'top',
+            },
+        }
+    },
+});
+
+
+$(document).ready(function () {
+    $('#qsoday').DataTable({
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        stateSave: true,
+        order: [0, 'desc']
+    });
+
+    $('#qsoweek').DataTable({
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        stateSave: true,
+        order: [0, 'asc']
+    });
+});
+</script>
+{% endblock %}

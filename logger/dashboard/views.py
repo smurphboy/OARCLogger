@@ -138,8 +138,33 @@ def userchart():
                            callsignvalues=callsignvalues, unclaimedlabels=unclaimedlabels, unclaimedvalues=unclaimedvalues)
 
 
-@dashboard.route("/mydates/<user>")
-def mydates(user):
+@dashboard.route("/mydatestable/<user>")
+def mydatestable(user):
+    '''All the date and time related info for the Dashboard Dates detail page'''
+    usercalls = Callsign.query.with_entities(Callsign.name).join(User, Callsign.user_id==User.id).filter(User.name==user).all()
+    userfirstqso = QSO.query.with_entities(QSO.qso_date).filter(QSO.station_callsign.in_([lis[0] for lis in usercalls])).order_by(QSO.qso_date).first()
+    userlastqso = QSO.query.with_entities(QSO.qso_date).filter(QSO.station_callsign.in_([lis[0] for lis in usercalls])).order_by(QSO.qso_date.desc()).first()
+    date_list = func.generate_series(userfirstqso[0], userlastqso[0], '1 day').alias('day')
+    day = column('day')
+    userqsosbyday = db.session.query(day, func.count(QSO.id)).select_from(date_list).outerjoin(QSO, and_((func.date_trunc('day', QSO.qso_date) == day), QSO.station_callsign.in_([lis[0] for lis in usercalls]))).group_by(day).order_by(day).all()
+    userqsosbyweek = db.session.query(func.to_char(day, 'WW'), func.count(QSO.id)).select_from(date_list).outerjoin(QSO, and_((func.date_trunc('day', QSO.qso_date) == day), QSO.station_callsign.in_([lis[0] for lis in usercalls]))).group_by(func.to_char(day, 'WW')).order_by(func.to_char(day, 'WW')).all()
+    hour_list = func.generate_series(0, 23).alias('hour')
+    hour = column('hour')
+    userqsosbyhour = db.session.query(hour, func.count(QSO.id)).select_from(hour_list).outerjoin(QSO, and_((func.extract('hour', QSO.time_on) == hour), QSO.station_callsign.in_([lis[0] for lis in usercalls]))).group_by(hour).order_by(hour).all()
+    hc = []
+    for hour in userqsosbyhour:
+        hc.append((hour[0],hour[1]))
+    dow_list = func.generate_series(0, 6).alias('dow')
+    dow = column('dow')
+    userqsobydow = db.session.query(dow, func.count(QSO.id)).select_from(dow_list).outerjoin(QSO, and_((func.extract('dow', QSO.qso_date) == dow), QSO.station_callsign.in_([lis[0] for lis in usercalls]))).group_by(dow).order_by(dow).all()
+    dc = []
+    for d in userqsobydow:
+        dc.append((DOW[d[0]], d[1], d[0]))
+    return render_template('mydatestable.html', qsobyday=userqsosbyday, user=user, qsobyweek=userqsosbyweek, hc=hc, dc=dc)
+
+
+@dashboard.route("/mydateschart/<user>")
+def mydateschart(user):
     '''All the date and time related info for the Dashboard Dates detail page'''
     usercalls = Callsign.query.with_entities(Callsign.name).join(User, Callsign.user_id==User.id).filter(User.name==user).all()
     userfirstqso = QSO.query.with_entities(QSO.qso_date).filter(QSO.station_callsign.in_([lis[0] for lis in usercalls])).order_by(QSO.qso_date).first()
@@ -171,8 +196,9 @@ def mydates(user):
     dc = []
     for d in userqsobydow:
         dc.append((DOW[d[0]], d[1], d[0]))
-    return render_template('mydates.html', qsobyday=userqsosbyday, user=user, daylabels=daydates, dayvalues=dayvalues, weeklabels=weekdates,
+    return render_template('mydateschart.html', qsobyday=userqsosbyday, user=user, daylabels=daydates, dayvalues=dayvalues, weeklabels=weekdates,
                            weekvalues=weekvalues, qsobyweek=userqsosbyweek, hc=hc, dc=dc)
+
 
 @dashboard.route("/mybandschart/<user>")
 def mybandschart(user):
