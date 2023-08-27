@@ -45,6 +45,15 @@ rarity = {
     24 : 1,
 }
 
+DOW = {
+    0 : 'Sunday',
+    1 : 'Monday',
+    2 : 'Tuesday',
+    3 : 'Wednesday',
+    4 : 'Thursday',
+    5 : 'Friday',
+    6 : 'Saturday'
+}
 
 @dashboard.route("/leaderboards")
 def leaderboards():
@@ -150,8 +159,20 @@ def mydates(user):
     for label in weeklabels:
         weekdates.append(label)
     weekvalues = list(map(list, zip(*userqsosbyweek)))[1]
+    hour_list = func.generate_series(0, 23).alias('hour')
+    hour = column('hour')
+    userqsosbyhour = db.session.query(hour, func.count(QSO.id)).select_from(hour_list).outerjoin(QSO, and_((func.extract('hour', QSO.time_on) == hour), QSO.station_callsign.in_([lis[0] for lis in usercalls]))).group_by(hour).order_by(hour).all()
+    hc = []
+    for hour in userqsosbyhour:
+        hc.append((hour[0],hour[1]))
+    dow_list = func.generate_series(0, 6).alias('dow')
+    dow = column('dow')
+    userqsobydow = db.session.query(dow, func.count(QSO.id)).select_from(dow_list).outerjoin(QSO, and_((func.extract('dow', QSO.qso_date) == dow), QSO.station_callsign.in_([lis[0] for lis in usercalls]))).group_by(dow).order_by(dow).all()
+    dc = []
+    for d in userqsobydow:
+        dc.append((DOW[d[0]], d[1], d[0]))
     return render_template('mydates.html', qsobyday=userqsosbyday, user=user, daylabels=daydates, dayvalues=dayvalues, weeklabels=weekdates,
-                           weekvalues=weekvalues, qsobyweek=userqsosbyweek)
+                           weekvalues=weekvalues, qsobyweek=userqsosbyweek, hc=hc, dc=dc)
 
 @dashboard.route("/mybandschart/<user>")
 def mybandschart(user):
