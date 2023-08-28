@@ -211,7 +211,7 @@ def datestable():
     dc = []
     for d in dowcount:
         dc.append((DOW[d[0]], d[1], d[0]))
-    callsignstreaks = db.session.execute(text("select distinct on (station_callsign) station_callsign, count(distinct qso_date::date) as num_days from (select ci.*, dense_rank() over (partition by station_callsign order by qso_date::date) as seq from qso ci) ci group by station_callsign, qso_date::date - seq * interval '1 day' order by station_callsign, num_days desc"))
+    callsignstreaks = db.session.execute(text("select distinct on (name) name, count(distinct ci.qso_date::date) as num_days from (select ci.qso_date, u.name, dense_rank() over (partition by u.name order by ci.qso_date::date) as seq from qso ci join callsign c on ci.station_callsign = c.name join public.user u on c.user_id = u.id where qso_date >= '2023-07-01' and qso_date <= '2023-08-31') ci group by name, ci.qso_date::date - seq * interval '1 day' order by name, num_days desc"))
     cs = []
     for streak in callsignstreaks:
         cs.append((streak[0], streak[1]))
@@ -242,7 +242,7 @@ def dateschart():
     dc = []
     for d in dowcount:
         dc.append((DOW[d[0]], d[1]))
-    callsignstreaks = db.session.execute(text("select distinct on (station_callsign) station_callsign, count(distinct qso_date::date) as num_days from (select ci.*, dense_rank() over (partition by station_callsign order by qso_date::date) as seq from qso ci) ci group by station_callsign, qso_date::date - seq * interval '1 day' order by station_callsign, num_days desc"))
+    callsignstreaks = db.session.execute(text("select distinct on (name) name, count(distinct ci.qso_date::date) as num_days from (select ci.qso_date, u.name, dense_rank() over (partition by u.name order by ci.qso_date::date) as seq from qso ci join callsign c on ci.station_callsign = c.name join public.user u on c.user_id = u.id where qso_date >= '2023-07-01' and qso_date <= '2023-08-31') ci group by name, ci.qso_date::date - seq * interval '1 day' order by name, num_days desc"))
     cs = []
     for streak in callsignstreaks:
         if streak[1] > 1:
