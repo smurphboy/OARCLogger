@@ -140,6 +140,27 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="box tile is-child">
+                    <h1 class="title">QSOs streaks by Callsign</h1>
+                    <table id="callstreak" class="table is-striped is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>Callsign</th>
+                                <th>Num Days</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cs in callsignstreak %}
+                            <tr>
+                                <td>{{ cs[0] }}</td>
+                                <td>{{ cs[1] }}</td>
+                            </tr>
+                            {% else %}
+                            No QSOs
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -182,6 +203,11 @@ $(document).ready(function () {
 
 
     $('#qsobydow').DataTable({
+    });
+
+    $('#callstreak').DataTable({
+        stateSave: true,
+        order: [1, 'desc']
     });
 });
 </script>

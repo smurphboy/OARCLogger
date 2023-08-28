@@ -211,7 +211,12 @@ def datestable():
     dc = []
     for d in dowcount:
         dc.append((DOW[d[0]], d[1], d[0]))
-    return render_template('datestable.html', qsobyday=qsobyday, usersbyday=usersbyday, qsobyweek=qsobyweek, usersbyweek=usersbyweek, facts=facts, hourcount=hc, dowcount=dc)
+    callsignstreaks = db.session.execute(text("select distinct on (station_callsign) station_callsign, count(distinct qso_date::date) as num_days from (select ci.*, dense_rank() over (partition by station_callsign order by qso_date::date) as seq from qso ci) ci group by station_callsign, qso_date::date - seq * interval '1 day' order by station_callsign, num_days desc"))
+    cs = []
+    for streak in callsignstreaks:
+        cs.append((streak[0], streak[1]))
+    return render_template('datestable.html', qsobyday=qsobyday, usersbyday=usersbyday, qsobyweek=qsobyweek, usersbyweek=usersbyweek,
+                           facts=facts, hourcount=hc, dowcount=dc, callsignstreak=cs)
 
 
 @waoarc.route("/dateschart")
@@ -237,8 +242,13 @@ def dateschart():
     dc = []
     for d in dowcount:
         dc.append((DOW[d[0]], d[1]))
+    callsignstreaks = db.session.execute(text("select distinct on (station_callsign) station_callsign, count(distinct qso_date::date) as num_days from (select ci.*, dense_rank() over (partition by station_callsign order by qso_date::date) as seq from qso ci) ci group by station_callsign, qso_date::date - seq * interval '1 day' order by station_callsign, num_days desc"))
+    cs = []
+    for streak in callsignstreaks:
+        cs.append((streak[0], streak[1]))
+    cs.sort(key=lambda a: a[1], reverse=True)
     return render_template('dateschart.html', daylabels=daydates, dayvalues=dayvalues, weeklabels=weekdates,
-                           weekvalues=weekvalues, hourcount=hc, dowcount=dc)
+                           weekvalues=weekvalues, hourcount=hc, dowcount=dc, callsignstreak=cs)
 
 @waoarc.route("/bands")
 def bands():
