@@ -10,8 +10,8 @@ from wtforms.widgets import DateTimeInput
 
 
 class QSOForm(FlaskForm):
-    qso_date = DateField('QSO Date', validators=[InputRequired()], default=datetime.datetime.utcnow().date())
-    time_on = TimeField('QSO On Time', validators=[InputRequired()], default=datetime.datetime.utcnow())
+    qso_date = DateField('QSO Date', validators=[InputRequired()])
+    time_on = TimeField('QSO On Time', validators=[InputRequired()])
     qso_date_off = DateField('QSO Date Off')
     time_off = TimeField('QSO Off Time')
     dxcc = IntegerField('DXCC')
@@ -75,6 +75,13 @@ class QSOForm(FlaskForm):
     my_gridsquare = StringField('My Gridsquare', validators=[Length(max=10)])
     comment = TextAreaField('Comment', validators=[Length(max=255)])
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.qso_date.data:
+            self.qso_date.data = datetime.datetime.utcnow().date()
+        if not self.time_on.data:
+            self.time_on.data = datetime.datetime.utcnow()
+
 class QSOUploadForm(FlaskForm):
     file = FileField('File')
     submit = SubmitField('Submit')
@@ -92,12 +99,23 @@ class EventForm(FlaskForm):
     sat_mode = StringField('Satellite Mode', validators=[Optional(), Length(max=255)])
     clubcall = StringField('Club Callsign')
     my_gridsquare = StringField('My Gridsquare', validators=[Length(max=10)])
-    start_date = DateField('Start Date', validators=[InputRequired()], default=datetime.datetime.utcnow().date())
-    start_time = TimeField('Start Time', validators=[InputRequired()], default=datetime.datetime.now)
-    end_date  = DateField('End Date', validators=[Optional()], default=datetime.date.today)
-    end_time = TimeField('End Time', validators=[Optional()], default=datetime.datetime.now)
+    start_date = DateField('Start Date', validators=[InputRequired()])
+    start_time = TimeField('Start Time', validators=[InputRequired()])
+    end_date  = DateField('End Date', validators=[Optional()])
+    end_time = TimeField('End Time', validators=[Optional()])
     comment = TextAreaField('Comment', validators=[Optional(), Length(max=255)])
 
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.start_date.data:
+            self.start_date.data = datetime.datetime.utcnow().date()
+        if not self.end_date.data:
+            self.end_date.data = datetime.datetime.utcnow().date()
+        if not self.start_time.data:
+            self.start_time.data = datetime.datetime.utcnow()
+        if not self.end_time.data:
+            self.end_time.data = datetime.datetime.utcnow()
 
 class ConfigForm(FlaskForm):
     name = StringField('Name', validators=[InputRequired(), Length(max=50)])
@@ -126,8 +144,8 @@ class SelectedEventForm(FlaskForm):
 
 
 class SOTAQSOForm(FlaskForm):
-    qso_date = DateField('QSO Date', validators=[InputRequired()], default=datetime.datetime.utcnow().date())
-    time_on = TimeField('QSO On Time', validators=[InputRequired()], default=datetime.datetime.utcnow())
+    qso_date = DateField('QSO Date', validators=[InputRequired()])
+    time_on = TimeField('QSO On Time', validators=[InputRequired()])
     qso_date_off = DateField('QSO Date Off')
     time_off = TimeField('QSO Off Time')
     call = StringField('Call', validators=[InputRequired(),
@@ -161,9 +179,16 @@ class SOTAQSOForm(FlaskForm):
     comment = StringField('Comment', validators=[Length(max=255)])
 
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.qso_date.data:
+            self.qso_date.data = datetime.datetime.utcnow().date()
+        if not self.time_on.data:
+            self.time_on.data = datetime.datetime.utcnow()
+
 class POTAQSOForm(FlaskForm):
-    qso_date = DateField('QSO Date', validators=[InputRequired()], default=datetime.datetime.utcnow().date())
-    time_on = TimeField('QSO On Time', validators=[InputRequired()], default=datetime.datetime.utcnow())
+    qso_date = DateField('QSO Date', validators=[InputRequired()])
+    time_on = TimeField('QSO On Time', validators=[InputRequired()])
     qso_date_off = DateField('QSO Date Off')
     time_off = TimeField('QSO Off Time')
     call = StringField('Call', validators=[InputRequired(),
@@ -191,9 +216,17 @@ class POTAQSOForm(FlaskForm):
     comment = StringField('Comment', validators=[Length(max=255)])
 
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.qso_date.data:
+            self.qso_date.data = datetime.datetime.utcnow().date()
+        if not self.time_on.data:
+            self.time_on.data = datetime.datetime.utcnow()
+
+
 class SOTAPOTAQSOForm(FlaskForm):
-    qso_date = DateField('QSO Date', validators=[InputRequired()], default=datetime.datetime.utcnow().date())
-    time_on = TimeField('QSO On Time', validators=[InputRequired()], default=datetime.datetime.utcnow())
+    qso_date = DateField('QSO Date', validators=[InputRequired()])
+    time_on = TimeField('QSO On Time', validators=[InputRequired()])
     qso_date_off = DateField('QSO Date Off')
     time_off = TimeField('QSO Off Time')
     call = StringField('Call', validators=[InputRequired(),
@@ -223,9 +256,17 @@ class SOTAPOTAQSOForm(FlaskForm):
     comment = StringField('Comment', validators=[Length(max=255)])
 
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.qso_date.data:
+            self.qso_date.data = datetime.datetime.utcnow().date()
+        if not self.time_on.data:
+            self.time_on.data = datetime.datetime.utcnow()
+
+
 class SATQSOForm(FlaskForm):
-    qso_date = DateField('QSO Date', validators=[InputRequired()], default=datetime.datetime.utcnow().date())
-    time_on = TimeField('QSO On Time', validators=[InputRequired()], default=datetime.datetime.utcnow())
+    qso_date = DateField('QSO Date', validators=[InputRequired()])
+    time_on = TimeField('QSO On Time', validators=[InputRequired()])
     qso_date_off = DateField('QSO Date Off')
     time_off = TimeField('QSO Off Time')
     call = StringField('Call', validators=[InputRequired(),
@@ -251,9 +292,17 @@ class SATQSOForm(FlaskForm):
     comment = StringField('Comment', validators=[Length(max=255)])
 
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.qso_date.data:
+            self.qso_date.data = datetime.datetime.utcnow().date()
+        if not self.time_on.data:
+            self.time_on.data = datetime.datetime.utcnow()
+
+
 class NonAmQSOForm(FlaskForm):
-    qso_date = DateField('QSO Date', validators=[InputRequired()], default=datetime.datetime.utcnow().date())
-    time_on = TimeField('QSO On Time', validators=[InputRequired()], default=datetime.datetime.utcnow())
+    qso_date = DateField('QSO Date', validators=[InputRequired()])
+    time_on = TimeField('QSO On Time', validators=[InputRequired()])
     qso_date_off = DateField('QSO Date Off')
     time_off = TimeField('QSO Off Time')
     call = StringField('Call', validators=[InputRequired(),
@@ -283,9 +332,17 @@ class NonAmQSOForm(FlaskForm):
     comment = StringField('Comment', validators=[Length(max=255)])
 
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.qso_date.data:
+            self.qso_date.data = datetime.datetime.utcnow().date()
+        if not self.time_on.data:
+            self.time_on.data = datetime.datetime.utcnow()
+
+
 class ClubCallQSOForm(FlaskForm):
-    qso_date = DateField('QSO Date', validators=[InputRequired()], default=datetime.datetime.utcnow().date())
-    time_on = TimeField('QSO On Time', validators=[InputRequired()], default=datetime.datetime.utcnow())
+    qso_date = DateField('QSO Date', validators=[InputRequired()])
+    time_on = TimeField('QSO On Time', validators=[InputRequired()])
     qso_date_off = DateField('QSO Date Off')
     time_off = TimeField('QSO Off Time')
     call = StringField('Call', validators=[InputRequired(),
@@ -313,3 +370,11 @@ class ClubCallQSOForm(FlaskForm):
                                 'Q15', 'QRA64', 'ROS', 'T10', 'THOR', 'THRB', 'TOR', 'V4', 'VOI', 'WINMOR', 'WSPR', 'Other']) # convert this to look at the config selected and the modes available
     submode = SelectField('Sub Mode')
     comment = StringField('Comment', validators=[Length(max=255)])
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.qso_date.data:
+            self.qso_date.data = datetime.datetime.utcnow().date()
+        if not self.time_on.data:
+            self.time_on.data = datetime.datetime.utcnow()
