@@ -289,6 +289,7 @@ def qsodelete(id, callsign):
     db.session.commit()
     db.session.delete(qso)
     db.session.commit()
+    flash('QSO deleted', 'warning')
     return redirect(request.referrer)
 
 
@@ -432,7 +433,7 @@ def sat(event):
         flash('New QSO added to the event', 'info')
         return redirect(url_for('qsos.sat', event=event))
     satevent = Event.query.filter_by(id=event).first()
-    print(satevent.name)
+    # print(satevent.name)
     form = SATQSOForm()
     form.sat_name.data = satevent.sat_name
     form.sat_mode.data = satevent.sat_mode
@@ -446,7 +447,7 @@ def sat(event):
     form.station_callsign.data = callsigns[0].name
     form.station_callsign.choices = [callsign.name for callsign in Callsign.query.filter_by(user_id=current_user.get_id()).all()]
     form.my_gridsquare.data = satevent.my_gridsquare
-    print(form.station_callsign.choices)
+    # print(form.station_callsign.choices)
     return render_template('satqsoform.html', form=form, selectedevents=selectedevents, callsigns=callsigns, event=satevent)
 
 

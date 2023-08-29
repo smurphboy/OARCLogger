@@ -13,17 +13,6 @@
 {% endblock %}
 {% block content %}
     <div class="container">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <div class="box">
-            <div class="notification is-info">
-                {% for message in messages%}
-                {{ message }}
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
-        {% endwith %}
         <div class="box">
             <h1 class="title">Existing QSOs</h1>
             <p class="subtitle">{{ event.qsos|length }} QSOs for this Event</p>

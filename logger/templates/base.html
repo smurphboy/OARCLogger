@@ -192,14 +192,14 @@
     </section>
     <section>
         <div class="container">
-            {% with messages = get_flashed_messages() %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
             <div class="box notification">
-                <div class="notification is-info">
-                    {% for message in messages %}
-                    {{ message }}
-                    {% endfor %}
+                {% for category, message in messages %}
+                <div class="notification is-{{category}}">
+                {{ message }}
                 </div>
+                {% endfor %}
             </div>
             {% endif %}
             {% endwith %}
