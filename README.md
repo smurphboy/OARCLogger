@@ -1,10 +1,11 @@
 # OARCLogger
 
-OARC QSO Logger
+OARC QSO Logger V1 - WAOARC Season 2 edition
 
 ## TL;DR
 
 The OARC QSO Logger is a database backed web application written in Python using the Flask framework. It allows a set of users to capture, import and manage QSOs. It's initial aim is to support Worked All OARC, but it is capable of expanding into other use cases.
+This release is the Logger as at the end of WAOARC Season 2. It's a fully capable logger with ADIF import / export (although ADIF isn't checked too hard on the way in) and many visulisations.
 
 ## Stack used
 
@@ -12,7 +13,7 @@ Python 3.8 / Flask 2.2 / Postgres (other SQL databases will work / Nginx (other 
 
 ## Installation
 
-* Install python requirements e.g. pip3 install -r requirements.txt
+* Install python requirements e.g. pip3 install -r requirements.txt (I'd recommend a virtual env or a tool like Poetry to manage your python dependencies)
 * Install database and web server
 
 ```sql
@@ -52,7 +53,16 @@ export FLASK_APP=logger.application
 flask run
 ```
 
-In live mode use initd??? (TBC)
+## Setting a user as admin
+
+Once you have the server up and you've created an initial user, you will want to make yourself ADMIN. You do this by setting the admin flag on your user record (use a POSTGRES tool to do this). 
+This allows you access to the ADMIN interface at /admin so you can edit records without needing to go into the DB itself.
+
+## Deploying the server in production setting
+
+As above, the Flask dev server shouldn't be used on the internet! Instead there are many guides on hosting Flask applications on hosting services.
+For WAOARC Season 2, I hosted it on Azure as a virtual machine based on Ubuntu 20.04, nginx and uWSGI. 
+I followed this [guide](https://hackersandslackers.com/deploy-flask-uwsgi-nginx/)
 
 ## and finally...
 
