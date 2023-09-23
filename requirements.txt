@@ -1,11 +1,13 @@
 adif_io
 applicationinsights
 flask
+flask-admin
 flask-login
 flask-migrate
 flask-wtf
 flask-sqlalchemy
 geojson
+gridtools
 maidenhead
 psycopg2
 python-dotenv
